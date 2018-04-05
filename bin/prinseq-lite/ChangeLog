@@ -1,0 +1,263 @@
+-- Version history --
+
+Certain updates only apply to the web version, but they should be obvious to
+figure out since they are likely modification of the interface.
+
+prinseq-lite-0.20.4:
+Fixed error caused by empty lines at the end of paired-end datasets. Restricted
+sequences in graph data complexity statistics output to 1000bp to keep the .gd
+files small for inputs with very long sequences (e.g. whole genomes).
+
+prinseq-lite-0.20.3:
+Fixed issue of incorrect duplicate counts when a sequence is both an exact
+duplicate and reverse complement exact duplicate of another sequence.
+
+prinseq-lite-0.20.2:
+Added support for STDOUT output to paired-end processing.
+
+prinseq-web-0.20.1:
+Release of web version files to run the web version on a local machine.
+
+prinseq-lite-0.20.1:
+Fixed issue with FASTA inputs that caused the program to exit.
+
+prinseq-lite-0.20:
+Fixed depricated use of 'defined' on aggregates. Added options "trim_left_p" and
+"trim_right_p" to trim reads by a percentage value in addition to options that
+trim by number of nucleotides. Added option "stats_assembly" to report N50, N90,
+etc contig size in the standalone version's summary statistics output. Added
+support for paired-end data (new options "fasta2" and "fastq2").
+
+prinseq-graphs-0.6 / prinseq-web-0.20:
+Added support for paired-end data.
+
+prinseq-lite-0.19.5:
+Fixed issue of incorrect quality trimming with arguments "min" and "max" for
+option -trim_qual_type.
+
+prinseq-lite-0.19.4 / prinseq-graphs-0.5.1:
+Fixed issues related to the use of qw() in loops for Perl version 5.14+ (thanks
+to Evan Staton for pointing out the issue and providing the link with details:
+http://search.cpan.org/~jesse/perl-5.14.0/pod/perldelta.pod
+#Use_of_qw%28...%29_as_parentheses ). Fixed issue with 5'/3' duplicate removal
+that forced option -exact_only (thanks to Stephanie Pierson for reporting the
+issue). Fixed issue with missing duplicate statistics in graph data output if
+-derep or -graph_stats was not specified. Suppressed output of PCA module when
+generating PCA plots.
+
+prinseq-lite-0.19.3:
+Added new output file option to keep track of sequence identifier renaming
+(option -seq_id_mappings). Fixed trim_qual_rule parameter listed twice in the
+log file. Fixed issue with sequences of length 3bp when calculating DUST scores.
+Fixed issue with exact_only parameter check.
+
+prinseq-lite-0.19.2:
+Increased memory efficiency for graph data calculation on big input files.
+
+prinseq-lite-0.19.1:
+Fixed rounding issue in sequence complexity calculation.
+
+prinseq-lite-0.19 / prinseq-graphs-0.5:
+Added check for counts of filtered sequence to report when no sequences were
+filtered. Optimized dinucleotide calculation (~400% faster), sequence complexity
+calculation (~80% faster) and quality filtering and trimming (~90% faster when
+both filtering and trimming). Added option (-graph_stats) to select what
+statistics should be calculated and included in the graph_data file (useful if
+you e.g. do not need sequence complexity information, which requires a lot of
+computation). Added binned base quality data to graph data output (as generated
+in web version up to 0.17.4). Removed annotations from length distribution graph
+if standard deviation is zero.
+
+prinseq-lite-0.18.3:
+Fixed phred64 scaling issue for graph data outputs (thanks to Komal Jain for
+pointing out the issue).
+
+prinseq-lite-0.18.2:
+Fixed typo in selection of graph data elements that resulted in missing quality
+data.
+
+prinseq-lite-0.18.1 / prinseq-graphs-0.4.1:
+Fixed missing zero count for Ns when generating graphs data file. Fixed
+duplication count table output for HTML report.
+
+prinseq-lite-0.18 / prinseq-graphs-0.4:
+Added options for web version processing (lite+graphs). Added custom parameter
+processing (same as already available in web version). Added option to input
+parameters saved in a file (lite). Fixed issue with output to STDOUT for
+"-out_format 4" option. Added counts by type for filtered sequences to verbose
+output (lite). Updated layout of HTML report to match web version and to use
+less colors to reduce printing costs and increase readability (graphs).
+
+prinseq-web-0.18:
+Fixed issue with spaces and parenthesis in filename when compressing files.
+Switched from Sencha to JQuery for front-end javascript. New web frontend fully
+relying on lite and graphs Perl scripts (all further lite and graphs updates
+will automatically apply to the web version).
+
+prinseq-lite-0.17.4:
+Fixed issue with MID tag output when using the -graph_data option.
+
+prinseq-lite-0.17.3:
+Fixed issue with non-exact duplicate removal that caused incorrect out_bad files
+(filtered out outputs) introduced in last version.
+
+prinseq-lite-0.17.2:
+Fixed issue with non-exact duplicate removal when graph data and data processing
+is performed at the same time.
+
+prinseq-lite-0.17.1 / prinseq-graphs-0.3:
+Added support for tag sequence check to the HTML output.
+
+prinseq-lite-0.17 / prinseq-graphs-0.2:
+Added error message if statistics and graph data are generated at the same time.
+Prevented generation of graphs for missing data that might otherwise generate
+errors. Prevent the use of -stats outputs when generating graphs data. Added
+example data for prinseq-graphs. Fixed issue with filenames containing a
+non-alphanuerical sign after the period sign (thanks to Marmaduke for pointing
+out the issue). New option -no_qual_header allows to reduce the file size of
+FASTQ files by preventing any header information output for the quality data.
+New option -derep_min to specify the duplication threshold (e.g. only filter
+sequences that occur more than 5 times).
+
+prinseq-web-0.16.1
+Fixed issue with mean and max quality score rule for trimming and changed trim
+"until" to "while" (web only, lite version is not affected).
+
+prinseq-web-0.16 / prinseq-lite-0.16:
+Check if sequence qualities are in Phred+64 format, if specified. Added the
+reporting of errors during processing of data. Multiple output formats are now
+supported (prinseq-lite). Extended the input format from ACGTN to full nucleic
+acid ambiguity code (ACGTURYKMSWBDHVNX-). Allow processing of amino acid
+sequences (prinseq-lite). Replace option -si13 with -phred64 to specify input
+files in Phred+64 format. New options to generate graphs in standalone lite
+version (using prinseq-graphs.pl or online form).
+
+prinseq-web-0.15.1 / prinseq-lite-0.15.1:
+Fixed problem with dots in directory names (prinseq-lite). Fixed problem with
+trimming from left of reads that are shorter than the specified trim length.
+Fixed error in calculation of Phred quality scores for Solexa/Illumina 1.3+
+data.
+
+prinseq-web-0.15 / prinseq-lite-0.15:
+New file input by URL (web version). Corrected typo in regex (missing \ before
+s*) and sequence id hash value (was seqi_d instead of seq_id). Added quality
+score scaling for Solexa/Illumina 1.3+ data. New option to trim poly-N tails.
+New option to read from STDIN and write to STDOUT (lite version). Adjusted graph
+labels for datasets with more than 1 million reads (web version).
+
+prinseq-web-0.14.4 / prinseq-lite-0.14.4:
+Corrected line break possition in output format for QUAL files. Fixed warnings
+for quality trimming from the 3'-ends (lite version).
+
+prinseq-lite-0.14.3:
+Fixed warnings in tag sequence function.
+
+prinseq-web-0.14.2 / prinseq-lite-0.14.2:
+Fixed issue of file format check with non-Unix line breaks causing
+misidentification of FASTQ files.
+
+prinseq-web-0.14.1 / prinseq-lite-0.14.1:
+Fixed warning when trimming and dereplicating.
+
+prinseq-web-0.14 / prinseq-lite-0.14:
+Added status report for writing data after duplicate removal (lite version).
+Added number of bases and mean length to output summary statistics in verbose
+and log mode (lite version). Modified data processing to allow larger files and
+higher compressed input files that previously caused callback timeout (web
+version).
+
+prinseq-lite-0.13.2:
+Fixed warning when out_good or out_bad is set to null.
+
+prinseq-lite-0.13.1:
+Fixed issue of renaming sequence identifiers when additionally removing read
+duplicates.
+
+prinseq-web-0.13 / prinseq-lite-0.13:
+Fixed issue with leading spaces in first quality score. Added length check that
+ensures that the number of bases matches the number of quality scores. (This
+also ensures that each sequence has quality scores, if a QUAL file is provided
+as input.)
+
+prinseq-web-0.12 / prinseq-lite-0.12:
+Fixed issue when sequences are 3bp or shorter that caused a division by zero and
+incorrect DUST complexity scores. Added -log option to generate a log file with
+the used command and basic input/output statistics (lite version). Fixed
+renaming issue for duplicate removal (lite version). Fixed issue for sequences
+with a single base and a quality score of 0.
+
+prinseq-web-0.11 / prinseq-lite-0.11:
+Improved tag sequence probability estimation with additional check for MID tags
+(454 GSMIDs and RLMIDs) and report of MID sequence if found. Visualization for
+odds ratios to easily identify over- and under-represented dinucleotides (web
+version only). Added table with minimum and maximum complexity values and the
+respective sequece to the web version.
+
+prinseq-web-0.10 / prinseq-lite-0.10:
+Corrected typos in option description and user interface. Fixed bug when both
+output options out_good and out_bad are set to "null" in standalone version.
+Added summary statistics calculation for basic infos (stats_info), length
+(stats_len), dinucleotide odds ratios (stats_dinuc), tag probabilities
+(stats_tag), sequence duplicates (stats_dupl), ambiguous base N (stats_ns) and
+all together (stats_all) to the standalone version.
+
+prinseq-web-0.9 / prinseq-lite-0.9:
+Fixed parameter loading for JSON data. Fixed ID type in sequence complexity
+method. Changed order of tail trimming and quality trimming. Fixed 3'-end tail
+trimming bug. Extended documentation and verbose print output of lite-version.
+Added option to prevent output generation of certain files to lite-version.
+Fixed issue of maximum number of sequences in combination with duplicate
+removal.
+
+prinseq-web-0.9 beta / prinseq-lite-0.8:
+Fixed missing quality trimming in trimming of sequence to fixed length. Fixed GC
+content range filtering. Changed integer to float for percentage value
+filtering. Removed debugging Data::Dumper output. Forced single line output for
+FASTQ format.
+
+prinseq-web-0.8:
+Use JSON to manage parameters on server and user site. Add mean and standard
+deviations to length and GC content plot to guide choice of minimum and maximum
+values. Added example data.
+
+prinseq-web-0.7:
+Add dinucleotide odds ratio calculation and PCA plots including several viral
+and microbial metagenomes. Add sequence complexity plots and filters using DUST
+and entropy methods. Reorganize input counts and input info to merge into single
+table. Add tables with counts to most plots. Add percentage for sequence
+numbers.
+
+prinseq-web-0.6:
+Use Cairo graphics library to generate graphics. Added parameter management
+functionality and pre-defined parameter sets. Separate duplication plot into
+separate plot and add reverse complement counts. Add two plots to show
+duplication level and number of duplicate counts. Use box-plots for quality
+scores.
+
+prinseq-web-0.5:
+Use ExtJS for web-interface. Change progress bars and other functionality to JS.
+Use bi-histograms for duplicate identification in GC content and length
+distribution plots. Only show graphs when there are values to plot to reduce
+load on user site. Added sequence quality scores plot and filter functionality.
+
+prinseq-web-0.4:
+Removed rarely used information shown in "Input stats". Added base frequencies
+at sequence ends and tag sequence probability for tag sequence check. Added line
+width formatting option for FASTA (and QUAL) output. Use binning for datasets
+with long sequences.
+
+prinseq-web-0.3:
+Added information to "Reformat Options" field for renaming sequence ids. Remove
+spaces, ">" and quotes automatically from sequence ids before renaming. Fixed
+problem with saving "0" values instead of default values into parameters file.
+Fixed header line keep/remove mismatch. Fixed "division by 0" bug when
+calculating 1/length for sequence fractions. Automatically remove space and dash
+from sequences when parsing the input data. Add function to convert base U to T.
+Fixed length range filter bug. Fixed issue parsing FASTQ files with no
+information in '+' header line.
+
+prinseq-web-0.2:
+Fixed .qual file linebreak bug.
+
+prinseq-web-0.1:
+First release of prinseq web version.

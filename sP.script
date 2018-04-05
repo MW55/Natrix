@@ -1,0 +1,2 @@
+#!/bin/bash
+Rscript ./sP.R ./sP.config 1> ./sP_log_0216.txt 2> ./sP_error_0216.txt

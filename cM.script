@@ -1,0 +1,3 @@
+#!/bin/bash
+Rscript ./check_module.R ./sP.config 1> ./cM_log_cdhit.txt 2> ./cM_error_cdhit.txt
+

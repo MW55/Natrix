@@ -29,5 +29,5 @@ else:
             file_list[i], np.nan
         i += 1
 
-df.to_csv('units.tsv', sep='\t', index=False)
-pd.DataFrame(df['sample']).to_csv('samples.tsv', sep='\t', index=False)
+df.to_csv('units.tsv', sep='\t')
+pd.DataFrame(df['sample']).to_csv('samples.tsv', sep='\t')

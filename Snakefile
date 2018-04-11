@@ -1,6 +1,6 @@
 import pandas as pd
 
-configfile: "test_data.yaml"
+configfile: "rev_test.yaml"
 
 # Create .tsv files containing the samples and units in an ordered fashion
 file_list = os.listdir(config['general']['filename'])
@@ -37,22 +37,8 @@ units.index = units.index.set_levels([i.astype(str) for i in units.index.levels]
 
 
 rule all:
-	input:
-		"results/qc/multiqc_report.html"
-rule fastqc:
-	input:
-		"test_data/{sample}_{unit}_R{group}.fastq.gz"
-	output:
-		"results/qc/{sample}_{unit}_R{group}_fastqc.html",
-		"results/qc/{sample}_{unit}_R{group}_fastqc.zip",
-	shell:
-		"fastqc -o results/qc/ {input}"
+    input:
+        "logs/qc_done"
+       # "results/qc/multiqc_report.html"
 
-rule multiqc:
-	input:
-		expand("results/qc/{unit.sample}_{unit.unit}_R{group}_fastqc.zip",
-			unit = units.reset_index().itertuples(), group = groups)
-	output:
-		"results/qc/multiqc_report.html"
-	shell:
-		"multiqc results/qc/ -o results/qc/" 	
+include: "rules/quality_control.smk"

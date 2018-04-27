@@ -1,6 +1,5 @@
 # Script to indentify the primer sequences depending on the length of th primers (offset) or the sequence of the primers.
 primer  <- read.table(snakemake@input[['primer_table']], header=T, stringsAsFactors=F, sep= ',')
-write.csv(primer, file = 'test.csv', row.names=F)
 comb.f = c() ## forward primer
 comb.r = c() ## reverse primer
 ## pandaseq just takes the length of the primers but not the sequence, in case primer are different

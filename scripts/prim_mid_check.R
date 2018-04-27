@@ -1,5 +1,4 @@
 library('ShortRead')
-
 # Check for primers & MIDs in the sequences
 primer <- read.csv(snakemake@input[["primer_table"]], header=T, stringsAsFactors = F)
 files_fwd <- list.files(snakemake@input[["data_folder"]], full.names=TRUE, pattern="\\R1.fastq.gz$")

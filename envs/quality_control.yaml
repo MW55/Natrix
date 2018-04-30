@@ -1,0 +1,6 @@
+name: quality_control
+channels:
+  - bioconda
+dependencies:
+  - fastqc=0.11.5=1
+  - multiqc=1.5=py36_0

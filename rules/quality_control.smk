@@ -1,10 +1,12 @@
 if config['general']['multiqc']:
     rule fastqc:
         input:
-            data_folder + "/{sample}_{unit}_R{read}.fastq.gz"
+            "demultiplexed/{sample}_{unit}_R{read}.fastq.gz"
         output:
             "results/qc/{sample}_{unit}_R{read}_fastqc.html",
-            "results/qc/{sample}_{unit}_R{read}_fastqc.zip",
+            "results/qc/{sample}_{unit}_R{read}_fastqc.zip"
+        conda:
+            "../envs/quality_control.yaml"
         shell:
             "fastqc -o results/qc/ {input}"
 
@@ -14,13 +16,17 @@ if config['general']['multiqc']:
             unit = units.reset_index().itertuples(), read=reads)
         output:
             "results/qc/multiqc_report.html"
+        conda:
+            "../envs/quality_control.yaml"
         shell:
-            "multiqc results/qc/ -o results/qc/" 
+            "multiqc results/qc/ -o results/qc/"
+
+#I dont think this is really neccessary anymore, have to doublecheck
 if config['general']['mid_check']:
     rule mid_check:
         input:
-            data_folder = data_folder,
-            primer_table = data_folder + '.csv'
+            data_folder = 'dereplicated',
+            primer_table = config['general']['filename'] + '.csv'
         output:
             "logs/qc_done"
         log:

@@ -1,13 +1,15 @@
 def get_fastq(wildcards, read_pair='fq1'):
     return units.loc[(wildcards.sample, wildcards.unit), [read_pair]].dropna()
+
 rule unzip:
     input:
-         data_folder + '/{sample}_{unit}_R{read}.fastq.gz'
+         'demultiplexed/{sample}_{unit}_R{read}.fastq.gz'
     output:
-        data_folder + '/{sample}_{unit}_R{read}.fastq'
+        'demultiplexed/{sample}_{unit}_R{read}.fastq'
     shell: 'gunzip -c {input} > {output}'
 
-#das define_primer script muss noch für single end sets angepasst werden, das die auch functionieren!
+# I dont even think that the define primer script is really neccessary, afaik it was just some spaghetti from the old pipeline
+# if it is neccessary, I have to adjust it that is also works for single end data
 rule define_primer:
     input:
         primer_table = config['general']['filename'] + '.csv'
@@ -18,7 +20,7 @@ rule define_primer:
 
 rule prinseq:
     input:
-        r1 = lambda wildcards: data_folder + '/' + get_fastq(wildcards, 'fq1'), r2 = lambda wildcards: data_folder + '/' + get_fastq(wildcards, 'fq2')
+        r1 = lambda wildcards: get_fastq(wildcards, 'fq1'), r2 = lambda wildcards: get_fastq(wildcards, 'fq2')
     output:
         'results/assembly/{sample}_{unit}/{sample}_{unit}_1.fastq','results/assembly/{sample}_{unit}/{sample}_{unit}_2.fastq'
     params:
@@ -56,7 +58,7 @@ if config["merge"]["paired_End"]:
 else:
     rule digDeeper:
         input:
-            file_ = data_folder + '{sample}_{unit}_R1.fastq',
+            file_ = 'dereplicated/{sample}_{unit}_R1.fastq',
             file_name = '{sample}_{unit}'
         output:
         #got to find a dataset&primertable for single end and adjust the digDeeper script

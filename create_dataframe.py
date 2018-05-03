@@ -6,7 +6,7 @@ import numpy as np
 ### this is vital for the snakemake pipeline, without it, the wildcards can't be created ###
 
 # might be better to glob abspaths
-with open('../../workflow_test/amplicon_snakemake_pipeline/demultiplexer/test_data.yaml') as f_:
+with open('test_data.yaml') as f_:
     config = yaml.load(f_)
 file_path_list = sorted(glob('demultiplexed/' + "/*.gz"))
 file_list = sorted([file_.split('/')[-1] for file_ in glob('demultiplexed/' + "/*.gz")])
@@ -27,7 +27,7 @@ else:
     i = 0
     while i < len(file_list):
         df.loc[i] = file_list[i].split('_')[0], file_list[i].split('_')[1], \
-            file_list[i][:-3], np.nan
+            file_path_list[i][:-3], np.nan
         i += 1
 df.to_csv('units.tsv', sep='\t')
 pd.DataFrame(df['sample']).to_csv('samples.tsv', sep='\t')

@@ -17,7 +17,7 @@ else:
     reads = 1
 
 rule all:
-    input: 'results/qc/multiqc_report.html', expand(['demultiplexed/{unit.sample}_{unit.unit}_{read}.fastq','results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}_{read}.fastq','results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}_assembled.fastq','results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}.fasta','results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}.clustered100.fasta', 'results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}.clustered100.fasta'], unit = units.reset_index().itertuples(), read=reads)
+    input: 'results/qc/multiqc_report.html', expand(['demultiplexed/{unit.sample}_{unit.unit}_{read}.fastq','results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}_{read}.fastq','results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}_assembled.fastq','results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}.fasta','results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}.clustered100.fasta', 'results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}.clustered100.fasta', 'results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}.clustered100.uchime.txt'], unit = units.reset_index().itertuples(), read=reads)
 
 ruleorder: assembly > prinseq
 
@@ -26,3 +26,4 @@ ruleorder: assembly > prinseq
 include: "rules/quality_control.smk"
 include: "rules/read_assembly.smk"
 include: "rules/dereplication.smk"
+include: "rules/chim_rm.smk"

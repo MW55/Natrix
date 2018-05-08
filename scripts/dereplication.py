@@ -9,12 +9,12 @@ import subprocess
 
 subprocess.call('cd-hit-est -i {} -o {}_cdhit.fasta -c {} -T {} -s {}'.format(snakemake.input, str(snakemake.input)[:-6], snakemake.params.id_percent, snakemake.params.cores, snakemake.params.length_cutoff), shell=True)
 
-seq = dinopy.FastaReader(str(snakemake.input)[:-6] + '_cdhit.fasta')
+seqs = dinopy.FastaReader(str(snakemake.input)[:-6] + '_cdhit.fasta')
 clust = str(snakemake.input)[:-6] + '_cdhit.fasta.clstr'
 
 def printcc(current, count):
         if current is not None and count > 0:
-            return '{}; size = {};'.format(current.strip().replace('Cluster ',
+            return '{};size={};'.format(current[1:].strip().replace('Cluster ',
                 clust.split('/')[-2] + '_'), count)
 
 def cluster_size(clust):
@@ -36,8 +36,8 @@ def cluster_size(clust):
 c_size = cluster_size(clust)
 with dinopy.FastaWriter(str(snakemake.output), force_overwrite=True, line_width = 1000) as clust:
     for seq in enumerate(seqs.entries()):
-        output.write_entry((seq[1].sequence, clust_sizes[seq[0]].encode()))
-    output.close()
+        clust.write_entry((seq[1].sequence, c_size[seq[0]].encode()))
+    clust.close()
 
 #with dinopy.FastaWriter(str(snakemake.output), line_width=1000) as clust:
 #    for i in range(len(sorted_counter)):

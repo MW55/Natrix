@@ -1,42 +1,33 @@
 import dinopy
 from glob import glob
-from collections import Counter
-import subprocess
+from collections import OrderedDict
 
-#seqs = dinopy.FastaReader(str(snakemake.input))
-#sorted_counter = Counter(seqs.reads()).most_common()
-#sample_name = snakemake.wildcards.sample + '_' + snakemake.wildcards.unit
-
-subprocess.call('cd-hit-est -i {} -o {}_cdhit.fasta -c {} -T {} -s {}'.format(snakemake.input, str(snakemake.input)[:-6], snakemake.params.id_percent, snakemake.params.cores, snakemake.params.length_cutoff), shell=True)
-
-seqs = dinopy.FastaReader(str(snakemake.input)[:-6] + '_cdhit.fasta')
+seq_dict = {entry.name:entry.sequence for entry in dinopy.FastaReader(snakemake.input).entries()}
 clust = str(snakemake.input)[:-6] + '_cdhit.fasta.clstr'
-
-def printcc(current, count):
-        if current is not None and count > 0:
-            return '{};size={};'.format(current[1:].strip().replace('Cluster ',
-                clust.split('/')[-2] + '_'), count)
 
 def cluster_size(clust):
     clust_sizes = []
+    ids = []
     with open(clust) as f:
         current = None
         count = 0
         for line in f:
             if line[0] == '>':
-                clust_sizes.append(printcc(current, count))
+                if current is not None and count > 0:
+                    clust_sizes.append('{}; size = {};'.format(current[1:].strip().replace('Cluster ', clust.split('/')[-2] + '_'), count))
                 current = line
                 count = 0
+            elif line[-2] == '*':
+                ids.append(line[line.find('>')+1:line.find('...')])
+                count += 1
             else:
                 count += 1
         clust_sizes.append(printcc(current, count))
-    clust_sizes.pop(0)
-    return clust_sizes
+    return list(zip(clust_sizes, ids))
 
 c_size = cluster_size(clust)
 with dinopy.FastaWriter(str(snakemake.output), force_overwrite=True, line_width = 1000) as clust:
-    for seq in enumerate(seqs.entries()):
-        clust.write_entry((seq[1].sequence, c_size[seq[0]].encode()))
+    clust.write_entries([(sequence_dict[line[1].encode()], line[0].encode()) for line in c_size])
     clust.close()
 
 #with dinopy.FastaWriter(str(snakemake.output), line_width=1000) as clust:

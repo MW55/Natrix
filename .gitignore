@@ -6,3 +6,4 @@ bin/ncbi-blast-2.2.30+
 bin/taxdmp
 rules/.*
 scripts/.*
+scripts/dereplication2.py

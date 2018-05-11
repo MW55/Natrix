@@ -22,8 +22,8 @@ if snakemake.params.paired_end:
     r2_primer = primer_table[snakemake.wildcards.sample + '_'
             + snakemake.wildcards.unit]['specific_reverse_primer']
     if snakemake.params.prim_rm:
-        subprocess.call('pandaseq -f {r1} -r {r2} -B -a -F -g {log} 
-        -w {output} -N -t {threshold}, -o {minoverlap} -l {minlen} 
+        subprocess.call('pandaseq -f {r1} -r {r2} -B -a -F -g {log} \
+        -w {output} -N -t {threshold}, -o {minoverlap} -l {minlen} \
         -L {maxlen} -C min_phred:{minqual}'.format(r1=snakemake.input[0],
             r2=snakemake.input[1],log=snakemake.log, output=snakemake.output,
             r1_primer=r1_primer,r2_primer=r2_primer,
@@ -32,9 +32,9 @@ if snakemake.params.paired_end:
             minlen=snakemake.params.minlen, maxlen=snakemake.params.maxlen,
             minqual=snakemake.params.minqual), shell = True)
     else:
-        subprocess.call('pandaseq -f {r1} -r {r2} -B -a -F -g {log} 
-                -w {output} -N -p "{r1_primer}" -q "{r2_primer}" -t 
-                {threshold}, -o {minoverlap} -l {minlen} -L {maxlen} 
+        subprocess.call('pandaseq -f {r1} -r {r2} -B -a -F -g {log} \
+                -w {output} -N -p "{r1_primer}" -q "{r2_primer}" -t \
+                {threshold}, -o {minoverlap} -l {minlen} -L {maxlen} \
                 -C min_phred:{minqual}'.format(r1=snakemake.input[0],
                     r2=snakemake.input[1],log=snakemake.log, 
                     output=snakemake.output, r1_primer=r1_primer,
@@ -71,7 +71,7 @@ else:
             else:
                 filt_out.write(read.sequence, read.name, read.quality)
                 filt_out_counter += 1
-        logging.info('{}: {} sequences were kept,
+        logging.info('{}: {} sequences were kept, \
                 {} sequences were filtered out'.format(sample,
                     assembled_counter, filt_out_counter))
         assembled.close()

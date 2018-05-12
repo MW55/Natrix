@@ -17,33 +17,37 @@ primer_table = pd.read_csv(snakemake.input.primer_t, index_col='Probe',
         na_filter=False).to_dict('index')
 
 if snakemake.params.paired_end:
+    #old way using the old primertable
+#    r1_primer = primer_table[snakemake.wildcards.sample + '_'
+#            + snakemake.wildcards.unit]['specific_forward_primer']
+#    r2_primer = primer_table[snakemake.wildcards.sample + '_'
+#            + snakemake.wildcards.unit]['specific_reverse_primer']
     r1_primer = primer_table[snakemake.wildcards.sample + '_'
-            + snakemake.wildcards.unit]['specific_forward_primer']
+            + snakemake.wildcards.unit]['f_primer']
     r2_primer = primer_table[snakemake.wildcards.sample + '_'
-            + snakemake.wildcards.unit]['specific_reverse_primer']
+            + snakemake.wildcards.unit]['r_primer']
+
     if snakemake.params.prim_rm:
-        subprocess.call('pandaseq -f {r1} -r {r2} -B -a -F -g {log} \
-        -w {output} -N -t {threshold}, -o {minoverlap} -l {minlen} \
-        -L {maxlen} -C min_phred:{minqual}'.format(r1=snakemake.input[0],
-            r2=snakemake.input[1],log=snakemake.log, output=snakemake.output,
-            r1_primer=r1_primer,r2_primer=r2_primer,
-            threshold=snakemake.params.threshold,
-            minoverlap=snakemake.params.minoverlap,
-            minlen=snakemake.params.minlen, maxlen=snakemake.params.maxlen,
-            minqual=snakemake.params.minqual), shell = True)
+        subprocess.call(['pandaseq',
+            '-f',snakemake.input[0], '-r', snakemake.input[1], '-B', '-a', '-F',
+            '-g', str(snakemake.log),
+            '-w', str(snakemake.output), '-N',
+            '-t', str(snakemake.params.threshold),
+            '-o', str(snakemake.params.minoverlap),
+            '-l', str(snakemake.params.minlen),
+            '-L', str(snakemake.params.maxlen),
+            '-C' 'min_phred:' + str(snakemake.params.minqual)])
     else:
-        subprocess.call('pandaseq -f {r1} -r {r2} -B -a -F -g {log} \
-                -w {output} -N -p "{r1_primer}" -q "{r2_primer}" -t \
-                {threshold}, -o {minoverlap} -l {minlen} -L {maxlen} \
-                -C min_phred:{minqual}'.format(r1=snakemake.input[0],
-                    r2=snakemake.input[1],log=snakemake.log, 
-                    output=snakemake.output, r1_primer=r1_primer,
-                    r2_primer=r2_primer,
-                    threshold=snakemake.params.threshold,
-                    minoverlap=snakemake.params.minoverlap,
-                    minlen=snakemake.params.minlen,
-                    maxlen=snakemake.params.maxlen,
-                    minqual=snakemake.params.minqual), shell = True)
+        subprocess.call(['pandaseq',
+            '-f', snakemake.input[0], '-r', snakemake.input[1], '-B', '-a', '-F',
+            '-g', str(snakemake.log),
+            '-w', str(snakemake.output),'-N',
+            '-p', r1_primer, '-q', r2_primer,
+            '-t', str(snakemake.params.threshold),
+            '-o', str(snakemake.params.minoverlap),
+            '-l', str(snakemake.params.minlen),
+            '-L', str(snakemake.params.maxlen),
+            '-C' 'min_phred:' + str(snakemake.params.minqual)])
 else:
     logging.basicConfig(filename=str(snakemake.log),
             level = logging.DEBUG)

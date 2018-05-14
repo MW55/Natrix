@@ -1,4 +1,4 @@
-import pandas
+import pandas as pd
 
 # Script to define the primer used by pandaseq. The defined
 # primer depends on the existance off the barcode, if the reads are
@@ -7,7 +7,7 @@ import pandas
 # be useful if the sequence has many uncalled bases in the primer
 # region, preventing a nucleotide primer from matching.
 
-primertable = pd.read_csv(snakemake.input, index_col = 'Probe')
+primertable = pd.read_csv(str(snakemake.input), index_col = 'Probe')
 
 if snakemake.params.paired_end:
     if snakemake.params.offset:
@@ -57,4 +57,4 @@ else:
                 primertable[['Barcode_forward',
                 'specific_forward_primer']].sum(axis=1))
 
-primertable.to_csv(snakemake.output)
+primertable.to_csv(str(snakemake.output))

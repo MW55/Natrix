@@ -4,7 +4,7 @@ rule uchime:
     output:
         uchime_out = 'results/assembly/{sample}_{unit}/{sample}_{unit}.clustered100.uchime.txt',
         chim = 'results/assembly/{sample}_{unit}/{sample}_{unit}.clustered100.chimera.fasta',
-        nonchim = 'results/finalData/{sample}_{unit}/{sample}_{unit}.clustered100.nonchimera.fasta'
+        nonchim = 'results/finalData/{sample}_{unit}.clustered100.nonchimera.fasta'
     params:
         minh = config['chim']['minh'],
         mindiffs = config['chim']['mindiffs'],

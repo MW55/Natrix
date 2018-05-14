@@ -1,0 +1,10 @@
+name: merging
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.6.4=0
+  - dinopy=2.0.0=py36_0
+  - pandas=0.22.0=py36_0
+  - yaml=0.1.7=had09818_2

@@ -1,5 +1,6 @@
 import dinopy
 import pandas as pd
+import yaml
 
 # Function to create a nested dictionary out of all fasta files,
 # containing each sequence as a key with a dict as value which,
@@ -19,11 +20,27 @@ def seq_dict_creator(data_files):
                 (seq_dict[entry.sequence.decode()]
                     = {f_name:str(entry.name).split('size=')[1].split(';')[0]})
 
-# Writes the dict to a csv file, index is the sequence with each
+seq_dict = seq_dict_creator(snakemake.input)
+
+# Export the dict im yaml format for further processing.
+# This increases the modularity of the pipeline but cost time to
+# read/write the file. I could put the other functions working
+# with the dict in this script to work on the dict in memory,
+# should the reading/writing take up too much space
+with open(str(snakemake.output[1]), 'w') as f_:
+    yaml.dump(seq_dict, stream = f_)
+
+# Write the dict to a csv file, index is the sequence with each
 # column being the abundance of each sequence for a particular
 # sample. Same structure than the old pipeline.
 
-df = pd.DataFrame.from_dict(seq_dict_creator(snakemake.input),
-        orient='index').fillna(0)
+df = pd.DataFrame.from_dict(seq_dict, orient='index').fillna(0)
 df.index.name = 'sequences'
-df.to_csv(snakmake.output)
+df.to_csv(snakmake.output[0])
+
+
+# Export the dict im yaml format for further processing.
+# This increases the modularity of the pipeline but cost time to
+# read/write the file. I could put the other functions working
+# with the dict in this script to work on the dict in memory,
+# should the reading/writing take up too much space

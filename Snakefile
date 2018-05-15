@@ -26,8 +26,9 @@ rule all:
         'results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}.clustered100.fasta',
         'results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}.clustered100.uchime.txt'],
         unit = units.reset_index().itertuples(), read=reads),
-        'results/qc/multiqc_report.html'
-
+        'results/qc/multiqc_report.html',
+        'results/finalData/unfiltered_table.csv',
+        'results/finalData/filtered_table.csv'
 
 ruleorder: assembly > prinseq
 
@@ -37,3 +38,4 @@ include: "rules/quality_control.smk"
 include: "rules/read_assembly.smk"
 include: "rules/dereplication.smk"
 include: "rules/chim_rm.smk"
+include: "rules/merging.smk"

@@ -1,14 +1,14 @@
 import dinopy
 import pandas as pd
 import yaml
-
+import collections as col
 # Function to create a nested dictionary out of all fasta files,
 # containing each sequence as a key with a dict as value which,
 # in turn, cointains all samples as key and the abundance of
 # the particular sequence as value. It's quicker than it looks.
 
 def seq_dict_creator(data_files):
-    seq_dict = {}
+    seq_dict = col.OrderedDict()
     for i in range(len(data_files)):
         seqs = dinopy.FastaReader(data_files[i])
         f_name = data_files[i].split('/')[-1].split('.')[0]

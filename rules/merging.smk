@@ -11,13 +11,16 @@ rule unfiltered_table:
 
 rule filtering:
     input:
-        'restults/finalData/unfiltered_dict.yaml'
+        'results/finalData/unfiltered_dict.yaml'
     output:
         'results/finalData/filtered_table.csv',
         'results/finalData/filtered_out_table.csv',
         temp('results/finalData/filtered_dict.yaml'),
         temp('results/finalData/filtered_out_dict.yaml')
+    params:
+        filter_method = config['merge']['filter_method'],
+        cutoff = config['merge']['cutoff']
     conda:
-        '../envs/unfiltered_table.yaml'
+        '../envs/filtering.yaml'
     script:
         '../scripts/filtering.py'

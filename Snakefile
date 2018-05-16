@@ -1,4 +1,3 @@
-#
 import pandas as pd
 
 configfile: "test_data.yaml"

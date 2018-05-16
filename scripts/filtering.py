@@ -1,14 +1,14 @@
-import yaml
-import pandaseq as pd
+import json
+import pandas as pd
 import collections as col
 
 with open(str(snakemake.input), 'r') as f_:
-    seq_dict = yaml.load(f_)
+    seq_dict = json.load(f_)
 
 filtered_out = col.OrderedDict()
 filtered = col.OrderedDict()
 
-if snakemake.params.filter_method = "split_sample":
+if snakemake.params.filter_method == "split_sample":
     # If the list of samples without unit identifier contains only
     # unique strings, the sequence does not apper in both samples for
     # any sample pair.
@@ -18,7 +18,7 @@ if snakemake.params.filter_method = "split_sample":
             filtered_out[sequence] = seq_dict[sequence]
         else:
             filtered[sequence] = seq_dict[sequence]
-elif snakemake.params.filter_method = 'singleton':
+elif snakemake.params.filter_method == 'singleton':
     for sequence in seq_dict.keys():
         if all([int(value) <= snakemake.params.cutoff for value in seq_dict[sequence].values()]):
             filtered_out[sequence] = seq_dict[sequence]
@@ -29,15 +29,15 @@ else:
 
 df_filtered = pd.DataFrame.from_dict(filtered, orient='index').fillna(0)
 df_filtered.index.name = 'sequences'
-df.to_csv(snakmake.output[0])
+df_filtered.to_csv(snakemake.output[0])
 df_filtered_out = pd.DataFrame.from_dict(filtered_out, orient='index').fillna(0)
 df_filtered_out.index.name = 'sequences'
-df_filtered_out.to_csv(snakmake.output[1])
+df_filtered_out.to_csv(snakemake.output[1])
 
 with open(str(snakemake.output[2]), 'w') as f_:
-    yaml.dump(filtered, stream = f_)
+    json.dump(filtered, f_)
 with open(str(snakemake.output[3]), 'w') as g_:
-    yaml.dump(filtered_out, stream = g_)
+    json.dump(filtered_out, g_)
 
 
 

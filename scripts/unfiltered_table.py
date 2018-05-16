@@ -1,6 +1,6 @@
 import dinopy
+import json
 import pandas as pd
-import yaml
 import collections as col
 # Function to create a nested dictionary out of all fasta files,
 # containing each sequence as a key with a dict as value which,
@@ -13,12 +13,13 @@ def seq_dict_creator(data_files):
         seqs = dinopy.FastaReader(data_files[i])
         f_name = data_files[i].split('/')[-1].split('.')[0]
         for entry in seqs.entries():
-            if entry.sequence in seq_dict:
-                (seq_dict[entry.sequence.decode()][f_name]
-                    = str(entry.name).split('size=')[1].split(';')[0])
+            if entry.sequence.decode() in seq_dict:
+                seq_dict[entry.sequence.decode()][f_name] =(
+                        str(entry.name).split('size=')[1].split(';')[0])
             else:
-                (seq_dict[entry.sequence.decode()]
-                    = {f_name:str(entry.name).split('size=')[1].split(';')[0]})
+                seq_dict[entry.sequence.decode()] =(
+                        {f_name:str(entry.name).split('size=')[1].split(';')[0]})
+    return seq_dict
 
 seq_dict = seq_dict_creator(snakemake.input)
 
@@ -27,8 +28,13 @@ seq_dict = seq_dict_creator(snakemake.input)
 # read/write the file. I could put the other functions working
 # with the dict in this script to work on the dict in memory,
 # should the reading/writing take up too much space
+
+#with open(str(snakemake.output[1]), 'w') as f_:
+#    yaml.dump(seq_dict, stream = f_)
+
 with open(str(snakemake.output[1]), 'w') as f_:
-    yaml.dump(seq_dict, stream = f_)
+    json.dump(seq_dict, f_)
+
 
 # Write the dict to a csv file, index is the sequence with each
 # column being the abundance of each sequence for a particular
@@ -36,7 +42,7 @@ with open(str(snakemake.output[1]), 'w') as f_:
 
 df = pd.DataFrame.from_dict(seq_dict, orient='index').fillna(0)
 df.index.name = 'sequences'
-df.to_csv(snakmake.output[0])
+df.to_csv(snakemake.output[0])
 
 
 # Export the dict im yaml format for further processing.

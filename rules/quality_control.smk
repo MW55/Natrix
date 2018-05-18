@@ -5,10 +5,12 @@ if config['general']['multiqc']:
         output:
             "results/qc/{sample}_{unit}_R{read}_fastqc.html",
             "results/qc/{sample}_{unit}_R{read}_fastqc.zip"
+        threads:
+            config['general']['cores']
         conda:
             "../envs/quality_control.yaml"
         shell:
-            "fastqc -o results/qc/ {input}"
+            "fastqc -o results/qc/ {input} -t {threads}"
 
     rule multiqc:
         input:

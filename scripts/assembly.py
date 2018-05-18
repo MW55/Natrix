@@ -1,11 +1,11 @@
-import pandas as pd
-import subprocess
-import dinopy
-import yaml
 import re
-import numpy as np
-from glob import glob
+import yaml
+import dinopy
 import logging
+import subprocess
+import numpy as np
+import pandas as pd
+from glob import glob
 
 # Script to assemble paired end reads using PandaSeq.
 # If the primer were previously not removed, PandaSeq will remove them.
@@ -32,6 +32,7 @@ if snakemake.params.paired_end:
             '-f',snakemake.input[0], '-r', snakemake.input[1], '-B', '-a', '-F',
             '-g', str(snakemake.log),
             '-w', str(snakemake.output), '-N',
+            '-T', str(snakemake.threads),
             '-t', str(snakemake.params.threshold),
             '-o', str(snakemake.params.minoverlap),
             '-l', str(snakemake.params.minlen),
@@ -43,6 +44,7 @@ if snakemake.params.paired_end:
             '-g', str(snakemake.log),
             '-w', str(snakemake.output),'-N',
             '-p', r1_primer, '-q', r2_primer,
+            '-T', str(snakemake.threads),
             '-t', str(snakemake.params.threshold),
             '-o', str(snakemake.params.minoverlap),
             '-l', str(snakemake.params.minlen),
@@ -112,5 +114,3 @@ else:
 
     primer_len_filter(snakemake.input[0],
             snakemake.input[0].split('/')[-1].rsplit('_', 1)[0])
-
-

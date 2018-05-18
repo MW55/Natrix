@@ -1,7 +1,7 @@
 # General options
 general:
         filename : test_data # 1 filename
-        cores : 4 # 2 cores
+        cores : 10 # 2 cores
         NGS_type : illumina # 3 NGStype
         multiqc : TRUE  # 5 initial quality check (fastqc & multiqc) 
         mid_check : TRUE # 6 check for primers/MIDs in the sequences
@@ -45,7 +45,7 @@ chim:
 # Merging
 merge:
         filtering : TRUE # 30 Filtering
-        filter_method : mixed # 31 filter methods: 'singelton', 'ampduo', 'mixed'
+        filter_method : split_sample # 31 filter methods: 'singelton', 'split_sample'
         cutoff : 3 # 32 cutoff value 
         ampli_corr : fdr # 33 ampliconduo correction
         save_format : png # 34 saving format for ampliconduoplot

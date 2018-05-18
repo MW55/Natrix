@@ -20,7 +20,8 @@ if snakemake.params.filter_method == "split_sample":
             filtered[sequence] = seq_dict[sequence]
 elif snakemake.params.filter_method == 'singleton':
     for sequence in seq_dict.keys():
-        if all([int(value) <= snakemake.params.cutoff for value in seq_dict[sequence].values()]):
+        if all([int(value) <= snakemake.params.cutoff for value
+                in seq_dict[sequence].values()]):
             filtered_out[sequence] = seq_dict[sequence]
         else:
             filtered[sequence] = seq_dict[sequence]
@@ -38,10 +39,3 @@ with open(str(snakemake.output[2]), 'w') as f_:
     json.dump(filtered, f_)
 with open(str(snakemake.output[3]), 'w') as g_:
     json.dump(filtered_out, g_)
-
-
-
-
-
-
-

@@ -3,7 +3,7 @@ rule unfiltered_table:
         expand('results/finalData/{unit.sample}_{unit.unit}.clustered100.nonchimera.fasta', unit=units.reset_index().itertuples())
     output:
         'results/finalData/unfiltered_table.csv',
-        'results/finalData/unfiltered_dict.json' #temp()
+        temp('results/finalData/unfiltered_dict.json')
     conda:
         '../envs/unfiltered_table.yaml'
     script:
@@ -24,3 +24,19 @@ rule filtering:
         '../envs/filtering.yaml'
     script:
         '../scripts/filtering.py'
+
+rule ampliconduo:
+    input:
+        filtered_table = 'results/finalData/filtered_table.csv',
+        unfiltered_table = 'results/finalData/unfiltered_table.csv'
+    output:
+        'results/finalData/figures/AmpliconDuo.RData'
+    params:
+        plot_ampduo = config['merge']['plot_AmpDuo'],
+        saving_format = config['merge']['save_format'],
+        p_corr = config['merge']['ampli_corr']
+    conda:
+        '../envs/ampliconduo.yaml'
+    script:
+        '../scripts/ampliconduo.R'
+

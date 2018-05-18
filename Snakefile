@@ -27,7 +27,9 @@ rule all:
         unit = units.reset_index().itertuples(), read=reads),
         'results/qc/multiqc_report.html',
         'results/finalData/unfiltered_table.csv',
-        'results/finalData/filtered_table.csv'
+        'results/finalData/filtered_table.csv',
+        'results/finalData/figures/AmpliconDuo.RData'
+
 
 ruleorder: assembly > prinseq
 

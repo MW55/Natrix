@@ -7,3 +7,4 @@ bin/taxdmp
 rules/.*
 scripts/.*
 scripts/dereplication2.py
+.snakemake/log

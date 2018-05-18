@@ -1,0 +1,9 @@
+name: prinseq
+channels:
+  - bioconda
+  - defaults
+dependencies:
+  - perl-threaded=5.22.0=10
+  - prinseq=0.20.4=2
+prefix: /vol/home/welzel/anaconda3/envs/prinseq
+

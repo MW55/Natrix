@@ -28,8 +28,8 @@ rule all:
         'results/qc/multiqc_report.html',
         'results/finalData/unfiltered_table.csv',
         'results/finalData/filtered_table.csv',
-        'results/finalData/figures/AmpliconDuo.RData'
-
+        'results/finalData/figures/AmpliconDuo.RData',
+        'results/finalData/merged.swarms'
 
 ruleorder: assembly > prinseq
 
@@ -40,3 +40,4 @@ include: "rules/read_assembly.smk"
 include: "rules/dereplication.smk"
 include: "rules/chim_rm.smk"
 include: "rules/merging.smk"
+include: "rules/clustering.smk"

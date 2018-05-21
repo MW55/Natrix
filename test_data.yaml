@@ -9,7 +9,7 @@ general:
         spoint : TRUE # 8 enables a  menu to choose the starting point
         samples: samples.tsv # path to sequencing sample sheet
         units: units.tsv # path to sequencing unit sheet
-
+        demultiplexing: FALSE
 # Quality check and primer removal
 qc:
         threshold : 0.9 # 9 threshold(pairedEnd:TRUE) (pandaseq)

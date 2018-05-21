@@ -2,17 +2,18 @@ import yaml
 import pandas as pd
 import numpy as np
 from glob import glob
+import sys
 # Create the datatable containing the samples, units and paths of all
 # fastq files formatted correctly. This is vital for the snakemake
 # pipeline, without it, the wildcards can't be created.
 
 # might be better to glob abspaths
-with open('test_data.yaml') as f_:
+with open(sys.argv[1]) as f_:
     config = yaml.load(f_)
 
-file_path_list = sorted(glob('demultiplexed/' + "/*.gz"))
+file_path_list = sorted(glob('demultiplexed/' + "*.gz"))
 file_list = sorted([file_.split('/')[-1] for file_ 
-                    in glob('demultiplexed/' + "/*.gz")])
+                    in glob('demultiplexed/' + "*.gz")])
 df = pd.DataFrame(columns=['sample', 'unit', 'fq1', 'fq2'],
     index =range(int(len(file_list)/2)))
 if config['merge']['paired_End']:

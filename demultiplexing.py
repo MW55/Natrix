@@ -5,7 +5,8 @@ import os
 import re
 import yaml
 import glob
-
+import sys
+import shutil
 # IMPORTANT: The name formatting differs between the new and the old
 # style: now an additional integer itentifier is right next to the
 # unit identifier, have to ask is that is the planned name formatting
@@ -15,13 +16,12 @@ import glob
 
 # config and p_table has to be adjusted for the corresponding path to the 
 # primertable with config config['general']['filename'] + '.csv'
-with open('../../workflow_test/amplicon_snakemake_pipeline/demultiplexer/test_data.yaml') as f_:
+with open(sys.argv[1] + '.yaml') as f_:
     config = yaml.load(f_)
-p_table = pd.read_csv('../../workflow_test/amplicon_snakemake_pipeline/demultiplexer/test_data.csv', index_col='Probe') #test_data.csv
+p_table = pd.read_csv(sys.argv[1] + '.csv', index_col='Probe') #test_data.csv
 primertable = p_table.to_dict('index')
-data_folder = f_.name.rsplit('/', 1)[0] + '/' + config['general']['filename']
-file_path_list = sorted(glob.glob(data_folder + "/*.fastq"))
-print(file_path_list)
+data_folder = config['general']['filename'] #f_.name.rsplit('/', 1)[0] + '/' + 
+file_path_list = sorted(glob.glob(data_folder + "/*.fastq*"))
 
 # Demultiplexing part of the script, this is only needed for the new
 # samples with the triplet barcode and the "manual" pooling in-lab
@@ -76,13 +76,11 @@ check_for_match_rev = define_direction('poly_N_rev', 'specific_reverse_primer',
 def demultiplexer(file_path_list):
     samples = []
     output_filepaths = []
-    if not os.path.exists('demultiplexed'):
-        os.mkdir('demultiplexed')
     for sample in primertable.keys():
         samples.append(sample + '_R1')
         samples.append(sample + '_R2')
-        output_filepaths.append('demultiplexed/' + sample + '_R1.fastq')
-        output_filepaths.append('demultiplexed/' + sample + '_R2.fastq')
+        output_filepaths.append('demultiplexed/' + sample + '_R1.fastq.gz')
+        output_filepaths.append('demultiplexed/' + sample + '_R2.fastq.gz')
 
     # create a dict of writers
     writers = {name: dinopy.FastqWriter(path) for name, path in 
@@ -110,5 +108,14 @@ def demultiplexer(file_path_list):
     for writer in writers.values():
         writer.close()
 
-# Run the demultiplexing script
-demultiplexer(file_path_list)
+if not os.path.exists('demultiplexed'):
+    os.mkdir('demultiplexed')
+
+# If the files do not need demultiplexing, just move them to
+# the demultiplexed folder.
+if not config['general']['demultiplexing']:
+    for file in file_path_list:
+        shutil.move(file, 'demultiplexed/')
+else:
+    # Run the demultiplexing script
+    demultiplexer(file_path_list)

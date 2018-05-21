@@ -1,4 +1,0 @@
-KeyError in line 11 of /home/wintermute/projects/masterthesis/repos/amplicon_snakemake_pipeline/rules/dereplication.smk:
-'length_overlap'
-  File "/home/wintermute/projects/masterthesis/repos/amplicon_snakemake_pipeline/Snakefile", line 38, in <module>
-  File "/home/wintermute/projects/masterthesis/repos/amplicon_snakemake_pipeline/rules/dereplication.smk", line 11, in <module>

@@ -17,19 +17,20 @@ else:
 
 rule all:
     input:
-        expand(['demultiplexed/{unit.sample}_{unit.unit}_{read}.fastq',
-        'results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}_{read}.fastq',
-        'results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}_assembled.fastq',
-        'results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}.fasta',
-        'results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}.clustered100.fasta',
-        'results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}.clustered100.fasta',
-        'results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}.clustered100.uchime.txt'],
-        unit = units.reset_index().itertuples(), read=reads),
-        'results/qc/multiqc_report.html',
-        'results/finalData/unfiltered_table.csv',
-        'results/finalData/filtered_table.csv',
+       # expand(['demultiplexed/{unit.sample}_{unit.unit}_{read}.fastq',
+       # 'results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}_{read}.fastq',
+       # 'results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}_assembled.fastq',
+       # 'results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}.fasta',
+       # 'results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}.clustered100.fasta',
+       # 'results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}.clustered100.fasta',
+       # 'results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}.clustered100.uchime.txt'],
+       # unit = units.reset_index().itertuples(), read=reads),
+       # 'results/qc/multiqc_report.html',
+       # 'results/finalData/unfiltered_table.csv',
+       # 'results/finalData/filtered_table.csv',
         'results/finalData/figures/AmpliconDuo.RData',
-        'results/finalData/merged.swarms'
+        'results/finalData/merged.swarms',
+        'results/finalData/blast_taxonomy.tsv'
 
 ruleorder: assembly > prinseq
 
@@ -41,3 +42,4 @@ include: "rules/dereplication.smk"
 include: "rules/chim_rm.smk"
 include: "rules/merging.smk"
 include: "rules/clustering.smk"
+include: "rules/blast.smk"

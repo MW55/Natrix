@@ -54,3 +54,11 @@ merge:
         paired_End : TRUE  # 37 pairedEnd
         name_ext : _R1 # 38 name_extension
         swarm : TRUE # 39 generate OTUs
+
+# BLAST
+blast:
+        db_path : 'database/silva.db'
+        max_target_seqs : 1
+        ident : 90.0
+        evalue : 1e-51
+        out6 : '"6 qseqid qlen length pident mismatch qstart qend sstart send gaps evalue stitle"'

@@ -8,3 +8,4 @@ rules/.*
 scripts/.*
 scripts/dereplication2.py
 .snakemake/log
+backup/

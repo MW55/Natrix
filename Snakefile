@@ -25,12 +25,16 @@ rule all:
        # 'results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}.clustered100.fasta',
        # 'results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}.clustered100.uchime.txt'],
        # unit = units.reset_index().itertuples(), read=reads),
-       # 'results/qc/multiqc_report.html',
+        'results/qc/multiqc_report.html',
        # 'results/finalData/unfiltered_table.csv',
        # 'results/finalData/filtered_table.csv',
         'results/finalData/figures/AmpliconDuo.RData',
-        'results/finalData/merged.swarms',
-        'results/finalData/blast_taxonomy.tsv'
+       # 'results/finalData/merged.swarms',
+       # 'results/finalData/blast_taxonomy.tsv',
+        'results/finalData/filtered_blast_table.csv',
+        #'results/finalData/filtered_table2.csv'
+
+
 
 ruleorder: assembly > prinseq
 

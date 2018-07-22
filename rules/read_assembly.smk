@@ -19,7 +19,8 @@ rule define_primer:
     params:
        paired_end = config['merge']['paired_End'],
        offset = config['qc']['primer_offset'],
-       bar_removed = config['qc']['barcode_removed']
+       bar_removed = config['qc']['barcode_removed'],
+       all_removed = config['qc']['all_primer']
     conda:
         '../envs/define_primer.yaml'
     script:

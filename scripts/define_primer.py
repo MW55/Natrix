@@ -9,52 +9,55 @@ import pandas as pd
 
 primertable = pd.read_csv(str(snakemake.input), index_col = 'Probe')
 
-if snakemake.params.paired_end:
-    if snakemake.params.offset:
-        if snakemake.params.bar_removed:
-            primertable['f_primer'] = (
-                primertable[['poly_N',
-                'specific_forward_primer']].sum(axis=1).str.len())
-            primertable['r_primer'] = (
-                primertable[['poly_N_rev',
-                'specific_reverse_primer']].sum(axis=1).str.len())
-        else:
-            primertable['f_primer'] = (
-                primertable[['poly_N', 'Barcode_forward',
-                'specific_forward_primer']].sum(axis=1).str.len())
-            primertable['r_primer'] = (
-                primertable[['poly_N_rev','Barcode_reverse',
-                'specific_reverse_primer']].sum(axis=1).str.len())
-    else:
-        if snakemake.params.bar_removed:
-            primertable['f_primer'] = (
-                primertable['specific_forward_primer'])
-            primertable['r_primer'] = (
-                primertable['specific_reverse_primer'])
-        else:
-            primertable['f_primer'] = (
-                primertable[['Barcode_forward',
-                'specific_forward_primer']].sum(axis=1))
-            primertable['r_primer'] = (
-                primertable[['Barcode_reverse',
-                'specific_reverse_primer']].sum(axis=1))
+if snakemake.params.all_removed:
+    pass
 else:
-    if snakemake.params.offset:
-        if snakemake.params.bar_removed:
-            primertable['f_primer'] = (
-                primertable[['poly_N',
-                'specific_forward_primer']].sum(axis=1).str.len())
+    if snakemake.params.paired_end:
+        if snakemake.params.offset:
+            if snakemake.params.bar_removed:
+                primertable['f_primer'] = (
+                    primertable[['poly_N',
+                    'specific_forward_primer']].sum(axis=1).str.len())
+                primertable['r_primer'] = (
+                    primertable[['poly_N_rev',
+                    'specific_reverse_primer']].sum(axis=1).str.len())
+            else:
+                primertable['f_primer'] = (
+                    primertable[['poly_N', 'Barcode_forward',
+                    'specific_forward_primer']].sum(axis=1).str.len())
+                primertable['r_primer'] = (
+                    primertable[['poly_N_rev','Barcode_reverse',
+                    'specific_reverse_primer']].sum(axis=1).str.len())
         else:
-            primertable['f_primer'] = (
-                primertable[['poly_N', 'Barcode_forward',
-                'specific_forward_primer']].sum(axis=1).str.len())
+            if snakemake.params.bar_removed:
+                primertable['f_primer'] = (
+                    primertable['specific_forward_primer'])
+                primertable['r_primer'] = (
+                    primertable['specific_reverse_primer'])
+            else:
+                primertable['f_primer'] = (
+                    primertable[['Barcode_forward',
+                    'specific_forward_primer']].sum(axis=1))
+                primertable['r_primer'] = (
+                    primertable[['Barcode_reverse',
+                    'specific_reverse_primer']].sum(axis=1))
     else:
-        if snakemake.params.bar_removed:
-            primertable['f_primer'] = (
-                primertable['specific_forward_primer'])
+        if snakemake.params.offset:
+            if snakemake.params.bar_removed:
+                primertable['f_primer'] = (
+                    primertable[['poly_N',
+                    'specific_forward_primer']].sum(axis=1).str.len())
+            else:
+                primertable['f_primer'] = (
+                    primertable[['poly_N', 'Barcode_forward',
+                    'specific_forward_primer']].sum(axis=1).str.len())
         else:
-            primertable['f_primer'] = (
-                primertable[['Barcode_forward',
-                'specific_forward_primer']].sum(axis=1))
+            if snakemake.params.bar_removed:
+                primertable['f_primer'] = (
+                    primertable['specific_forward_primer'])
+            else:
+                primertable['f_primer'] = (
+                    primertable[['Barcode_forward',
+                    'specific_forward_primer']].sum(axis=1))
 
 primertable.to_csv(str(snakemake.output))

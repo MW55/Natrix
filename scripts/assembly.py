@@ -22,10 +22,12 @@ if snakemake.params.paired_end:
 #            + snakemake.wildcards.unit]['specific_forward_primer']
 #    r2_primer = primer_table[snakemake.wildcards.sample + '_'
 #            + snakemake.wildcards.unit]['specific_reverse_primer']
-    r1_primer = primer_table[snakemake.wildcards.sample + '_'
-            + snakemake.wildcards.unit]['f_primer']
-    r2_primer = primer_table[snakemake.wildcards.sample + '_'
-            + snakemake.wildcards.unit]['r_primer']
+# new way, now further down so that primertables without
+# primer work (when everything is already removed)
+#    r1_primer = primer_table[snakemake.wildcards.sample + '_'
+#            + snakemake.wildcards.unit]['f_primer']
+#    r2_primer = primer_table[snakemake.wildcards.sample + '_'
+#            + snakemake.wildcards.unit]['r_primer']
 
     if snakemake.params.prim_rm:
         subprocess.call(['pandaseq',
@@ -39,6 +41,11 @@ if snakemake.params.paired_end:
             '-L', str(snakemake.params.maxlen),
             '-C' 'min_phred:' + str(snakemake.params.minqual)])
     else:
+        r1_primer = primer_table[snakemake.wildcards.sample + '_'
+            + snakemake.wildcards.unit]['f_primer']
+        r2_primer = primer_table[snakemake.wildcards.sample + '_'
+            + snakemake.wildcards.unit]['r_primer']
+
         subprocess.call(['pandaseq',
             '-f', snakemake.input[0], '-r', snakemake.input[1], '-B', '-a', '-F',
             '-g', str(snakemake.log),

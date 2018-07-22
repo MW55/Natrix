@@ -10,7 +10,7 @@ blast_dict = dict((k.split(';')[0], v) for k, v in blast_dict.items())
 filtered_dict = pd.read_csv(snakemake.input['final_table_path2'],
                 index_col='seqid').to_dict(orient = 'index')
 
-with open(snakemake.input['blast_result'], 'r') as swarms:
+with open(snakemake.input['merged'], 'r') as swarms:
     seq_names = []
     for row in swarms:
         otu_seq_list = [s for s in row.split()]

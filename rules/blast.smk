@@ -1,6 +1,21 @@
+rule make_silva_db:
+    output:
+        expand(config['blast']['db_path'] + '{file_extension}', file_extension = ['.nhr', '.nin', '.nog', '.nsd', '.nsi', '.nsq'])
+    params:
+        db_path = config['blast']['db_path']
+    shell:
+        'dir_name=$(dirname {params[0]});'
+        'wget -P $dir_name/ --progress=bar '
+        'https://www.arb-silva.de/fileadmin/silva_databases/current/Exports/'
+        'SILVA_132_SSURef_tax_silva.fasta.gz;'
+        'gunzip $dir_name/SILVA_132_SSURef_tax_silva.fasta.gz;'
+        'makeblastdb -in $dir_name/SILVA_132_SSURef_tax_silva.fasta'
+        '-dbtype nucl -parse_seqids -out $dir_name/silva.db'
+
 rule blast:
     input:
-        'results/finalData/merged_representatives.fasta'
+        'results/finalData/merged_representatives.fasta',
+        expand(config['blast']['db_path'] + '{file_extension}', file_extension = ['.nhr', '.nin', '.nog', '.nsd', '.nsi', '.nsq'])
     output:
         'results/finalData/blast_taxonomy.tsv'
     threads:
@@ -14,7 +29,7 @@ rule blast:
     conda:
         '../envs/blast.yaml'
     shell:
-        'blastn -num_threads {threads} -query {input} -db {params.db_path}'
+        'blastn -num_threads {threads} -query {input[0]} -db {params.db_path}'
         ' -max_target_seqs {params.max_target_seqs}'
         ' -perc_identity {params.ident} -evalue {params.evalue}'
         ' -outfmt {params.out6} -out {output}'

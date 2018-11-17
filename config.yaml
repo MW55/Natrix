@@ -1,0 +1,54 @@
+# General options
+general:
+        filename : project #  filename
+        cores : 10 #  cores
+        NGS_type : illumina #  NGStype
+        multiqc : TRUE  #  initial quality check (fastqc & multiqc) 
+        samples: samples.tsv # path to sequencing sample sheet
+        units: units.tsv # path to sequencing unit sheet
+        demultiplexing: FALSE
+# Quality check and primer removal
+qc:
+        threshold : 0.9 #  threshold(pairedEnd:TRUE) (pandaseq)
+        minoverlap : 15 #  minoverlap (pandaseq)
+        minqual : 1 #  minqual (pandaseq)
+        minlen : 100 #  minlength (pandaseq)
+        maxlen : 600 #  max_length (pandaseq)
+        primer_offset : FALSE #  primer_offset instead of sequence(pandaseq : TRUE) (pandaseq)
+        prefilter : TRUE #  prefilter (prinseq)
+        mq : 25 #  minimum quality sequence check (prinseq)
+        barcode_removed: TRUE
+        all_primer : TRUE #  all primer, MID.. removed
+
+# Dereplication
+derep:
+        clustering : 1 #  percent identity for cdhit (dereplication) (cd_hit) (1 = 100%)
+        length_overlap : 0.0 # length difference cutoff, default 0.0 if set to 0.9, the shorter sequences need to be at least 90% length of the representative of the cluster
+
+# Chimera removal
+chim:
+        minh : 0.28 #  minh(uchime_denovo)
+        mindiffs : 3 #  mindiffs(uchime_denovo)
+        mindiv : 1.5 #  mindiv(uchime_denovo)
+        beta : 8.0 #  beta(weightOfNoVote)(uchime_denovo)
+        pseudo_count : 1.2 #  pseudo_count(uchime_denovo)
+        abskew : 16 #  abskew(uchime_denovo)
+
+# Merging
+merge:
+        filter_method : split_sample #  filter methods: 'singelton', 'split_sample'
+        cutoff : 3 #  cutoff value 
+        ampli_corr : fdr #  ampliconduo correction
+        save_format : png #  saving format for ampliconduoplot
+        plot_AmpDuo : TRUE #  plotAmpDuo
+        paired_End : TRUE #  pairedEnd
+        name_ext : _R1 #  name_extension
+        swarm : TRUE #  generate OTUs
+
+# BLAST
+blast:
+        db_path : 'database/silva.db' #Path to silva database
+        max_target_seqs : 1 #Number of blast hits that are saved per sequence
+        ident : 90.0 #Minimal identity overlap between target and query sequence
+        evalue : 1e-51 #Highest accepted evalue
+        out6 : '"6 qseqid qlen length pident mismatch qstart qend sstart send gaps evalue stitle"' #Blast information to be saved

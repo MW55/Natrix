@@ -9,7 +9,7 @@ rule make_silva_db:
         'https://www.arb-silva.de/fileadmin/silva_databases/current/Exports/'
         'SILVA_132_SSURef_tax_silva.fasta.gz;'
         'gunzip $dir_name/SILVA_132_SSURef_tax_silva.fasta.gz;'
-        'makeblastdb -in $dir_name/SILVA_132_SSURef_tax_silva.fasta'
+        'makeblastdb -in $dir_name/SILVA_132_SSURef_tax_silva.fasta '
         '-dbtype nucl -parse_seqids -out $dir_name/silva.db'
 
 rule blast:
@@ -43,5 +43,7 @@ rule merge_results:
         'results/finalData/filtered_blast_table.csv'
     conda:
         '../envs/merge_results.yaml'
+    log:
+        'results/logs/finalData/BLAST.log'
     script:
         '../scripts/merge_results.py'

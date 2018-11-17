@@ -36,10 +36,3 @@ with open(str(snakemake.output[1]), 'w') as f_:
 df = pd.DataFrame.from_dict(seq_dict, orient='index').fillna(0)
 df.index.name = 'sequences'
 df.to_csv(snakemake.output[0])
-
-
-# Export the dict im yaml format for further processing.
-# This increases the modularity of the pipeline but cost time to
-# read/write the file. I could put the other functions working
-# with the dict in this script to work on the dict in memory,
-# should the reading/writing take up too much space

@@ -1,7 +1,5 @@
 import pandas as pd
 
-configfile: "test_data.yaml"
-
 samples = pd.read_table(config["general"]["samples"], index_col="sample")
 units = pd.read_table(config["general"]["units"], index_col=["sample", "unit"],
     dtype=str)
@@ -17,28 +15,11 @@ else:
 
 rule all:
     input:
-       # expand(['demultiplexed/{unit.sample}_{unit.unit}_{read}.fastq',
-       # 'results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}_{read}.fastq',
-       # 'results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}_assembled.fastq',
-       # 'results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}.fasta',
-       # 'results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}.clustered100.fasta',
-       # 'results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}.clustered100.fasta',
-       # 'results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}.clustered100.uchime.txt'],
-       # unit = units.reset_index().itertuples(), read=reads),
         'results/qc/multiqc_report.html',
-       # 'results/finalData/unfiltered_table.csv',
-       # 'results/finalData/filtered_table.csv',
         'results/finalData/figures/AmpliconDuo.RData',
-       # 'results/finalData/merged.swarms',
-       # 'results/finalData/blast_taxonomy.tsv',
         'results/finalData/filtered_blast_table.csv',
-        #'results/finalData/filtered_table2.csv'
-
-
 
 ruleorder: assembly > prinseq
-
-# 'logs/qc_done'
 
 include: "rules/quality_control.smk"
 include: "rules/read_assembly.smk"

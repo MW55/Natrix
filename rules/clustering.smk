@@ -13,12 +13,12 @@ rule write_fasta:
             for row in enumerate(filtered_table):
                 if row[0] != 0:
                     abu_sum = sum([int(num) for num in row[1][1:]])
-                    filtered_table_seqid.writerow(row[1] + ['>{};size={};'.format(    #'N{}_{}'
-                        row[0], abu_sum)])
+                    filtered_table_seqid.writerow(['>{};size={};'.format(    #switched row[1] and ['>.....']
+                        row[0], abu_sum)] + row[1])
                     fasta_out.write('>{};size={};\n{}\n'.format(row[0],
                         abu_sum, row[1][0]))
                 else:
-                    filtered_table_seqid.writerow(row[1] + ['seqid'])
+                    filtered_table_seqid.writerow(['seqid'] + row[1])
 
 rule swarm:
     input:

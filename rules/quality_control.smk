@@ -22,16 +22,3 @@ if config['general']['multiqc']:
             "../envs/quality_control.yaml"
         shell:
             "multiqc results/qc/ -o results/qc/"
-
-#I dont think this is really neccessary anymore, have to doublecheck
-if config['general']['mid_check']:
-    rule mid_check:
-        input:
-            data_folder = 'dereplicated',
-            primer_table = config['general']['filename'] + '.csv'
-        output:
-            "logs/qc_done"
-        log:
-            "logs/quality_control.log"
-        script:
-            "../scripts/prim_mid_check.R"

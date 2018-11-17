@@ -3,6 +3,7 @@
 echo Please enter the name of the project
 
 read varname
+source activate snakemake
 python demultiplexing.py "$varname"
 
 varname+=".yaml"

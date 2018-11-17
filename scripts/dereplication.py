@@ -1,11 +1,19 @@
 import dinopy
 from glob import glob
+#seq_dict = {entry.name.decode().split(' ')[0].encode():entry.sequence for entry
+#            in dinopy.FastaReader(str(snakemake.input)).entries()}
+
+
+#seq_dict = {entry.name:entry.sequence for entry
+#            in dinopy.FastaReader(str(snakemake.input)).entries()}
 
 # Parsing the whole fasta to a dict, at this point in the pipeline the
 # files are small enugh to fit into memory and using a dict comp with
 # dinopy is quicker then the to_dict func from SeqIO
+
 seq_dict = {entry.name:entry.sequence for entry
             in dinopy.FastaReader(str(snakemake.input)).entries()}
+
 clust = str(snakemake.input) + '.clstr'
 
 # returns a list of tuples containing the old header of the

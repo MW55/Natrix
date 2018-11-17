@@ -27,9 +27,6 @@ derep:
 
 # Chimera removal
 chim:
-        minh : 0.28 #  minh(uchime_denovo)
-        mindiffs : 3 #  mindiffs(uchime_denovo)
-        mindiv : 1.5 #  mindiv(uchime_denovo)
         beta : 8.0 #  beta(weightOfNoVote)(uchime_denovo)
         pseudo_count : 1.2 #  pseudo_count(uchime_denovo)
         abskew : 16 #  abskew(uchime_denovo)

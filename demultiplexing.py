@@ -42,8 +42,8 @@ def iupac_replace(sequence, iupac_dict):
 # which has access to the environment of the higher order function,
 # this allows creation of similar functions while limiting code
 # redundancy
-def define_direction(polyN, prim, barcode):
-    def check_for_match(sequence, sample):
+def define_direction_demulti(polyN, prim, barcode):
+    def check_for_match_demulti(sequence, sample):
         poly_prim_bar = [primertable[sample][key] for key
                         in primertable[sample].keys() if key
                         in [polyN, prim, barcode]]
@@ -58,17 +58,30 @@ def define_direction(polyN, prim, barcode):
                 return True
         else:
             return False
-    return check_for_match
+    return check_for_match_demulti
 
 # These are the variations of the check_for_match closure for the
 # forward and reverse primer, the arguments are the column indices
 # of the corresponding polyN col, the col after the primer
 # (as the slice beginning is inclusive, end is exclusive) and the
 # col index of the barcode.
-check_for_match_fwd = define_direction('poly_N', 'specific_forward_primer',
+check_for_match_fwd_demulti = define_direction_demulti('poly_N', 'specific_forward_primer',
                                        'Barcode_forward')
-check_for_match_rev = define_direction('poly_N_rev', 'specific_reverse_primer',
+check_for_match_rev_demulti = define_direction_demulti('poly_N_rev', 'specific_reverse_primer',
                                        'Barcode_reverse')
+
+def define_direction_sort(prim):
+    def check_for_match_sort(sequence, sample):
+        prim_regex = re.compile(iupac_replace(primertable[sample][prim],
+                                              iupac_dict_regex))
+        if prim_regex.match(sequence[:len(primertable[sample][prim])]):
+            return True
+        else:
+            return False
+    return check_for_match_sort
+
+check_for_match_sort_fwd = define_direction_sort('specific_forward_primer')
+check_for_match_sort_rev = define_direction_sort('specific_reverse_primer')
 
 # Create a dict of Dinopy writer instances and write the sequences
 # according to their barcode and primer sequence in the corresponding
@@ -95,10 +108,10 @@ def demultiplexer(file_path_list):
         sequence = dinopy.FastqReader(sample)
         for read in sequence.reads(quality_values=True):
             for sample in primertable.keys():
-                if check_for_match_fwd(read.sequence.decode(), sample):
+                if check_for_match_fwd_demulti(read.sequence.decode(), sample):
                     writers[sample + '_R1'].write(read.sequence, read.name,
                             read.quality)
-                elif check_for_match_rev(read.sequence.decode(), sample):
+                elif check_for_match_rev_demulti(read.sequence.decode(), sample):
                     writers[sample + '_R2'].write(read.sequence, read.name,
                             read.quality)
                 else:
@@ -111,11 +124,60 @@ def demultiplexer(file_path_list):
 if not os.path.exists('demultiplexed'):
     os.mkdir('demultiplexed')
 
+if not os.path.exists('demultiplexed/not_sorted'):
+    os.mkdir('demultiplexed/not_sorted')
+
+def read_sorter(primertable):
+    samples = []
+    output_filepaths = []
+    for sample in primertable.keys():
+        samples.append(sample + config['merge']['name_ext'][:-1] + '1')
+        samples.append(sample + config['merge']['name_ext'][:-1] + '2')
+        samples.append(sample + '_not_sorted')
+        output_filepaths.append('demultiplexed/' + sample + '_R1.fastq.gz')
+        output_filepaths.append('demultiplexed/' + sample + '_R2.fastq.gz')
+        output_filepaths.append('demultiplexed/not_sorted/' + sample + '_not_sorted.fastq.gz')
+
+    # create a dict of writers
+    writers = {name: dinopy.FastqWriter(path) for name, path in 
+               zip(samples, output_filepaths)}
+
+    #open all writers
+    for writer in writers.values():
+        writer.open()
+
+    #start writing
+    for sample in primertable.keys():
+        fwd = dinopy.FastqReader(data_folder + '/' + sample + config['merge']['name_ext'][:-1] + '1.fastq.gz')
+        rev = dinopy.FastqReader(data_folder + '/' + sample + config['merge']['name_ext'][:-1] + '2.fastq.gz')
+        for read_f, read_r in zip(fwd.reads(quality_values=True),rev.reads(quality_values=True)):
+            if check_for_match_sort_fwd(read_f.sequence.decode(), sample.split('/')[-1]) and check_for_match_sort_rev(read_r.sequence.decode(), sample.split('/')[-1]):
+                writers[sample + '_R1'].write(read_f.sequence, read_f.name,
+                                read_f.quality)
+                writers[sample + '_R2'].write(read_r.sequence, read_r.name,
+                                read_r.quality)
+            elif check_for_match_sort_rev(read_f.sequence.decode(), sample.split('/')[-1]) and check_for_match_sort_fwd(read_r.sequence.decode(), sample.split('/')[-1]):
+                writers[sample + '_R2'].write(read_f.sequence, read_f.name,
+                                read_f.quality)
+                writers[sample + '_R1'].write(read_r.sequence, read_r.name,
+                                read_r.quality)
+            else:
+                writers[sample + '_not_sorted'].write(read_f.sequence, read_f.name,
+                                read_f.quality)
+                writers[sample + '_not_sorted'].write(read_r.sequence, read_r.name,
+                                read_r.quality)
+
+    # close all writers
+    for writer in writers.values():
+        writer.close()
+
 # If the files do not need demultiplexing, just move them to
 # the demultiplexed folder.
-if not config['general']['demultiplexing']:
-    for file in file_path_list:
-        shutil.move(file, 'demultiplexed/')
+if config['general']['demultiplexing']:
+    demultiplexer(file_path_list)
+elif config['general']['read_sorting']:
+    read_sorter(primertable)
 else:
     # Run the demultiplexing script
-    demultiplexer(file_path_list)
+    for file in file_path_list:
+        shutil.move(file, 'demultiplexed/')

@@ -13,7 +13,7 @@ rule write_fasta:
             for row in enumerate(filtered_table):
                 if row[0] != 0:
                     abu_sum = sum([int(num) for num in row[1][1:]])
-                    filtered_table_seqid.writerow(['>{};size={};'.format(    #switched row[1] and ['>.....']
+                    filtered_table_seqid.writerow(['>{};size={};'.format(
                         row[0], abu_sum)] + row[1])
                     fasta_out.write('>{};size={};\n{}\n'.format(row[0],
                         abu_sum, row[1][0]))

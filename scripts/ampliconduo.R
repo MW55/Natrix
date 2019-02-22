@@ -16,7 +16,7 @@ figure.folder <- unlist(strsplit(toString(snakemake@output),
 amp.duo <- function(table, figure.folder, saving.format, file.name, p.corr) {
   intable <- table[, -1]
   names <- names(intable)
-  names <- names[seq(1, length(names), by = 2)]
+  names <- names[seq(1, length(names), 2)] #  names <- names[seq(1, length(names), by = 2)]
   names <- sapply(X = names, FUN = function(x){
   unlist(strsplit(x, split = "+.A$"))
   })

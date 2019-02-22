@@ -1,6 +1,6 @@
 rule cdhit:
     input:
-        'results/assembly/{sample}_{unit}/{sample}_{unit}.fasta'
+        "results/assembly/{sample}_{unit}/{sample}_{unit}.fasta"
     output:
         'results/assembly/{sample}_{unit}/{sample}_{unit}_cdhit.fasta'
     conda:

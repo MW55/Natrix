@@ -3,6 +3,8 @@ rule make_silva_db:
         expand(config['blast']['db_path'] + '{file_extension}', file_extension = ['.nhr', '.nin', '.nog', '.nsd', '.nsi', '.nsq'])
     params:
         db_path = config['blast']['db_path']
+    conda:
+        '../envs/blast.yaml'
     shell:
         'dir_name=$(dirname {params[0]});'
         'wget -P $dir_name/ --progress=bar '

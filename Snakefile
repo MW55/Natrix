@@ -15,9 +15,11 @@ else:
 
 rule all:
     input:
-        'results/qc/multiqc_report.html',
+        'results/finalData/filtered_table.csv',
+        'results/finalData/merged.swarms',
+        'results/qc/multiqc_report.html' if config["general"]["multiqc"] else [],
         'results/finalData/figures/AmpliconDuo.RData',
-        'results/finalData/filtered_blast_table.csv',
+        'results/finalData/filtered_blast_table.csv' if config["blast"]["blast"] else []
 
 ruleorder: assembly > prinseq
 

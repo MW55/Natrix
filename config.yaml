@@ -3,10 +3,12 @@ general:
         filename : project #  filename
         cores : 10 #  cores
         NGS_type : illumina #  NGStype
-        multiqc : TRUE  #  initial quality check (fastqc & multiqc) 
+        multiqc : FALSE  #  initial quality check (fastqc & multiqc) 
         samples: samples.tsv # path to sequencing sample sheet
         units: units.tsv # path to sequencing unit sheet
         demultiplexing: FALSE
+	read_sorting: FALSE
+
 # Quality check and primer removal
 qc:
         threshold : 0.9 #  threshold(pairedEnd:TRUE) (pandaseq)
@@ -44,6 +46,7 @@ merge:
 
 # BLAST
 blast:
+        blast : TRUE #Blast against the SILVA database
         db_path : 'database/silva.db' #Path to silva database
         max_target_seqs : 1 #Number of blast hits that are saved per sequence
         ident : 90.0 #Minimal identity overlap between target and query sequence

@@ -130,7 +130,8 @@ dependencies:
   - datrie=0.7.1=py36h7b6447c_1
   - intel-openmp=2019.0=118
   - libgcc-ng=8.2.0=hdf63c60_1
-  - mkl=2019.0=118
+  #- mkl=2019.0=118
+  - mkl
   - numpy=1.15.4=py36h1d66e8a_0
   - numpy-base=1.15.4=py36h81de0dd_0
   - pip:

@@ -47,7 +47,6 @@ rule assembly:
         expand(
         'results/assembly/{{sample}}_{{unit}}/{{sample}}_{{unit}}_{read}.fastq',
         read=reads),
-        #primer_t = config['general']['filename'] + '.csv'
         primer_t = 'primer_table.csv'
     output:
         'results/assembly/{sample}_{unit}/{sample}_{unit}_assembled.fastq'

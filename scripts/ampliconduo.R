@@ -1,10 +1,7 @@
+library(AmpliconDuo)
 library(ggplot2)
 library(xtable)
 library(data.table)
-
-source('bin/AmpliconDuo/R/ampliconduo.R')
-source('bin/AmpliconDuo/R/discordance.delta.R')
-source('bin/AmpliconDuo/R/plotAmpliconduo.set.R')
 
 unfiltered.table <- fread(snakemake@input[['unfiltered_table']],
                           stringsAsFactors=FALSE, data.table=FALSE)
@@ -31,7 +28,6 @@ amp.duo <- function(table, figure.folder, saving.format, file.name, p.corr) {
   return(ampliconduos)
 }
 
-## discordance Delta befor filtering
 discordance <- function(ampliconduos, figure.folder, file.name) {
   discordance.delta(ampliconduos, corrected = TRUE, printToTex= TRUE,
                     directory = figure.folder, file.name = file.name)

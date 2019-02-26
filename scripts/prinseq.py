@@ -1,6 +1,5 @@
 from subprocess import call
 
-
 if(len(snakemake.input)) == 2:
     output_edit = str(snakemake.output[0])[:-8]
     output_bad = str(snakemake.output[0])[:-8] + '_bad'

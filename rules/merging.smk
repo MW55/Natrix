@@ -13,7 +13,7 @@ rule filtering:
     input:
         'results/finalData/unfiltered_dict.json'
     output:
-        'results/finalData/filtered_table.csv',
+        temp('results/finalData/filtered_table_temp.csv'),
         'results/finalData/filtered_out_table.csv',
         temp('results/finalData/filtered_dict.json'),
         temp('results/finalData/filtered_out_dict.json')
@@ -27,7 +27,7 @@ rule filtering:
 
 rule ampliconduo:
     input:
-        filtered_table = 'results/finalData/filtered_table.csv',
+        filtered_table = 'results/finalData/filtered_table_temp.csv',
         unfiltered_table = 'results/finalData/unfiltered_table.csv'
     output:
         'results/finalData/figures/AmpliconDuo.RData'

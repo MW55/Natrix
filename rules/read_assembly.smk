@@ -1,14 +1,14 @@
 def get_fastq(wildcards):
     if not is_single_end(wildcards.sample, wildcards.unit):
-        return expand('demultiplexed/{sample}_{unit}_{group}.fastq',
+        return expand('results/assembly/{sample}_{unit}/{sample}_{unit}_{group}.fastq',
                         group=[1,2], **wildcards)
-    return 'demultiplexed/{sample}_{unit}_1.fastq'.format(**wildcards)
+    return 'results/assembly/{sample}_{unit}/{sample}_{unit}_{group}.fastq'.format(**wildcards, group=[1])
 
 rule unzip:
     input:
-         'demultiplexed/{sample}_{unit}_R{read}.fastq.gz'
+         'demultiplexed/{sample}_{unit}_{group}.fastq.gz'
     output:
-        'demultiplexed/{sample}_{unit}_{read}.fastq'
+        'demultiplexed/{sample}_{unit}_{group}.fastq'
     shell: 'gunzip -c {input} > {output}'
 
 rule define_primer:
@@ -28,11 +28,10 @@ rule define_primer:
 
 rule prinseq:
     input:
-        sample=get_fastq
+        expand('demultiplexed/{{sample}}_{{unit}}_{group}.fastq', group = GROUP)
     output:
         expand(
-        'results/assembly/{{sample}}_{{unit}}/{{sample}}_{{unit}}_{read}.fastq',
-        read=reads)
+        'results/assembly/{{sample}}_{{unit}}/{{sample}}_{{unit}}_{group}.fastq', group = GROUP)
     params:
         config['qc']['mq']
     log:
@@ -44,9 +43,7 @@ rule prinseq:
 
 rule assembly:
     input:
-        expand(
-        'results/assembly/{{sample}}_{{unit}}/{{sample}}_{{unit}}_{read}.fastq',
-        read=reads),
+        get_fastq,
         primer_t = 'primer_table.csv'
     output:
         'results/assembly/{sample}_{unit}/{sample}_{unit}_assembled.fastq'

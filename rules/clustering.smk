@@ -1,9 +1,9 @@
 rule write_fasta:
     input:
-        'results/finalData/filtered_table.csv'
+        'results/finalData/filtered_table_temp.csv'
     output:
         'results/finalData/filtered.fasta',
-        'results/finalData/filtered_table2.csv'
+        'results/finalData/filtered_table.csv'
     run:
         import csv
         with open(input[0], 'r') as csv_in, open(

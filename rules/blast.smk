@@ -19,7 +19,7 @@ rule blast:
         'results/finalData/merged_representatives.fasta',
         expand(config['blast']['db_path'] + '{file_extension}', file_extension = ['.nhr', '.nin', '.nog', '.nsd', '.nsi', '.nsq'])
     output:
-        'results/finalData/blast_taxonomy.tsv'
+        temp('results/finalData/blast_taxonomy.tsv')
     threads:
         config['general']['cores']
     params:
@@ -39,7 +39,7 @@ rule blast:
 rule merge_results:
     input:
         merged = 'results/finalData/merged.swarms',
-        final_table_path2 = 'results/finalData/filtered_table2.csv',
+        final_table_path2 = 'results/finalData/filtered_table.csv',
         blast_result = 'results/finalData/blast_taxonomy.tsv'
     output:
         'results/finalData/filtered_blast_table.csv'

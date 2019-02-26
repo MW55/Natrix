@@ -1,24 +1,14 @@
 import dinopy
 from glob import glob
-#seq_dict = {entry.name.decode().split(' ')[0].encode():entry.sequence for entry
-#            in dinopy.FastaReader(str(snakemake.input)).entries()}
-
-
-#seq_dict = {entry.name:entry.sequence for entry
-#            in dinopy.FastaReader(str(snakemake.input)).entries()}
-
-# Parsing the whole fasta to a dict, at this point in the pipeline the
-# files are small enugh to fit into memory and using a dict comp with
-# dinopy is quicker then the to_dict func from SeqIO
 
 seq_dict = {entry.name:entry.sequence for entry
             in dinopy.FastaReader(str(snakemake.input)).entries()}
 
 clust = str(snakemake.input) + '.clstr'
 
-# returns a list of tuples containing the old header of the
+# Returns a list of tuples containing the old header of the
 # representative seq of each cluster and the new header as required
-# by uchime (sorted by cluster size)
+# by uchime (sorted by cluster size).
 clust_sizes = []
 ids = []
 with open(clust) as f:
@@ -39,8 +29,8 @@ with open(clust) as f:
             count += 1
 c_size = list(zip(clust_sizes, ids))
 
-# writes the representatives in a fasta file with the new headers, uses
-# the old header as key to get the matching sequences from the dict
+# Writes the representatives in a fasta file with the new headers, uses
+# the old header as key to get the matching sequences from the dict.
 with dinopy.FastaWriter(str(snakemake.output), force_overwrite=True,
         line_width = 1000) as clust:
     clust.write_entries([(seq_dict[line[1].encode()],

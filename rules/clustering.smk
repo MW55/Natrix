@@ -24,8 +24,8 @@ rule swarm:
     input:
         'results/finalData/filtered.fasta'
     output:
-        'results/finalData/merged_representatives.fasta',
-        'results/finalData/merged.swarms'
+        'results/finalData/OTU_representatives.fasta',
+        temp('results/finalData/merged.swarms')
     threads: config['general']['cores']
     conda:
         '../envs/swarm.yaml'

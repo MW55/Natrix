@@ -2,7 +2,7 @@ rule cdhit:
     input:
         "results/assembly/{sample}_{unit}/{sample}_{unit}.fasta"
     output:
-        'results/assembly/{sample}_{unit}/{sample}_{unit}_cdhit.fasta'
+        temp('results/assembly/{sample}_{unit}/{sample}_{unit}_cdhit.fasta')
     conda:
         '../envs/dereplication.yaml'
     threads:
@@ -17,7 +17,7 @@ rule cluster_sorting:
     input:
         'results/assembly/{sample}_{unit}/{sample}_{unit}_cdhit.fasta'
     output:
-        'results/assembly/{sample}_{unit}/{sample}_{unit}.clustered100.fasta'
+        'results/assembly/{sample}_{unit}/{sample}_{unit}.dereplicated.fasta'
     conda:
         '../envs/dereplication.yaml'
     script:

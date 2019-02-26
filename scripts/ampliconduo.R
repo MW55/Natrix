@@ -3,6 +3,9 @@ library(ggplot2)
 library(xtable)
 library(data.table)
 
+# Script for statistical analysis of the filtering process (filtered vs unfiltered),
+# it will also use Fisher's exact test to find significantly deviating read numbers
+# between split-samples, which could be used to implement an additional filtering step.
 unfiltered.table <- fread(snakemake@input[['unfiltered_table']],
                           stringsAsFactors=FALSE, data.table=FALSE)
 filtered.table <- fread(snakemake@input[['filtered_table']],
@@ -13,7 +16,7 @@ figure.folder <- unlist(strsplit(toString(snakemake@output),
 amp.duo <- function(table, figure.folder, saving.format, file.name, p.corr) {
   intable <- table[, -1]
   names <- names(intable)
-  names <- names[seq(1, length(names), 2)] #  names <- names[seq(1, length(names), by = 2)]
+  names <- names[seq(1, length(names), by = 2)]
   names <- sapply(X = names, FUN = function(x){
   unlist(strsplit(x, split = "+.A$"))
   })

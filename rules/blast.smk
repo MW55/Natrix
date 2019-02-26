@@ -16,7 +16,7 @@ rule make_silva_db:
 
 rule blast:
     input:
-        'results/finalData/merged_representatives.fasta',
+        'results/finalData/OTU_representatives.fasta',
         expand(config['blast']['db_path'] + '{file_extension}', file_extension = ['.nhr', '.nin', '.nog', '.nsd', '.nsi', '.nsq'])
     output:
         temp('results/finalData/blast_taxonomy.tsv')

@@ -17,18 +17,6 @@ primer_table = pd.read_csv(snakemake.input.primer_t, index_col='Probe',
         na_filter=False).to_dict('index')
 
 if snakemake.params.paired_end:
-    #old way using the old primertable
-#    r1_primer = primer_table[snakemake.wildcards.sample + '_'
-#            + snakemake.wildcards.unit]['specific_forward_primer']
-#    r2_primer = primer_table[snakemake.wildcards.sample + '_'
-#            + snakemake.wildcards.unit]['specific_reverse_primer']
-# new way, now further down so that primertables without
-# primer work (when everything is already removed)
-#    r1_primer = primer_table[snakemake.wildcards.sample + '_'
-#            + snakemake.wildcards.unit]['f_primer']
-#    r2_primer = primer_table[snakemake.wildcards.sample + '_'
-#            + snakemake.wildcards.unit]['r_primer']
-
     if snakemake.params.prim_rm:
         subprocess.call(['pandaseq',
             '-f',snakemake.input[0], '-r', snakemake.input[1], '-B', '-a', '-F',
@@ -90,7 +78,7 @@ else:
         assembled.close()
         filt_out.close()
 
-    # Helper function for the IUPAC extended nucleotide base code
+    # Helper function for the IUPAC extended nucleotide base code.
     def iupac_replace(sequence, iupac_dict):
         for i, j in iupac_dict_regex.items():
             sequence = sequence.replace(i, j)

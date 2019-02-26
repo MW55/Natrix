@@ -8,7 +8,7 @@ rule unzip:
     input:
          'demultiplexed/{sample}_{unit}_{group}.fastq.gz'
     output:
-        'demultiplexed/{sample}_{unit}_{group}.fastq'
+        temp('demultiplexed/{sample}_{unit}_{group}.fastq')
     shell: 'gunzip -c {input} > {output}'
 
 rule define_primer:
@@ -30,8 +30,8 @@ rule prinseq:
     input:
         expand('demultiplexed/{{sample}}_{{unit}}_{group}.fastq', group = GROUP)
     output:
-        expand(
-        'results/assembly/{{sample}}_{{unit}}/{{sample}}_{{unit}}_{group}.fastq', group = GROUP)
+        temp(expand(
+        'results/assembly/{{sample}}_{{unit}}/{{sample}}_{{unit}}_{group}.fastq', group = GROUP))
     params:
         config['qc']['mq']
     log:
@@ -68,7 +68,7 @@ rule copy_to_fasta:
     input:
         'results/assembly/{sample}_{unit}/{sample}_{unit}_assembled.fastq'
     output:
-        'results/assembly/{sample}_{unit}/{sample}_{unit}.fasta'
+        temp('results/assembly/{sample}_{unit}/{sample}_{unit}.fasta')
     conda:
         '../envs/seqtk.yaml'
     shell:

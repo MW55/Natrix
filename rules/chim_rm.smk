@@ -1,10 +1,10 @@
 rule vsearch:
     input:
-        'results/assembly/{sample}_{unit}/{sample}_{unit}.clustered100.fasta'
+        'results/assembly/{sample}_{unit}/{sample}_{unit}.dereplicated.fasta'
     output:
-        uchime_out = 'results/assembly/{sample}_{unit}/{sample}_{unit}.clustered100.uchime.txt',
-        chim = 'results/assembly/{sample}_{unit}/{sample}_{unit}.clustered100.chimera.fasta',   
-        nonchim = 'results/finalData/{sample}_{unit}.clustered100.nonchimera.fasta' 
+        uchime_out = temp('results/assembly/{sample}_{unit}/{sample}_{unit}.vsearch.txt'),
+        chim = 'results/assembly/{sample}_{unit}/{sample}_{unit}.chimera.fasta',   
+        nonchim = 'results/finalData/{sample}_{unit}.nonchimera.fasta' 
     params:
         beta = config['chim']['beta'],
         pseudo_c = config['chim']['pseudo_count'],

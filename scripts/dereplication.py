@@ -2,16 +2,14 @@ import dinopy
 from glob import glob
 
 seq_dict = {entry.name:entry.sequence for entry
-            in dinopy.FastaReader(str(snakemake.input)).entries()}
-
-clust = str(snakemake.input) + '.clstr'
+            in dinopy.FastaReader(str(snakemake.input[0])).entries()}
 
 # Returns a list of tuples containing the old header of the
 # representative seq of each cluster and the new header as required
 # by uchime (sorted by cluster size).
 clust_sizes = []
 ids = []
-with open(clust) as f:
+with open(snakemake.input[1]) as f:
     current = None
     count = 0
     for line in f:
@@ -19,7 +17,7 @@ with open(clust) as f:
             if current is not None and count > 0:
                 clust_sizes.append('{};size={};'.format(
                     current[1:].strip().replace('Cluster ',
-                        clust.split('/')[-2] + '_'), count))
+                        snakemake.input[1].split('/')[-2] + '_'), count))
             current = line
             count = 0
         elif line[-2] == '*':

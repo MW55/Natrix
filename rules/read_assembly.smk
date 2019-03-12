@@ -1,14 +1,14 @@
 def get_fastq(wildcards):
     if not is_single_end(wildcards.sample, wildcards.unit):
-        return expand('results/assembly/{sample}_{unit}/{sample}_{unit}_{group}.fastq',
+        return expand('demultiplexed/{sample}_{unit}_{group}.fastq',
                         group=[1,2], **wildcards)
-    return 'results/assembly/{sample}_{unit}/{sample}_{unit}_{group}.fastq'.format(**wildcards, group=[1])
+    return 'demultiplexed/{sample}_{unit}_1.fastq'.format(**wildcards)
 
 rule unzip:
     input:
-         'demultiplexed/{sample}_{unit}_{group}.fastq.gz'
+         'demultiplexed/{sample}_{unit}_R{read}.fastq.gz'
     output:
-        temp('demultiplexed/{sample}_{unit}_{group}.fastq')
+        'demultiplexed/{sample}_{unit}_{read}.fastq'
     shell: 'gunzip -c {input} > {output}'
 
 rule define_primer:
@@ -28,10 +28,11 @@ rule define_primer:
 
 rule prinseq:
     input:
-        expand('demultiplexed/{{sample}}_{{unit}}_{group}.fastq', group = GROUP)
+        sample=get_fastq
     output:
-        temp(expand(
-        'results/assembly/{{sample}}_{{unit}}/{{sample}}_{{unit}}_{group}.fastq', group = GROUP))
+        expand(
+        'results/assembly/{{sample}}_{{unit}}/{{sample}}_{{unit}}_{read}.fastq',
+        read=reads)
     params:
         config['qc']['mq']
     log:
@@ -43,7 +44,9 @@ rule prinseq:
 
 rule assembly:
     input:
-        get_fastq,
+        expand(
+        'results/assembly/{{sample}}_{{unit}}/{{sample}}_{{unit}}_{read}.fastq',
+        read=reads),
         primer_t = 'primer_table.csv'
     output:
         'results/assembly/{sample}_{unit}/{sample}_{unit}_assembled.fastq'
@@ -68,7 +71,7 @@ rule copy_to_fasta:
     input:
         'results/assembly/{sample}_{unit}/{sample}_{unit}_assembled.fastq'
     output:
-        temp('results/assembly/{sample}_{unit}/{sample}_{unit}.fasta')
+        'results/assembly/{sample}_{unit}/{sample}_{unit}.fasta'
     conda:
         '../envs/seqtk.yaml'
     shell:

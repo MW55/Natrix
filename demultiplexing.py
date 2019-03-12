@@ -7,11 +7,14 @@ import yaml
 import glob
 import sys
 import shutil
+import subprocess
+import pathlib
 
-# This script is used for demultiplexing samples that were pooled in-lab (instead of at the sequencing company) and
-# to manually sort reads depending on their primersequence. Both functions are very slow and only serve niche
-# purposes for the people over at the biodiversity lab. It migth be a better idea to remove the script from
-# the main branch and only leave it in a branch specific for the people over at the biodiv. lab.
+# This script is used for moving already assembled fastq files to the correct folder for further processing,
+# demultiplexing samples that were pooled in-lab (instead of at the sequencing company) and
+# to manually sort reads depending on their primersequence. the latter two functions are very slow and only serve niche
+# purposes for the people over at the biodiversity lab. It migth be a better idea to remove these functions from
+# the script and only leave it in a branch specific for the people over at the biodiv. lab.
 
 # Config and p_table has to be adjusted for the corresponding path to the 
 # primertable with config config['general']['filename'] + '.csv'
@@ -143,12 +146,16 @@ def read_sorter(primertable):
         fwd = dinopy.FastqReader(data_folder + '/' + sample + config['merge']['name_ext'][:-1] + '1.fastq.gz')
         rev = dinopy.FastqReader(data_folder + '/' + sample + config['merge']['name_ext'][:-1] + '2.fastq.gz')
         for read_f, read_r in zip(fwd.reads(quality_values=True),rev.reads(quality_values=True)):
-            if check_for_match_sort_fwd(read_f.sequence.decode(), sample.split('/')[-1]) and check_for_match_sort_rev(read_r.sequence.decode(), sample.split('/')[-1]):
+            if check_for_match_sort_fwd(read_f.sequence.decode(), 
+                sample.split('/')[-1]) and check_for_match_sort_rev(read_r.sequence.decode(),
+                    sample.split('/')[-1]):
                 writers[sample + '_R1'].write(read_f.sequence, read_f.name,
                                 read_f.quality)
                 writers[sample + '_R2'].write(read_r.sequence, read_r.name,
                                 read_r.quality)
-            elif check_for_match_sort_rev(read_f.sequence.decode(), sample.split('/')[-1]) and check_for_match_sort_fwd(read_r.sequence.decode(), sample.split('/')[-1]):
+            elif check_for_match_sort_rev(read_f.sequence.decode(), 
+                sample.split('/')[-1]) and check_for_match_sort_fwd(read_r.sequence.decode(),
+                    sample.split('/')[-1]):
                 writers[sample + '_R2'].write(read_f.sequence, read_f.name,
                                 read_f.quality)
                 writers[sample + '_R1'].write(read_r.sequence, read_r.name,
@@ -163,11 +170,23 @@ def read_sorter(primertable):
     for writer in writers.values():
         writer.close()
 
+def already_assembled(primertable, file_path_list):
+    for f_ in file_path_list:
+        if '.gz' in f_:
+            subprocess.run(['gunzip', f_])
+            f_ = f_.split('.gz')[0]
+        for sample in primertable.keys():
+            pathlib.Path('results/assembly/' + sample).mkdir(parents=True, exist_ok=True)
+            if sample in f_:
+                shutil.move(f_, 'results/assembly/' + sample + '/' + sample + '_assembled.fastq')
+
 # Run the demultiplexing / read sorting script.
 if config['general']['demultiplexing']:
     demultiplexer(file_path_list)
 elif config['general']['read_sorting']:
     read_sorter(primertable)
+elif config['general']['already_assembled']:
+    already_assembled(primertable, file_path_list)
 else:
     # If the files do not need demultiplexing / sorting, just move them to
     # the demultiplexed folder.

@@ -3,14 +3,15 @@ import pandas as pd
 units = pd.read_table(config["general"]["units"], index_col=["sample", "unit"],
     dtype=str)
 units.index = units.index.set_levels([i.astype(str) for i in units.index.levels])
+name_ext = config["merge"]["name_ext"][:-1]
 
 def is_single_end(sample, unit):
     return pd.isnull(units.loc[(sample,unit), 'fq2'])
 
 if config['merge']['paired_End']:
-    GROUP = [1,2]
+    reads = [1,2]
 else:
-    GROUP = 1
+    reads = 1
 
 rule all:
     input:

@@ -18,7 +18,7 @@ if snakemake.params.filter_method == "split_sample":
             filtered_out[sequence] = seq_dict[sequence]
         else:
             filtered[sequence] = seq_dict[sequence]
-elif snakemake.params.filter_method == 'singleton':
+elif snakemake.params.filter_method == 'not_split':
     for sequence in seq_dict.keys():
         if all([int(value) <= snakemake.params.cutoff for value
                 in seq_dict[sequence].values()]):
@@ -26,7 +26,7 @@ elif snakemake.params.filter_method == 'singleton':
         else:
             filtered[sequence] = seq_dict[sequence]
 else:
-    raise ValueError('Valid filter methods are "split_sample" and "singleton"')
+    raise ValueError('Valid filter methods are "split_sample" and "not_split"')
 
 df_filtered = pd.DataFrame.from_dict(filtered, orient='index').fillna(0)
 df_filtered.index.name = 'sequences'

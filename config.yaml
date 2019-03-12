@@ -2,12 +2,12 @@
 general:
         filename : project #  filename
         cores : 10 #  cores
-        NGS_type : illumina #  NGStype
         multiqc : FALSE  #  initial quality check (fastqc & multiqc) 
         samples: samples.tsv # path to sequencing sample sheet
         units: units.tsv # path to sequencing unit sheet
         demultiplexing: FALSE
 	read_sorting: FALSE
+        already_assembled: FALSE # If the reads are already assembled
 
 # Quality check and primer removal
 qc:
@@ -29,26 +29,26 @@ derep:
 
 # Chimera removal
 chim:
-        beta : 8.0 #  beta(weightOfNoVote)(uchime_denovo)
-        pseudo_count : 1.2 #  pseudo_count(uchime_denovo)
-        abskew : 16 #  abskew(uchime_denovo)
+        beta : 8.0 # beta(weightOfNoVote)(uchime_denovo)
+        pseudo_count : 1.2 # pseudo_count(uchime_denovo)
+        abskew : 16 # abskew(uchime_denovo)
 
 # Merging
 merge:
-        filter_method : split_sample #  filter methods: 'singelton', 'split_sample'
+        filter_method : split_sample #  filter methods: 'not_split', 'split_sample'
         cutoff : 3 #  cutoff value 
         ampli_corr : fdr #  ampliconduo correction
         save_format : png #  saving format for ampliconduoplot
         plot_AmpDuo : TRUE #  plotAmpDuo
         paired_End : TRUE #  pairedEnd
-        name_ext : _R1 #  name_extension
+        name_ext : R1 #  name_extension
         swarm : TRUE #  generate OTUs
 
 # BLAST
 blast:
-        blast : TRUE #Blast against the SILVA database
-        db_path : 'database/silva.db' #Path to silva database
-        max_target_seqs : 1 #Number of blast hits that are saved per sequence
-        ident : 90.0 #Minimal identity overlap between target and query sequence
-        evalue : 1e-51 #Highest accepted evalue
+        blast : TRUE # Blast against the SILVA database
+        db_path : 'database/silva.db' # Path to silva database
+        max_target_seqs : 1 # Number of blast hits that are saved per sequence
+        ident : 90.0 # Minimal identity overlap between target and query sequence
+        evalue : 1e-51 # Highest accepted evalue
         out6 : '"6 qseqid qlen length pident mismatch qstart qend sstart send gaps evalue stitle"' #Blast information to be saved

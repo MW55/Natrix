@@ -13,7 +13,7 @@ import pathlib
 # This script is used for moving already assembled fastq files to the correct folder for further processing,
 # demultiplexing samples that were pooled in-lab (instead of at the sequencing company) and
 # to manually sort reads depending on their primersequence. the latter two functions are very slow and only serve niche
-# purposes for the people over at the biodiversity lab. It migth be a better idea to remove these functions from
+# purposes for the people over at the biodiversity lab. It might be a better idea to remove these functions from
 # the script and only leave it in a branch specific for the people over at the biodiv. lab.
 
 # Config and p_table has to be adjusted for the corresponding path to the 

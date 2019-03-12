@@ -99,7 +99,7 @@ chim:
         pseudo_count:
                 type: float
                 default: 1.2
-                description:  Pseudo - count prior on number of “no” votes.
+                description: Pseudo - count prior on number of “no” votes.
         abskew:
                 type: int
                 default: 16
@@ -132,7 +132,7 @@ merge:
                 description: Specifies the correction method for Fisher's excat test.
         save_format:
                 type: string
-                default: png #  saving format for ampliconduoplot
+                default: png
                 oneOf:
                         png,
                         eps,
@@ -152,7 +152,7 @@ merge:
         paired_End:
                 type: boolean
                 default: TRUE
-                description: The format of the sequencing data, TRUE if the reads are in paired-end format
+                description: The format of the sequencing data, TRUE if the reads are in paired-end format.
         name_ext:
                 type: string
                 default: R1

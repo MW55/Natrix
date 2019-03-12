@@ -1,9 +1,9 @@
 rule fastqc:
     input:
-        "demultiplexed/{sample}_{unit}_{unit.group}.fastq.gz"
+        "demultiplexed/{sample}_{unit}_R{read}.fastq.gz"
     output:
-        "results/qc/{sample}_{unit}_{unit.group}_fastqc.html",
-        "results/qc/{sample}_{unit}_{unit.group}_fastqc.zip"
+        "results/qc/{sample}_{unit}_R{read}_fastqc.html",
+        "results/qc/{sample}_{unit}_R{read}_fastqc.zip"
     threads:
         config['general']['cores']
     conda:
@@ -13,10 +13,11 @@ rule fastqc:
 
 rule multiqc:
     input:
-        'results/qc/'
+        expand("results/qc/{unit.sample}_{unit.unit}_R{read}_fastqc.zip",
+        unit = units.reset_index().itertuples(), read=reads)
     output:
         "results/qc/multiqc_report.html"
     conda:
         "../envs/quality_control.yaml"
     shell:
-        "multiqc {input} -o {input}"
+        "multiqc results/qc/ -o results/qc/"

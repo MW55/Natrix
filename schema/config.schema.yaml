@@ -1,0 +1,188 @@
+$schema: "http://json-schema.org/draft-06/schema#"
+description: Schema for the configfile.
+general:
+        filename: 
+                type: string
+                default: project
+                description: The filename of the project folder, primertable (.csv) and config file (.yaml).
+        cores:
+                type: int
+                default: 4
+                exclusiveMinimum: 0
+                description: Amount of cores available for the workflow.
+        multiqc:
+                type: boolean
+                default: FALSE
+                description: Initial quality check (fastqc & multiqc), currently only works for not yet assembled reads.
+        units: 
+                type: string 
+                default: units.tsv
+                description: Path to the sequencing unit sheet.
+        demultiplexing: 
+                type: boolean
+                default: FALSE
+                description: Demultiplexing for reads that were not demultiplexed by the sequencing company (slow).
+        read_sorting:
+                type: boolean
+                default: FALSE
+                description: Read sorting for paired end reads that were not sorted by the sequencing company (slow).
+        already_assembled:
+                type: boolean
+                default: FALSE
+                description: Skipping of the quality control and read assembly steps for data that is already assembled.
+
+qc:
+        threshold:
+                type: float
+                default: 0.9
+                minimum: 0.0
+                maximum: 1.0
+                description: PANDAseq score threshold a sequence must meet to be kept in the output.
+        minoverlap:
+                type: int
+                default: 15
+                minimum: 1
+                maximum: 50
+                description: Sets the minimum overlap between forward and reverse reads.
+        minqual:
+                type: int
+                default: 1
+                minimum: 1
+                description: Minimal quality score for bases in an assembled read to be accepted by PANDAseq.
+        minlen:
+                type: int
+                default: 100
+                minimum: 10
+                description: The minimal length of a sequence after primer removal to be accepted by PANDAseq.
+        maxlen:
+                type: int
+                default: 600
+                minimum: 10
+                description: The maximal length of a sequence after primer removal to be accepted by PANDAseq.
+        primer_offset:
+                type: boolean
+                default: FALSE
+                description:  Using PANDAseq to remove primer sequences by length offset instead of sequence identity.
+        mq:
+                type: int
+                default: 25
+                minimum: 0
+                description: Minimum quality sequence check (prinseq), filtering of sequences according to the PHRED quality score before the assembly.
+        barcode_removed:
+                type: boolean
+                default: TRUE
+                description: Boolean that indicates if the sequence is free of barcodes.
+        all_primer:
+                type: boolean
+                default: TRUE
+                description: Boolean that indicates if the sequence is free of any kind of additional subsequences (primer, barcodes etc.).
+
+derep:
+        clustering: 
+                type: float
+                default: 1.0
+                minimum: 0.1
+                maximum: 1.0
+                desciption: Percent identity for cdhit (dereplication) (1 = 100%), if cdhit is solely to be used for dereplication (recommended), keep the default value.
+        length_overlap:
+                type: float
+                default: 0.0
+                minimum: 0.0
+                maximum: 1.0
+                description: Length difference cutoff, default 0.0 if set to 0.9, the shorter sequences need to be at least 90% length of the representative of the cluster.
+
+chim:
+        beta:
+                type: float
+                default: 8.0
+                description: Weight of a "no" vote for the VSEARCH chimera detection algorithm.
+        pseudo_count:
+                type: float
+                default: 1.2
+                description:  Pseudo - count prior on number of “no” votes.
+        abskew:
+                type: int
+                default: 16
+                description: Minimum abundance skew, definied by (min(abund.(paren1), abund.(paren2))) / abund.(child).
+
+merge:
+        filter_method: 
+                type: string
+                default: not_split
+                oneOf:
+                        not_split,
+                        split_sample
+                description: If the split sample approach (https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0141590) was used or not.
+        cutoff:
+                type: int
+                default: 3
+                description: An additional abundance filter if the split sample approach was not used.
+        ampli_corr:
+                type: string
+                default: fdr
+                oneOf:
+                        fdr,
+                        holm,
+                        hochberg,
+                        hommel,
+                        bonferroni,
+                        BH,
+                        BY,
+                        none
+                description: Specifies the correction method for Fisher's excat test.
+        save_format:
+                type: string
+                default: png #  saving format for ampliconduoplot
+                oneOf:
+                        png,
+                        eps,
+                        ps,
+                        tex,
+                        pdf,
+                        jpeg,
+                        tiff,
+                        bmp,
+                        svg,
+                        wmf
+                Description: File format for the frequency-frequency plot.
+        plot_AmpDuo:
+                type: boolean
+                default: TRUE
+                description: If the frequency-frequency plot should be saved.
+        paired_End:
+                type: boolean
+                default: TRUE
+                description: The format of the sequencing data, TRUE if the reads are in paired-end format
+        name_ext:
+                type: string
+                default: R1
+                description: The identifier for the forward read (for the reverse read the 1 is switched with 2, if the data is in paired-end format), has to be included at the end of the file name, before the file format identifier (including for single end files).
+        swarm:
+                type: boolean
+                default: TRUE
+                description: Boolean to indicate the use of the SWARM clustering algorithm to create operational taxonomic units (OTUs) from the data.
+blast:
+        blast:
+                type: boolean
+                default: FALSE
+                description: Boolean to indicate the use of the BLAST clustering algorithm to assign taxonomic information to the OTUs.
+        db_path:
+                type: string
+                default: 'database/silva.db'
+                description: Path to the database file against which the BLAST should be carried out, at the moment only the SILVA database will be automatically downloaded, other databases have to be downloaded and configurated manually.
+        max_target_seqs:
+                type: int
+                default: 1
+                description: Number of blast hits that are saved per sequence / OTU.
+        ident:
+                type: float
+                default: 90.0
+                description: Minimal identity overlap between target and query sequence.
+        evalue:
+                type: string
+                default: 1e-51
+                description: Highest accepted evalue.
+        out6:
+                type: string
+                default: '"6 qseqid qlen length pident mismatch qstart qend sstart send gaps evalue stitle"'
+                description: Additional BLAST information to be saved.

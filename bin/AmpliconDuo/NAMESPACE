@@ -1,4 +1,0 @@
-## Namespace for package 'AmpliconDuo'
-import(stats, ggplot2, xtable)
-
-export(accepted.amplicons, ampliconduo, discordance.delta, filter.ampliconduo, filter.ampliconduo.set, plotAmpliconduo, plotAmpliconduo.set, plotORdensity)

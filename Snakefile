@@ -1,4 +1,7 @@
 import pandas as pd
+from snakemake.utils import validate
+
+validate(config, "schema/config.schema.yaml")
 
 units = pd.read_table(config["general"]["units"], index_col=["sample", "unit"],
     dtype=str)

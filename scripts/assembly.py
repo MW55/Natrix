@@ -65,12 +65,13 @@ else:
         assembled.open()
         filt_out.open()
         for read in sequence.reads(quality_values=True):
+            name = read.name.decode()
             seq = check_for_match(read.sequence.decode(), sample)
             if seq[0] and snakemake.params.maxlen >= len(seq[1]) >= snakemake.params.minlen:
-                assembled.write(seq[1].encode(), read.name, read.quality)
+                assembled.write(seq[1].encode(), name.split(' ')[0].encode(), read.quality)
                 assembled_counter += 1
             else:
-                filt_out.write(read.sequence, read.name, read.quality)
+                filt_out.write(read.sequence, name.split(' ')[0].encode(), read.quality)
                 filt_out_counter += 1
         logging.info('{}: {} sequences were kept, \
                 {} sequences were filtered out'.format(sample,

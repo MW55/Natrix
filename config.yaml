@@ -2,7 +2,7 @@
 general:
         filename : project #  filename
         cores : 10 #  cores
-        multiqc : FALSE  #  initial quality check (fastqc & multiqc) 
+        multiqc : FALSE  #  initial quality check (fastqc & multiqc) currently only works for not yet assembled reads
         samples: samples.tsv # path to sequencing sample sheet
         units: units.tsv # path to sequencing unit sheet
         demultiplexing: FALSE
@@ -17,7 +17,6 @@ qc:
         minlen : 100 #  minlength (pandaseq)
         maxlen : 600 #  max_length (pandaseq)
         primer_offset : FALSE #  primer_offset instead of sequence(pandaseq : TRUE) (pandaseq)
-        prefilter : TRUE #  prefilter (prinseq)
         mq : 25 #  minimum quality sequence check (prinseq)
         barcode_removed: TRUE
         all_primer : TRUE #  all primer, MID.. removed

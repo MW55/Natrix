@@ -3,11 +3,11 @@ import pandas as pd
 import numpy as np
 from glob import glob
 import sys
+
 # Create the datatable containing the samples, units and paths of all
 # fastq files formatted correctly. This is vital for the snakemake
 # pipeline, without it, the wildcards can't be created.
 
-# might be better to glob abspaths
 with open(sys.argv[1]) as f_:
     config = yaml.load(f_)
 

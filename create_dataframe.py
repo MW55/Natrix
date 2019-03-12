@@ -12,7 +12,7 @@ with open(sys.argv[1]) as f_:
     config = yaml.load(f_)
 
 def create_dataframe(fl, fpl, config, slice):
-    if config['merge']['paired_End']:
+    if config['merge']['paired_End'] and not config['general']['already_assembled']:
         df = pd.DataFrame(columns=['sample', 'unit', 'fq1', 'fq2'],
             index =range(int(len(fl)/2)), dtype=str)
         i, j = (0, 0)

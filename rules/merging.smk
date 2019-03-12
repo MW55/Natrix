@@ -39,4 +39,3 @@ rule ampliconduo:
         '../envs/ampliconduo.yaml'
     script:
         '../scripts/ampliconduo.R'
-

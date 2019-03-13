@@ -3,7 +3,7 @@
 echo Please enter the name of the project
 
 read varname
-source ~/anaconda3/etc/profile.d/conda.sh
+#source ~/anaconda3/etc/profile.d/conda.sh
 conda activate snakemake
 python demultiplexing.py "$varname"
 

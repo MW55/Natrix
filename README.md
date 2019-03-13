@@ -106,7 +106,9 @@ The pipeline supports both single-sample and split-sample FASTQ amplicon data. T
 was created by PCR or sequencing errors does not occur in both samples. A schematic
 representation of the split-sample method is shown below:
 
-<div style="text-align:center"><img src="documentation/images/splitsample.png" alt="split_sample" width="300"/>
+<p align="center"> 
+<img src="documentation/images/splitsample.png" alt="split_sample" width="300"/>
+</p>
 
 *Schematic representation of the split-sample approach: Extracted DNA from a single en-
 vironmental sample is splitted and separately amplified and sequenced. The filtering rule compares the resulting read sets between two split-samples, filtering out all sequences that do not occur in both split-samples. Image adapted from Lange et al. 2015.*

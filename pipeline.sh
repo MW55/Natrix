@@ -3,7 +3,7 @@
 echo Please enter the name of the project
 
 read varname
-env_loc=$(conda info | grep "active\ env\ location" | awk '{print $5}')
+env_loc=$(conda info | grep "base\ environment" | awk '{print $4}')
 env_loc+="/etc/profile.d/conda.sh"
 source $env_loc
 #source ~/anaconda3/etc/profile.d/conda.sh

@@ -1,7 +1,7 @@
 # General options
 general:
         filename : example_data # The filename of the project folder, primertable (.csv) and config file (.yaml).
-        cores : 8 # Amount of cores available for the workflow.
+        cores : 4 # Amount of cores available for the workflow.
         multiqc : TRUE  # Initial quality check (fastqc & multiqc), currently only works for not yet assembled reads.
         units: units.tsv # Path to the sequencing unit sheet.
         demultiplexing: FALSE # Demultiplexing for reads that were not demultiplexed by the sequencing company (slow).

@@ -1,44 +1,39 @@
 name: snakemake
 channels:
-  - bioconda
   - conda-forge
+  - bioconda
   - defaults
-  - r
 dependencies:
-  - dinopy=2.0.1=py36h470a237_0
-  - filechunkio=1.6=py36_0
-  - ftputil=3.2=py36_0
-  - pyasn1-modules=0.0.5=py36_0
-  - pygraphviz=1.3.1=py36_0
-  - pysftp=0.2.9=py36_0
-  - rsa=3.1.4=py36_0
-  - snakemake=5.3.0=py36_1
-  - snakemake-minimal=5.3.0=py36_1
-  - urllib3=1.12=py36_0
   - aioeasywebdav=2.2.0=py36_0
   - aiohttp=3.4.4=py36h470a237_0
   - appdirs=1.4.3=py_1
   - asn1crypto=0.24.0=py36_1003
+  - astroid=2.1.0=py36_1000
   - async-timeout=3.0.1=py_1000
   - attrs=18.2.0=py_0
   - bcrypt=3.1.4=py36h470a237_0
+  - blas=1.0=mkl
   - boto3=1.7.84=py_0
   - botocore=1.10.84=py_0
-  - ca-certificates=2018.10.15=ha4d7672_0
+  - ca-certificates=2018.11.29=ha4d7672_0
   - cachetools=2.1.0=py_0
   - cairo=1.14.12=h276e583_5
-  - certifi=2018.10.15=py36_1000
+  - certifi=2018.11.29=py36_1000
   - cffi=1.11.5=py36h5e8e0c9_1
   - chardet=3.0.4=py36_1003
   - configargparse=0.13.0=py_1
   - cryptography=2.3.1=py36hdffb7b8_0
   - cryptography-vectors=2.3.1=py36_1000
+  - datrie=0.7.1=py36h7b6447c_1
   - decorator=4.3.0=py_0
+  - dinopy=2.0.1=py36h470a237_0
   - docutils=0.14=py36_1001
   - dropbox=7.3.1=py36_0
   - expat=2.2.5=hfc679d8_2
+  - filechunkio=1.6=py36_0
   - fontconfig=2.13.1=h65d0f4c_0
   - freetype=2.9.1=h6debe1e_4
+  - ftputil=3.2=py36_0
   - gettext=0.19.8.1=h5e8e0c9_1
   - gitdb2=2.0.5=py_0
   - gitpython=2.1.11=py_0
@@ -56,11 +51,15 @@ dependencies:
   - icu=58.2=hfc679d8_0
   - idna=2.7=py36_1002
   - idna_ssl=1.0.0=0
+  - intel-openmp=2019.0=118
+  - isort=4.3.4=py36_1000
   - jinja2=2.10=py_1
   - jmespath=0.9.3=py_1
   - jpeg=9c=h470a237_1
   - jsonschema=3.0.0a3=py36_1000
+  - lazy-object-proxy=1.3.1=py36h14c3975_1000
   - libffi=3.2.1=hfc679d8_5
+  - libgcc-ng=8.2.0=hdf63c60_1
   - libgfortran-ng=7.2.0=hdf63c60_3
   - libiconv=1.15=h470a237_3
   - libpng=1.6.35=ha92aebf_2
@@ -72,12 +71,16 @@ dependencies:
   - libxcb=1.13=h470a237_2
   - libxml2=2.9.8=h422b904_5
   - markupsafe=1.1.0=py36h470a237_0
+  - mccabe=0.6.1=py_1
+  - mkl=2018.0.3=1
   - mkl_fft=1.0.6=py36_0
   - mkl_random=1.0.2=py36_0
   - multidict=4.4.2=py36h470a237_0
   - ncurses=6.1=hfc679d8_1
   - networkx=2.2=py_1
-  - openssl=1.0.2p=h470a237_1
+  - numpy=1.15.4=py36h1d66e8a_0
+  - numpy-base=1.15.4=py36h81de0dd_0
+  - openssl=1.0.2p=h14c3975_1002
   - pandas=0.23.4=py36hf8a1672_0
   - pango=1.40.14=he752989_2
   - paramiko=2.4.2=py36_1000
@@ -89,9 +92,13 @@ dependencies:
   - psutil=5.4.8=py36h470a237_0
   - pthread-stubs=0.4=h470a237_1
   - pyasn1=0.4.4=py_1
+  - pyasn1-modules=0.0.5=py36_0
   - pycparser=2.19=py_0
+  - pygraphviz=1.3.1=py36_0
+  - pylint=2.2.2=py36_1000
   - pynacl=1.3.0=py36h470a237_0
   - pyrsistent=0.14.5=py36h470a237_1
+  - pysftp=0.2.9=py36_0
   - python=3.6.6=h5001a0f_3
   - python-dateutil=2.7.5=py_0
   - python-irodsclient=0.7.0=py_0
@@ -100,12 +107,17 @@ dependencies:
   - ratelimiter=1.2.0=py36_1000
   - readline=7.0=haf1bffa_1
   - requests=2.13.0=py36_0
+  - rsa=3.1.4=py36_0
   - s3transfer=0.1.13=py36_1001
   - setuptools=40.6.2=py36_0
   - six=1.11.0=py36_1001
   - smmap2=2.0.5=py_0
+  - snakemake=5.3.0=2
+  - snakemake-minimal=5.3.0=py36_1
   - sqlite=3.25.3=hb1c47c0_0
   - tk=8.6.8=ha92aebf_0
+  - typed-ast=1.3.1=py36h14c3975_0
+  - urllib3=1.12=py36_0
   - wheel=0.32.2=py36_0
   - wrapt=1.10.11=py36h470a237_1
   - xmlrunner=1.7.7=py_0
@@ -126,15 +138,7 @@ dependencies:
   - yaml=0.1.7=h470a237_1
   - yarl=1.2.6=py36h470a237_0
   - zlib=1.2.11=h470a237_3
-  - blas=1.0=mkl
-  - datrie=0.7.1=py36h7b6447c_1
-  - intel-openmp=2019.0=118
-  - libgcc-ng=8.2.0=hdf63c60_1
-  #- mkl=2019.0=118
-  - mkl
-  - numpy=1.15.4=py36h1d66e8a_0
-  - numpy-base=1.15.4=py36h81de0dd_0
   - pip:
     - powerline-status==2.6
-prefix: /home/wintermute/anaconda2/envs/snakemake
+prefix: /home/welzelm/anaconda3/envs/snakemake
 

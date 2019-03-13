@@ -30,3 +30,4 @@ samples.tsv
 units.tsv
 already_assembled_b
 test_data_backup*
+snakemake_backup.yaml

@@ -83,7 +83,7 @@ derep:
                 default: 1.0
                 minimum: 0.1
                 maximum: 1.0
-                desciption: Percent identity for cdhit (dereplication) (1 = 100%), if cdhit is solely to be used for dereplication (recommended), keep the default value.
+                description: Percent identity for cdhit (dereplication) (1 = 100%), if cdhit is solely to be used for dereplication (recommended), keep the default value.
         length_overlap:
                 type: float
                 default: 0.0
@@ -144,7 +144,7 @@ merge:
                         bmp,
                         svg,
                         wmf
-                Description: File format for the frequency-frequency plot.
+                description: File format for the frequency-frequency plot.
         plot_AmpDuo:
                 type: boolean
                 default: TRUE

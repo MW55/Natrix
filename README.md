@@ -41,6 +41,10 @@ When the workflow has finished, you can press **Ctrl+a, k** (*first press Ctrl+a
 
 ## Tutorial
 
+### Prerequisites: dataset, primer table and configuration file
+Besides the FASTQ data from the sequencing process Natter needs a primer table containing the sample names and, if they exists in the data, the length of the poly-N tails, the sequence of the primers and the barcodes used for each sample and direction. Besides the sample names all other information can be omitted if the data was already preprocessed or did not contain the corresponding subsequence. An example primer table is shown in section **PRIMERTABLE SECTION**. Natter also needs a configuration file in YAML format, specifying parameter values for tools used in the pipeline. An example configuration file with a description and default value
+for each parameter is shown in **CONFIG SECTION**.
+
 **BLABLABLA FILENAMES, CONFIG, PRIMERTABLE ETC**
 
 ---
@@ -53,11 +57,6 @@ When the workflow has finished, you can press **Ctrl+a, k** (*first press Ctrl+a
 ## Initial demultiplexing
 The sorting of reads accoring to their barcode is known as demultiplexing. In Natter, the demultiplexing step is implemented in a separate script, independent from the rest
 of the pipeline, as it is often already done by the sequencing company and therefore in most cases not necessary.
-
-## Prerequisites: primer table and configuration file
-Besides the FASTQ data from the sequencing process Natter needs a primer table
-containing the sample names and, if they exists in the data, the length of the poly-N tails, the sequence of the primers and the barcodes used for each sample and direction. Besides the sample names all other information can be omitted if the data was already preprocessed or did not contain the corresponding subsequence. An example primer table is shown in section **PRIMERTABLE SECTION**. Natter also needs a configuration file in YAML format, specifying parameter values for tools used in the pipeline. An example configuration file with a description and default value
-for each parameter is shown in **CONFIG SECTION**.
 
 ## Quality control
 For quality control the pipeline uses the programs FastQC (Andrews 2010), MultiQC (Ewels
@@ -131,6 +130,7 @@ OTUs containing only closely related amplicons with a natually forming centroid 
 The assignment of taxonomic information to an OTU is an important part of the processing of environmental amplicon data, as the characteristics of known groups or species can be used to assess the environmental conditions of the samples origin. To find sequences that are similar to the representative sequence of each OTU the BLAST (basic local alignment search
 tool) algorithm (Altschul et al. 1990)**REFERENCE** is used to search for similar sequences in the SILVA database (Pruesse et al. 2007)**REFERENCE**. The SILVA database contains aligned rRNA sequencing data that are curated in a multi-step process. While it has an extensive collection of highquality prokaryotic rRNA sequencing data, it only contains a limited amount of microbial
 eukaryotic sequencing data. If the database is not locally available, the required files will automatically be downloaded and the database will be build in the rule make_silva_db. The BLAST algorithm itself will be executed in the blast rule. As the aim is to find similar nucleotide sequences in the database for each query sequence the nucleotide-nucleotide BLAST (BLASTn) variation of the BLAST algorithm is used. The tab separated output file of the blast rule contains the following information for each representative sequence if the output of the BLASTn search meets the criteria defined in the configuration file **LINK TO CONFIG SECTION**:
+
 | Column Nr. | Column Name | Description                                   |
 |------------|-------------|-----------------------------------------------|
 | 1.         | qseqid      | Query sequence identification                 |

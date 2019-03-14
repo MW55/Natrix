@@ -8,7 +8,7 @@ rule unzip:
     input:
          'demultiplexed/{sample}_{unit}_R{read}.fastq.gz'
     output:
-        'demultiplexed/{sample}_{unit}_{read}.fastq'
+        temp('demultiplexed/{sample}_{unit}_{read}.fastq')
     shell: 'gunzip -c {input} > {output}'
 
 rule define_primer:
@@ -30,9 +30,9 @@ rule prinseq:
     input:
         sample=get_fastq
     output:
-        expand(
+        temp(expand(
         'results/assembly/{{sample}}_{{unit}}/{{sample}}_{{unit}}_{read}.fastq',
-        read=reads)
+        read=reads))
     params:
         config['qc']['mq']
     log:

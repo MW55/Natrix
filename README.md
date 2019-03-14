@@ -25,6 +25,7 @@ GNU screen can be found in the repositories of most Linux distributions:
 
 All other dependencies will be automatically installed using conda environments and can be found in the corresponding environment.yaml files in the *envs* folder and the `snakemake.yaml` file in the root directory of the pipeline.
 
+---
 
 ## Getting Started
 
@@ -128,14 +129,14 @@ with *project* being the name of your project and *cores* being the amount of co
 
 Should the pipeline prematurely terminate (either because of an error or by deliberatly stopping it) running the command above again will start the pipeline from the point it was terminated.
 
-
-**BLABLABLA FILENAMES, CONFIG, PRIMERTABLE ETC**
-
 ---
 
 ## Output
 
-**HIERARCHY OF THE OUTPUT FOLDERS, EXPLAINATION OF ALL OUTPUT FILES**
+<p align="center"> 
+<img src="documentation/images/output.png" alt="split_sample" width="800"/>
+</p>
+
 
 # Steps of the Pipeline **NOBODY READS ALL THIS, PUT IT IN THE WIKI**
 ## Initial demultiplexing

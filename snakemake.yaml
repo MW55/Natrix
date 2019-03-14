@@ -15,10 +15,10 @@ dependencies:
   - blas=1.0=mkl
   - boto3=1.7.84=py_0
   - botocore=1.10.84=py_0
-  - ca-certificates=2018.11.29=ha4d7672_0
+  - ca-certificates=2019.3.9=hecc5488_0
   - cachetools=2.1.0=py_0
   - cairo=1.14.12=h276e583_5
-  - certifi=2018.11.29=py36_1000
+  - certifi=2019.3.9=py36_0
   - cffi=1.11.5=py36h5e8e0c9_1
   - chardet=3.0.4=py36_1003
   - configargparse=0.13.0=py_1
@@ -80,7 +80,7 @@ dependencies:
   - networkx=2.2=py_1
   - numpy=1.15.4=py36h1d66e8a_0
   - numpy-base=1.15.4=py36h81de0dd_0
-  - openssl=1.0.2p=h14c3975_1002
+  - openssl=1.0.2r=h14c3975_0
   - pandas=0.23.4=py36hf8a1672_0
   - pango=1.40.14=he752989_2
   - paramiko=2.4.2=py36_1000
@@ -112,8 +112,8 @@ dependencies:
   - setuptools=40.6.2=py36_0
   - six=1.11.0=py36_1001
   - smmap2=2.0.5=py_0
-  - snakemake=5.3.0=2
-  - snakemake-minimal=5.3.0=py36_1
+  - snakemake=5.4.3=0
+  - snakemake-minimal=5.4.3=py_1
   - sqlite=3.25.3=hb1c47c0_0
   - tk=8.6.8=ha92aebf_0
   - typed-ast=1.3.1=py36h14c3975_0

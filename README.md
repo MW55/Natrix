@@ -1,7 +1,7 @@
 # Natter-Pipeline 
 
 Natter is an open-source bioinformatics pipeline for the preprocessing of raw sequencing data.
-The need for a scalable, reproducible workflow for the processing of environmental amplicon data led to the development of Natter. It is divided into quality assessment, read assembly, dereplication, chimera detection, split-sample merging, OTU-generation and taxonomic assessment. The pipeline is written in [Snakemake](https://snakemake.readthedocs.io), a workflow management engine for the development of data analysis workflows. Snakemake ensures reproducibility of a workflow by automatically deploying dependencies of workflow steps (rules) and scales seamlessly to different computing environments like servers, computer clusters or cloud services. While it was only tested with 16S and 18S amplicon data, it should also work for different kinds of sequencing data. The pipeline contains seperate rules for each step of the pipeline and each rule that has additional dependencies has a seperate [conda](https://conda.io/) environment that will be automatically created when starting the pipeline for the first time. The encapsulation of rules and their dependencies allows for hassle-free sharing of rules between workflows.
+The need for a scalable, reproducible workflow for the processing of environmental amplicon data led to the development of Natter. It is divided into quality assessment, read assembly, dereplication, chimera detection, split-sample merging, OTU-generation and taxonomic assessment. The pipeline is written in [Snakemake](https://snakemake.readthedocs.io), a workflow management engine for the development of data analysis workflows. Snakemake ensures reproducibility of a workflow by automatically deploying dependencies of workflow steps (rules) and scales seamlessly to different computing environments like servers, computer clusters or cloud services. While Natter was only tested with 16S and 18S amplicon data, it should also work for different kinds of sequencing data. The pipeline contains seperate rules for each step of the pipeline and each rule that has additional dependencies has a seperate [conda](https://conda.io/) environment that will be automatically created when starting the pipeline for the first time. The encapsulation of rules and their dependencies allows for hassle-free sharing of rules between workflows.
 
 ![DAG of an example workflow](documentation/images/example_dag.png)
 *DAG of an example workflow: each node represents a rule instance to be executed. The direction of each edge represents the order in which the rules are executed. Disjoint paths in the DAG can be executed in parallel. Below is a schematic representation of the main steps of the pipeline, the color coding represents which rules belong to which main step.*
@@ -112,6 +112,49 @@ representation of the split-sample method is shown below:
 
 *Schematic representation of the split-sample approach: Extracted DNA from a single en-
 vironmental sample is splitted and separately amplified and sequenced. The filtering rule compares the resulting read sets between two split-samples, filtering out all sequences that do not occur in both split-samples. Image adapted from Lange et al. 2015.*
+
+The initial proposal for the split-sample approach by Dr. Lange was accompanied by the release of the R package "AmpliconDuo" for the statistical analysis of amplicon data produced by the aforementioned split-sample approach. It uses Fishers exact test to detect significantly deviating read numbers between two experimental branches A and B from the sample S. For read number r<sub>iAS</sub> of sequence *i* in branch A and read number r<sub>iBS</sub> of sequence *i* in branch B for a sample S the 2 × 2 contingency table Fishers exact test is applied to as follows:
+!
+r
+iAS
+ r
+iBS
+(1)
+Pj6=i rjAS
+ Pj6=i rjBS
+To measure the discordance between two branches of a sample the read-weighted discordance
+∆rSθ , which is weigthed by the average read number of sequence i in both branches and the
+unweighted discordance ∆uSθ for each sequence i are calculated by first calculating the false
+discovery rate qiS from the p-values of all sequences i in sample S using the Benjamini and
+Hochberg (Benjamini and Hochberg 1995) procedure, a threshold θ that can be specified in
+the configuration file, the sum of sequences nS in sample S and (2) and (3) for the cases (4).
+PnS
+i=1 (riAS + riBS )δ(qiS
+ < θ)
+∆rSθ =
+ PnS
+ ,
+ (2)
+i=1 (riAS + riBS )
+δ(qiS < θ)
+∆uSθ =
+ ,
+ (3)
+nS
+
+
+1 for qiS < θ
+
+with δ(qiS < θ) =
+ (4)
+
+0 
+ for qiS
+ ≥ θ
+If ∆uSθ = 0 each branch of sample S contains the same set of sequences, while if ∆rSθ = 0
+the read numbers for each sequence in sample S are within the error margin set by the
+
+
 
 
 

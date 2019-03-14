@@ -169,8 +169,8 @@ The primertable should be a .csv file (*project*.csv) in the following format:
 | S2016RU_A | NNNN   |                 | GTACACACCGCCCGTC        | NN         |                 | GCTGCGYYCTTCATCGDTR     |
 
 # Configfile
-
 Below are the explainations for the configfile (*project*.yaml) entries:
+
 |                   | default                                                                           | description                                                                                                                                                                                                                                   |
 |-------------------|-----------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | filename          | project                                                                           | The filename of the project folder, primertable (.csv) and config file (.yaml).                                                                                                                                                               |

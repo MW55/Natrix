@@ -169,6 +169,7 @@ The primertable should be a .csv file (*project*.csv) in the following format:
 | S2016RU_A | NNNN   |                 | GTACACACCGCCCGTC        | NN         |                 | GCTGCGYYCTTCATCGDTR     |
 
 # Configfile
+
 Below are the explainations for the configfile (*project*.yaml) entries:
 |                   | default                                                                           | description                                                                                                                                                                                                                                   |
 |-------------------|-----------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -207,4 +208,6 @@ Below are the explainations for the configfile (*project*.yaml) entries:
 | ident             | 90.0                                                                              | Minimal identity overlap between target and query sequence.                                                                                                                                                                                   |
 | evalue            | 1e-51                                                                             | Highest accepted evalue.                                                                                                                                                                                                                      |
 | out6              | "6 qseqid qlen length pident mismatch qstart qend sstart send gaps evalue stitle" | Additional BLAST information to be saved.                                                                                                                                                                                                     |
+
+
 

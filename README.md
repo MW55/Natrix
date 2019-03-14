@@ -12,15 +12,33 @@ The need for a scalable, reproducible workflow for the processing of environment
 
 ---
 
+## Dependencies
+* [Conda](https://conda.io/en/latest/index.html)
+* [GNU screen](https://www.gnu.org/software/screen/)
+
+Conda can be downloaded as part of the [Anaconda](https://www.anaconda.com/) or the [Miniconda](https://conda.io/en/latest/miniconda.html) plattforms (Python 3.7).
+GNU screen can be found in the repositories of most Linux distributions:
+
+* Debian / Ubuntu based: apt-get install screen
+* RHEL based: yum install screen
+* Arch based: pacman -S screen
+
+All other dependencies will be automatically installed using conda environments and can be found in the corresponding environment.yaml files in the *envs* folder and the `snakemake.yaml` file in the root directory of the pipeline.
+
+
 ## Getting Started
 
-To install Natter, you'll need the open-source package management system conda and, if you want to try Natter using the accompanying `pipeline.sh` script you'll need [GNU screen](https://www.gnu.org/software/screen/).
+To install Natter, you'll need the open-source package management system [conda](https://conda.io/en/latest/index.html) and, if you want to try Natter using the accompanying `pipeline.sh` script you'll need [GNU screen](https://www.gnu.org/software/screen/).
 After cloning this repository to a folder of your choice, it is recommended to create a general snakemake conda environment with the accompanying `snakemake.yaml`. In the main folder of the cloned repository, execute the following command:
 
 ```shell
 $ conda env create -f snakemake.yaml
 ```
-This will create a conda environment containing all dependencies for Snakemake itself. To try out Natter using the example data, type in the following command:
+This will create a conda environment containing all dependencies for Snakemake itself. 
+
+With Natter comes an example [primertable](#Example-primertable) *example_data.csv*, [configfile](#Configfile) *example_data.yaml* and an example amplicon dataset in the folder *example_data*.
+
+To try out Natter using the example data, type in the following command:
 
 ```shell
 $ ./pipeline.sh
@@ -30,7 +48,7 @@ $ example_data
 The pipeline will then start a screen session using the project name (here, *example_data*) as session name and will beginn downloading dependencies for the rules. To detach from the screen session, press **Ctrl+a, d** (*first press Ctrl+a and then d*). To reattach to a running screen session, type in:
 
 ```shell
-screen -r
+$ screen -r
 ```
 
 When the workflow has finished, you can press **Ctrl+a, k** (*first press Ctrl+a and then k*). This will end the screen session and any processes that are still running.
@@ -41,16 +59,74 @@ When the workflow has finished, you can press **Ctrl+a, k** (*first press Ctrl+a
 
 ## Tutorial
 
-### Prerequisites: dataset, primer table and configuration file
-Besides the FASTQ data from the sequencing process Natter needs a primer table containing the sample names and, if they exists in the data, the length of the poly-N tails, the sequence of the primers and the barcodes used for each sample and direction. Besides the sample names all other information can be omitted if the data was already preprocessed or did not contain the corresponding subsequence. An example primer table is shown below:
+### Prerequisites: dataset, primertable and configuration file
+The FASTQ files need to follow a specific naming convention:
+```
+samplename_unit_direction.fastq.gz
+```
+with:
+* *samplename* as the name of the sample, without special characters.
+* *unit*, identifier for [split-samples](#AmpliconDuo-/-Split-sample-approach) (*A*, *B*). If the split-sample approach is not used, the unit identifier is simply *A*.
+* *direction*, identifier for forward (*R1*) and reverse (*R2*) reads of the same sample. If the reads are single-end, the direction identifier is *R1*.
 
+A dataset should look like this (two samples, paired-end, no split-sample approach):
+```
+S2016RU_A_R1.fastq.gz
+S2016RU_A_R2.fastq.gz
+S2016BY_A_R1.fastq.gz
+S2016BY_A_R2.fastq.gz
+```
+Besides the FASTQ data from the sequencing process Natter needs a [primertable](#Example-primertable) containing the sample names and, if they exists in the data, the length of the poly-N tails, the sequence of the primers and the barcodes used for each sample and direction. Besides the sample names all other information can be omitted if the data was already preprocessed or did not contain the corresponding subsequence. Natter also needs a [configuration](#Configfile) file in YAML format, specifying parameter values for tools used in the pipeline.
 
+The primertable, configfile and the folder containing the FASTQ files all have to be in the root directory of the pipeline and have the same name (with their corresponding file extensions, so *project*.yaml, *project*.csv and the *project* folder containing the FASTQ files). The first [configfile](#Configfile) entry (`filename`) also needs to be the name of the project.
 
-Natter also needs a configuration file in YAML format, specifying parameter values for tools used in the pipeline. An example configuration file with a description and default value
-for each parameter is shown below:
+### Running Natter with the `pipeline.sh` script
 
+IF everything is configured correctly, you can start the pipeline by typing in the following commands into your terminal emulator:
 
+```shell
+$ ./pipeline.sh
+Please enter the name of the project
+$ example_data
+```
 
+The pipeline will then start a screen session using the project name as session name and will beginn downloading dependencies for the rules. To detach from the screen session, press **Ctrl+a, d** (*first press Ctrl+a and then d*). To reattach to a running screen session, type in:
+
+```shell
+$ screen -r
+```
+
+When the workflow has finished, you can press **Ctrl+a, k** (*first press Ctrl+a and then k*). This will end the screen session and any processes that are still running.
+
+### Running Natter manually
+
+If you prefer to run the preperation scripts and snakemake manually, you have to start by activating the snakemake environment:
+
+```shell
+$ conda activate snakemake
+```
+
+Followed by starting the demultiplexing script:
+
+```shell
+$ python3 demultiplexing.py *project*
+```
+
+with *project* being the name of your project. The demultiplexing script will, depending on the options choosen in the configuration file, demultiplex your data, sort your reads or at the very least move the data files to the locations they need to be in for the pipeline.
+
+The second preperation script will create the `units.tsv` file, containing the file information in a way that Natter can use it:
+
+```shell
+$ python3 create_dataframe.py *project*.yaml
+```
+
+To start the main pipeline, type in:
+```shell
+snakemake --use-conda --configfile *project*.yaml --cores *cores*
+```
+with *project* being the name of your project and *cores* being the amount of cores you want to allocate for Natter to use.
+
+Should the pipeline prematurely terminate (either because of an error or by deliberatly stopping it) running the command above again will start the pipeline from the point it was terminated.
 
 
 **BLABLABLA FILENAMES, CONFIG, PRIMERTABLE ETC**
@@ -173,7 +249,7 @@ Below are the explainations for the configfile (*project*.yaml) entries:
 
 |                   | default                                                                           | description                                                                                                                                                                                                                                   |
 |-------------------|-----------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| filename          | project                                                                           | The filename of the project folder, primertable (.csv) and config file (.yaml).                                                                                                                                                               |
+| filename          | example_data                                                                           | The filename of the project folder, primertable (.csv) and config file (.yaml).                                                                                                                                                               |
 | cores             | 4                                                                                 | Amount of cores available for the workflow.                                                                                                                                                                                                   |
 | multiqc           | False                                                                             | Initial quality check (fastqc & multiqc), currently only works for not yet assembled reads.                                                                                                                                                   |
 | units             | units.tsv                                                                         | Path to the sequencing unit sheet.                                                                                                                                                                                                            |
@@ -192,7 +268,7 @@ Below are the explainations for the configfile (*project*.yaml) entries:
 | clustering        | 1.0                                                                               | Percent identity for cdhit (dereplication) (1 = 100%), if cdhit is solely to be used for dereplication (recommended), keep the default value.                                                                                                 |
 | length_overlap    | 0.0                                                                               | Length difference cutoff, default 0.0 if set to 0.9, the shorter sequences need to be at least 90% length of the representative of the cluster.                                                                                               |
 | beta              | 8.0                                                                               | Weight of a "no" vote for the VSEARCH chimera detection algorithm.                                                                                                                                                                            |
-| pseudo_count      | 1.2                                                                               | Pseudo - count prior on number of ânoâ votes.                                                                                                                                                                                                 |
+| pseudo_count      | 1.2                                                                               | Pseudo - count prior on number of "no" votes.                                                                                                                                                                                                 |
 | abskew            | 16                                                                                | Minimum abundance skew, definied by (min(abund.(paren1), abund.(paren2))) / abund.(child).                                                                                                                                                    |
 | filter_method     | not_split                                                                         | If the split sample approach (https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0141590) was used or not.                                                                                                                     |
 | cutoff            | 3                                                                                 | An additional abundance filter if the split sample approach was not used.                                                                                                                                                                     |

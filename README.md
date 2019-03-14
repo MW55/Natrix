@@ -14,7 +14,7 @@ The need for a scalable, reproducible workflow for the processing of environment
 
 ## Getting Started
 
-To install Natter, you'll need the open-source package management system conda and, if you want to try Natter using the accompanying `pipeline.sh` script you'll need [GNU screen](https://www.gnu.org/software/screen/) (in most Linux distributions GNU screen is already preinstalled).
+To install Natter, you'll need the open-source package management system conda and, if you want to try Natter using the accompanying `pipeline.sh` script you'll need [GNU screen](https://www.gnu.org/software/screen/).
 After cloning this repository to a folder of your choice, it is recommended to create a general snakemake conda environment with the accompanying `snakemake.yaml`. In the main folder of the cloned repository, execute the following command:
 
 ```shell
@@ -33,7 +33,7 @@ The pipeline will then start a screen session using the project name (here, *exa
 screen -r
 ```
 
-When the workflow has finished, you can press **Ctrl+a, k** (*first press Ctrl+a and then k*). This will kill any processes still running in this screen session.
+When the workflow has finished, you can press **Ctrl+a, k** (*first press Ctrl+a and then k*). This will end the screen session and any processes that are still running.
 
 **NOW LINK TO THE EXPLAINATION OF THE RESULTS AND TO THE IN-DEPTH EXPLAINATION HOW TO USE THE PIPELINE.**
 
@@ -110,53 +110,47 @@ representation of the split-sample method is shown below:
 <img src="documentation/images/splitsample.png" alt="split_sample" width="300"/>
 </p>
 
-*Schematic representation of the split-sample approach: Extracted DNA from a single en-
-vironmental sample is splitted and separately amplified and sequenced. The filtering rule compares the resulting read sets between two split-samples, filtering out all sequences that do not occur in both split-samples. Image adapted from Lange et al. 2015.*
+*Schematic representation of the split-sample approach: Extracted DNA from a single environmental sample is splitted and separately amplified and sequenced. The filtering rule compares the resulting read sets between two split-samples, filtering out all sequences that do not occur in both split-samples. Image adapted from Lange et al. 2015.*
 
-The initial proposal for the split-sample approach by Dr. Lange was accompanied by the release of the R package "AmpliconDuo" for the statistical analysis of amplicon data produced by the aforementioned split-sample approach. It uses Fishers exact test to detect significantly deviating read numbers between two experimental branches A and B from the sample S. For read number r<sub>iAS</sub> of sequence *i* in branch A and read number r<sub>iBS</sub> of sequence *i* in branch B for a sample S the 2 × 2 contingency table Fishers exact test is applied to as follows:
-!
-r
-iAS
- r
-iBS
-(1)
-Pj6=i rjAS
- Pj6=i rjBS
-To measure the discordance between two branches of a sample the read-weighted discordance
-∆rSθ , which is weigthed by the average read number of sequence i in both branches and the
-unweighted discordance ∆uSθ for each sequence i are calculated by first calculating the false
-discovery rate qiS from the p-values of all sequences i in sample S using the Benjamini and
-Hochberg (Benjamini and Hochberg 1995) procedure, a threshold θ that can be specified in
-the configuration file, the sum of sequences nS in sample S and (2) and (3) for the cases (4).
-PnS
-i=1 (riAS + riBS )δ(qiS
- < θ)
-∆rSθ =
- PnS
- ,
- (2)
-i=1 (riAS + riBS )
-δ(qiS < θ)
-∆uSθ =
- ,
- (3)
-nS
-
-
-1 for qiS < θ
-
-with δ(qiS < θ) =
- (4)
-
-0 
- for qiS
- ≥ θ
-If ∆uSθ = 0 each branch of sample S contains the same set of sequences, while if ∆rSθ = 0
-the read numbers for each sequence in sample S are within the error margin set by the
+The initial proposal for the split-sample approach by Dr. Lange was accompanied by the release of the R package [AmpliconDuo](https://cran.r-project.org/web/packages/AmpliconDuo/index.html) for the statistical analysis of amplicon data produced by the aforementioned split-sample approach. It uses Fishers exact test to detect significantly deviating read numbers between two experimental branches A and B from the sample S. To measure the discordance between two branches of a sample the read-weighted discordance ∆<sup>r</sup><sub>Sθ</sub> , which is weigthed by the average read number of sequence i in both branches and the unweighted discordance ∆<sup>u</sup><sub>Sθ</sub> for each sequence i are calculated.
+If ∆<sup>u</sup><sub>Sθ</sub> = 0 each branch of sample S contains the same set of sequences, while if ∆<sup>r</sup><sub>Sθ</sub> = 0
+the read numbers for each sequence in sample S are within the error margin set by the chosen false discovery rate. The results of the discordance calculations are then plotted for visualization purposes and written to an R data file to allow the filtering of significantly deviating sequences.
 
+## OTU generation
+OTUs are generated using the Swarm clustering algorithm (Mahé et al. 2015) **REFERENCE** in the identically named rule. Swarm clusters sequences into OTUs using an iterative approach with a local threshold: It creates a pool of amplicons from the input file and a empty OTU. Subsequently, it will remove the first amplicon from the pool, which will become the OTU seed. All amplicons left in the pool that differ in their nucleotide composition from the initial seed by a user given threshold (the default threshold used is 1 nucleotide) are removed from the pool and added to the OTU as subseeds. In the next iteration, each amplicon having at most a difference as high as the threshold to any of the subseeds is then removed from the
+pool and added to the OTU. This iterative process will continue until there are no amplicons left in the pool with a nucleotide difference of at most the threshold to any of the subseeds added in the previous iteration to the OTU, leading to the closure of the OTU and the opening of a new one. This approach to OTU generation circumvents two sources of OTU variability that are inherent to greedy clustering algorithms: the input order dependency, in which the first amplicon in a FASTA file will become the centroid of an OTU and the use of a global threshold, recruiting all amplicons that have less differences to the centroid than a user defined threshold. The iterative approach of Swarm produces a star-shaped minimum
+spanning tree, with an (usually highly abundant) amplicon as the center, regardless of the chosen first amplicon of the OTU, as visualized in Figure 12. The sequence of the amplicon at the center of each OTU tree is used in subsequent analysis steps as the representative sequence of the corresponding OTU.
+<p align="center"> 
+<img src="documentation/images/swarm.jpg" alt="split_sample" width="500"/>
+</p>
 
+*Schematic representation of the greedy clustering approach and the iterative Swarm approach. The greedy approach (a) that uses a global clustering threshold t and input order dependent centroid selection can lead to the placement of closely related amplicons into different OTUs. The iterative approach of Swarm (b), with a local threshold d, leads to
+OTUs containing only closely related amplicons with a natually forming centroid during the iterative growth process of the OTU. Image from Mahé et al. 2015.**REFERENCE***
 
+## Sequence comparison
+The assignment of taxonomic information to an OTU is an important part of the processing of environmental amplicon data, as the characteristics of known groups or species can be used to assess the environmental conditions of the samples origin. To find sequences that are similar to the representative sequence of each OTU the BLAST (basic local alignment search
+tool) algorithm (Altschul et al. 1990)**REFERENCE** is used to search for similar sequences in the SILVA database (Pruesse et al. 2007)**REFERENCE**. The SILVA database contains aligned rRNA sequencing data that are curated in a multi-step process. While it has an extensive collection of highquality prokaryotic rRNA sequencing data, it only contains a limited amount of microbial
+eukaryotic sequencing data. If the database is not locally available, the required files will automatically be downloaded and the database will be build in the rule make_silva_db. The BLAST algorithm itself will be executed in the blast rule. As the aim is to find similar nucleotide sequences in the database for each query sequence the nucleotide-nucleotide BLAST (BLASTn) variation of the BLAST algorithm is used. The tab separated output file of the blast rule contains the following information for each representative sequence if the output of the BLASTn search meets the criteria defined in the configuration file **LINK TO CONFIG SECTION**:
+| Column Nr. | Column Name | Description                                   |
+|------------|-------------|-----------------------------------------------|
+| 1.         | qseqid      | Query sequence identification                 |
+| 2.         | qlen        | Length of the query sequence                  |
+| 3.         | length      | Length of the alignment                       |
+| 4.         | pident      | Percentage of identical matches               |
+| 5.         | mismatch    | Number of mismatches                          |
+| 6.         | qstart      | Start of the alignment in the query sequence  |
+| 7.         | qend        | End of the alignment in the query sequence    |
+| 8.         | sstart      | Start of the alignment in the target sequence |
+| 9.         | send        | End of the alignment in the target sequence   |
+| 10.        | gaps        | Number of gaps                                |
+| 11.        | evalue      | E-value                                       |
+| 12.        | stitle      | Title (taxonomy) of the target sequence       |
 
+## Merging of the results
+The output data from the write_fasta, swarm and blast rules are merged to a single comma
+separated table in the merge_results rule, containing for each representative sequence the
+sequence identification number, the nucleotide sequence, the abundance of the sequence in
+each sample, the sum of abundances and, if the blast rule found a similar sequence, all information found in the table shown in the previous section.
 
 
 

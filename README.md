@@ -134,7 +134,7 @@ Should the pipeline prematurely terminate (either because of an error or by deli
 ## Output
 
 <p align="center"> 
-<img src="documentation/images/output.png" alt="split_sample" width="800"/>
+<img src="documentation/images/output.svg" alt="split_sample" width="800"/>
 </p>
 
 

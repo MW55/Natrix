@@ -131,10 +131,35 @@ Should the pipeline prematurely terminate (either because of an error or by deli
 
 ## Output
 
+After the workflow is finished, the original data can be found under *Natter-Pipeline/demultiplexed/*, while files created during the workflow can be found under *Natter-Pipeline/results/*
 <p align="center"> 
 <img src="documentation/images/output.svg" alt="split_sample" width="800"/>
 </p>
 
+*Output file hierachy, green nodes represent folders, purple nodes represent files.*
+
+|Folder                               |File(s)                   |Description                                                                                              |
+|-------------------------------------|--------------------------|---------------------------------------------------------------------------------------------------------|
+|qc                                   |FastQC reports            |Quality reports of the FastQC application.                                                               |
+|                                     |MultiQC report            |Aggregated FastQC reports in a single file.                                                              |
+|logs                                 |Logfiles                  |Logfiles of the different rules.                                                                         |
+|assembly (one folder for each sample)|sample_low_qual.fastq     |Sequences of sample that did not pass the prinseq quality filtering.                                     |
+|                                     |sample_assembled.fastq    |With PANDAseq assembled sequences.                                                                       |
+|                                     |sample_singletons.fastq   |Sequences that could not be assembled.                                                                   |
+|                                     |sample.fasta              |FASTA file of the assembled sequences.                                                                   |
+|                                     |sample.dereplicated.fasta |Dereplicated sequences of sample                                                                         |
+|                                     |sample_chimera.fasta      |Sequences of sample that are thought to be of chimeric origin.                                           |
+|finalData                            |sample.nonchimera.fasta   |Sequences of sample that passed the chimera detection rule.                                              |
+|                                     |unfiltered_table.csv      |Table containing the sequences of all samples and their abundances per sample.                           |
+|                                     |filtered_table.csv        |Table containing the sequences of all samples and their abundances per sample after filtering.           |
+|                                     |filtered_out_table.csv    |Table containing the sequences that did not pass the filtering rule.                                     |
+|                                     |filtered.fasta            |The sequences of the filtered_table.csv in FASTA format.                                                 |
+|                                     |filtered_blast_table.csv  |Table containing the sequences of the filtered_table.csv and the taxonomic information assigned to each. |
+|figures                              |ampliconduo_unfiltered.png|Discordance graph before the filtering.                                                                  |
+|                                     |ampliconduo_filtered.png  |Discordance graph after filtering.                                                                       |
+|                                     |AmpliconDuo.Rdata         |RData file containing the results of the AmpliconDuo statistical analysis.                               |
+
+---
 
 # Steps of the Pipeline
 ## Initial demultiplexing
@@ -164,11 +189,13 @@ assembly rule, specified by entries of the configuration file and a primer table
 ### Assembly 
 To assemble paired-end reads and remove the subsequences described in the pre-
 vious section PANDAseq (Masella et al. 2012) **REFERENCE** is used, which uses a probabilistic error correction to assemble overlapping forward- and reverse-reads. After assembly and sequence trimming, it will remove sequences that do not meet a minimal or maximal length threshold, have an assembly quality score below a threshold that can be defined in the configuration file and sequences whose forward- and reverse-read do not have an sufficiently long overlap. The thresholds for each of these procedures can be adjusted in the configuration file. If the reads are single-end, the subsequences (poly-N, barcode and the primer) that are defined in the define_primer rule are removed, followed by the removal of sequences that do not meet a minimal or maximal length threshold as defined in the configuration file.
+
 ## Similarity clustering
 ### Conversion of FASTQ files to FASTA files 
 The rule copy_to_fasta converts the FASTQ files to FASTA files to reduce the disc space occupied by the files and to allow the usage of CD-HIT, which requires FASTA formated sequencing files. Clustering of similar sequences The CD-HIT-EST algorithm (Fu et al. 2012) **REFERENCE** clusters sequences together if they are either identical or if a sequence is a subsequence of another. This clustering approach is known as dereplication. Beginning with the longest sequence of the dataset as the first representative sequence, it iterates through the dataset in order of
 decreasing sequence length, comparing at each iteration the current query sequence to all representative sequences. If the sequence identity threshold defined in the configuration file is met for a representative sequence, the counter of the representative sequence is increased by one. If the threshold could not be met for any of the existing representative sequences, the query sequence is added to the pool of representative sequences. Cluster sorting The cluster_sorting rule uses the output of the cdhit rule to count the amount of sequences represented by each cluster, followed by sorting the representative sequences in descending order according to the cluster size and adds a specific header to each
 sequence as required by the UCHIME chimera detection algorithm.
+
 ## Chimera detection
 ### VSEARCH
 VSEARCH is a open-source alternative to the USEARCH toolkit, which aims to functionally replicate the algorithms used by USEARCH for which the source code is not openly available and which are often only rudimentarily described (Rognes et al. 2016) **REFERENCE**. Natter uses as an alternative to UCHIME the VSEARCH uchime3_denovo algorithm to detect chimeric sequences (further referred to as VSEARCH3). The VSEARCH3 algorithm is a replication of the UCHIME2 algorithm with optimized standard parameters. The UCHIME2 algorithm is described by R. Edgar 2016 **REFERENCE** as follows:
@@ -212,7 +239,7 @@ OTUs containing only closely related amplicons with a natually forming centroid 
 ## Sequence comparison
 The assignment of taxonomic information to an OTU is an important part of the processing of environmental amplicon data, as the characteristics of known groups or species can be used to assess the environmental conditions of the samples origin. To find sequences that are similar to the representative sequence of each OTU the BLAST (basic local alignment search
 tool) algorithm (Altschul et al. 1990)**REFERENCE** is used to search for similar sequences in the SILVA database (Pruesse et al. 2007)**REFERENCE**. The SILVA database contains aligned rRNA sequencing data that are curated in a multi-step process. While it has an extensive collection of highquality prokaryotic rRNA sequencing data, it only contains a limited amount of microbial
-eukaryotic sequencing data. If the database is not locally available, the required files will automatically be downloaded and the database will be build in the rule make_silva_db. The BLAST algorithm itself will be executed in the blast rule. As the aim is to find similar nucleotide sequences in the database for each query sequence the nucleotide-nucleotide BLAST (BLASTn) variation of the BLAST algorithm is used. The tab separated output file of the blast rule contains the following information for each representative sequence if the output of the BLASTn search meets the criteria defined in the configuration file **LINK TO CONFIG SECTION**:
+eukaryotic sequencing data. If the database is not locally available, the required files will automatically be downloaded and the database will be build in the rule make_silva_db. The BLAST algorithm itself will be executed in the blast rule. As the aim is to find similar nucleotide sequences in the database for each query sequence the nucleotide-nucleotide BLAST (BLASTn) variation of the BLAST algorithm is used. The tab separated output file of the blast rule contains the following information for each representative sequence if the output of the BLASTn search meets the criteria defined in the [configuration](#Configfile) file:
 
 | Column Nr. | Column Name | Description                                   |
 |------------|-------------|-----------------------------------------------|

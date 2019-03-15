@@ -36,7 +36,7 @@
     </g>
     <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,290,-218)" stroke-linecap="butt">
       <rect x="535" y="331" clip-path="url(#clipPath2)" fill="none" width="243" rx="4" ry="4" height="52"/>
-      <text x="601.6636" font-size="30px" y="367.3857" clip-path="url(#clipPath2)" font-family="sans-serif" stroke="none" xml:space="preserve">Results</text>
+      <text x="605.9189" font-size="30px" y="367.3857" clip-path="url(#clipPath2)" font-family="sans-serif" stroke="none" xml:space="preserve">results</text>
     </g>
     <g transform="matrix(1,0,0,1,290,-218)" fill-opacity="0.6627" fill="rgb(167,214,160)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" stroke="rgb(167,214,160)" stroke-opacity="0.6627">
       <rect x="-65.2812" y="413" clip-path="url(#clipPath2)" width="243" rx="4" ry="4" height="52" stroke="none"/>

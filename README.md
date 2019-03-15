@@ -1,7 +1,7 @@
 # Natter-Pipeline 
 
 Natter is an open-source bioinformatics pipeline for the preprocessing of raw sequencing data.
-The need for a scalable, reproducible workflow for the processing of environmental amplicon data led to the development of Natter. It is divided into quality assessment, read assembly, dereplication, chimera detection, split-sample merging, OTU-generation and taxonomic assessment. The pipeline is written in [Snakemake](https://snakemake.readthedocs.io), a workflow management engine for the development of data analysis workflows. Snakemake ensures reproducibility of a workflow by automatically deploying dependencies of workflow steps (rules) and scales seamlessly to different computing environments like servers, computer clusters or cloud services. While Natter was only tested with 16S and 18S amplicon data, it should also work for different kinds of sequencing data. The pipeline contains seperate rules for each step of the pipeline and each rule that has additional dependencies has a seperate [conda](https://conda.io/) environment that will be automatically created when starting the pipeline for the first time. The encapsulation of rules and their dependencies allows for hassle-free sharing of rules between workflows.
+The need for a scalable, reproducible workflow for the processing of environmental amplicon data led to the development of Natter. It is divided into quality assessment, read assembly, dereplication, chimera detection, split-sample merging, OTU-generation and taxonomic assessment. The pipeline is written in [Snakemake](https://snakemake.readthedocs.io), a workflow management engine for the development of data analysis workflows. Snakemake ensures reproducibility of a workflow by automatically deploying dependencies of workflow steps (rules) and scales seamlessly to different computing environments like servers, computer clusters or cloud services. While Natter was only tested with 16S and 18S amplicon data, it should also work for other kinds of sequencing data. The pipeline contains seperate rules for each step of the pipeline and each rule that has additional dependencies has a seperate [conda](https://conda.io/) environment that will be automatically created when starting the pipeline for the first time. The encapsulation of rules and their dependencies allows for hassle-free sharing of rules between workflows.
 
 ![DAG of an example workflow](documentation/images/example_dag.png)
 *DAG of an example workflow: each node represents a rule instance to be executed. The direction of each edge represents the order in which the rules are executed. Disjoint paths in the DAG can be executed in parallel. Below is a schematic representation of the main steps of the pipeline, the color coding represents which rules belong to which main step.*
@@ -168,7 +168,7 @@ of the pipeline, as it is often already done by the sequencing company and there
 
 ## Quality control
 For quality control the pipeline uses the programs FastQC (Andrews 2010), MultiQC (Ewels
-et al. 2016) and PRINSEQ (Schmieder and Edwards 2011). **ALL NEED REFERENCES**
+et al. 2016) and PRINSEQ (Schmieder and Edwards 2011).
 
 ### FastQC 
 FastQC generates a quality report for each FASTQ file, containing information such
@@ -188,19 +188,22 @@ assembly rule, specified by entries of the configuration file and a primer table
 
 ### Assembly 
 To assemble paired-end reads and remove the subsequences described in the pre-
-vious section PANDAseq (Masella et al. 2012) **REFERENCE** is used, which uses a probabilistic error correction to assemble overlapping forward- and reverse-reads. After assembly and sequence trimming, it will remove sequences that do not meet a minimal or maximal length threshold, have an assembly quality score below a threshold that can be defined in the configuration file and sequences whose forward- and reverse-read do not have an sufficiently long overlap. The thresholds for each of these procedures can be adjusted in the configuration file. If the reads are single-end, the subsequences (poly-N, barcode and the primer) that are defined in the define_primer rule are removed, followed by the removal of sequences that do not meet a minimal or maximal length threshold as defined in the configuration file.
+vious section PANDAseq (Masella et al. 2012) is used, which uses a probabilistic error correction to assemble overlapping forward- and reverse-reads. After assembly and sequence trimming, it will remove sequences that do not meet a minimal or maximal length threshold, have an assembly quality score below a threshold that can be defined in the configuration file and sequences whose forward- and reverse-read do not have an sufficiently long overlap. The thresholds for each of these procedures can be adjusted in the configuration file. If the reads are single-end, the subsequences (poly-N, barcode and the primer) that are defined in the define_primer rule are removed, followed by the removal of sequences that do not meet a minimal or maximal length threshold as defined in the configuration file.
 
 ## Similarity clustering
 ### Conversion of FASTQ files to FASTA files 
-The rule copy_to_fasta converts the FASTQ files to FASTA files to reduce the disc space occupied by the files and to allow the usage of CD-HIT, which requires FASTA formated sequencing files. Clustering of similar sequences The CD-HIT-EST algorithm (Fu et al. 2012) **REFERENCE** clusters sequences together if they are either identical or if a sequence is a subsequence of another. This clustering approach is known as dereplication. Beginning with the longest sequence of the dataset as the first representative sequence, it iterates through the dataset in order of
+The rule copy_to_fasta converts the FASTQ files to FASTA files to reduce the disc space occupied by the files and to allow the usage of CD-HIT, which requires FASTA formated sequencing files. Clustering of similar sequences The CD-HIT-EST algorithm (Fu et al. 2012) clusters sequences together if they are either identical or if a sequence is a subsequence of another. This clustering approach is known as dereplication. Beginning with the longest sequence of the dataset as the first representative sequence, it iterates through the dataset in order of
 decreasing sequence length, comparing at each iteration the current query sequence to all representative sequences. If the sequence identity threshold defined in the configuration file is met for a representative sequence, the counter of the representative sequence is increased by one. If the threshold could not be met for any of the existing representative sequences, the query sequence is added to the pool of representative sequences. Cluster sorting The cluster_sorting rule uses the output of the cdhit rule to count the amount of sequences represented by each cluster, followed by sorting the representative sequences in descending order according to the cluster size and adds a specific header to each
 sequence as required by the UCHIME chimera detection algorithm.
 
 ## Chimera detection
 ### VSEARCH
-VSEARCH is a open-source alternative to the USEARCH toolkit, which aims to functionally replicate the algorithms used by USEARCH for which the source code is not openly available and which are often only rudimentarily described (Rognes et al. 2016) **REFERENCE**. Natter uses as an alternative to UCHIME the VSEARCH uchime3_denovo algorithm to detect chimeric sequences (further referred to as VSEARCH3). The VSEARCH3 algorithm is a replication of the UCHIME2 algorithm with optimized standard parameters. The UCHIME2 algorithm is described by R. Edgar 2016 **REFERENCE** as follows:
+VSEARCH is a open-source alternative to the USEARCH toolkit, which aims to functionally replicate the algorithms used by USEARCH for which the source code is not openly available and which are often only rudimentarily described (Rognes et al. 2016). Natter uses as an alternative to UCHIME the VSEARCH uchime3_denovo algorithm to detect chimeric sequences (further referred to as VSEARCH3). The VSEARCH3 algorithm is a replication of the UCHIME2 algorithm with optimized standard parameters. The UCHIME2 algorithm is described by R. Edgar 2016 as follows:
+
 "Given a query sequence *Q*, UCHIME2 uses the UCHIME algorithm to construct a model
-(*M*), then makes a multiple alignment of *Q* with the model and top hit (*T*, the most similar reference sequence). The following metrics are calculated from the alignment: number of differences d<sub>QT</sub> between Q and T and d<sub>QM</sub> between *Q* and *M*, the alignment score (*H*) using eq. 2 in R. C. Edgar et al. 2011. The fractional divergence with respect to the top hit is calculated as div<sub>T</sub> = (d<sub>QT</sub> − d<sub>QM</sub>)/|Q|. If divT is large, the model is a much better match than the top hit and the query is more likely to be chimeric, and conversely if div<sub>T</sub> is small, the model is more likely to be a fake." The difference between the UCHIME2 and UCHIME3 algorithm is that to be selected as a potential parent, a sequence needs to have at least 16 times the abundance of the query sequence in the UCHIME3 algorithm, while it only needs double the abundance of the query sequence to be selected as a potential parent in the UCHIME2 algorithm.
+(*M*), then makes a multiple alignment of *Q* with the model and top hit (*T*, the most similar reference sequence). The following metrics are calculated from the alignment: number of differences d<sub>QT</sub> between Q and T and d<sub>QM</sub> between *Q* and *M*, the alignment score (*H*) using eq. 2 in R. C. Edgar et al. 2011. The fractional divergence with respect to the top hit is calculated as div<sub>T</sub> = (d<sub>QT</sub> − d<sub>QM</sub>)/|Q|. If divT is large, the model is a much better match than the top hit and the query is more likely to be chimeric, and conversely if div<sub>T</sub> is small, the model is more likely to be a fake." 
+
+The difference between the UCHIME2 and UCHIME3 algorithm is that to be selected as a potential parent, a sequence needs to have at least 16 times the abundance of the query sequence in the UCHIME3 algorithm, while it only needs double the abundance of the query sequence to be selected as a potential parent in the UCHIME2 algorithm.
 
 ## Table creation and filtering
 ### Merging of all FASTA files into a single table
@@ -211,9 +214,7 @@ or equal the specified cutoff value. The filtered data and the filtered out data
 As the swarm rule needs FASTA files as input, the resulting table of the filtering is converted to a FASTA file by the rule write_fasta.
 
 ## AmpliconDuo / Split-sample approach
-The pipeline supports both single-sample and split-sample FASTQ amplicon data. The split-sample protocol (Lange et al. 2015) **REFERENCE** aims to reduce the amount of sequences that are the result of PCR or sequencing errors without the usage of stringent abundance cutoffs, which often lead to the loss of rare but naturally occurring sequences. To achieve this, extracted DNA from a single sample is divided into two split-samples, which are then separately amplified and sequenced. All sequences that do not occur in both split-samples are seen as erroneous sequences and filtered out. The method is therefore based on the idea that a sequence that
-was created by PCR or sequencing errors does not occur in both samples. A schematic
-representation of the split-sample method is shown below:
+The pipeline supports both single-sample and split-sample FASTQ amplicon data. The split-sample protocol (Lange et al. 2015) aims to reduce the amount of sequences that are the result of PCR or sequencing errors without the usage of stringent abundance cutoffs, which often lead to the loss of rare but naturally occurring sequences. To achieve this, extracted DNA from a single sample is divided into two split-samples, which are then separately amplified and sequenced. All sequences that do not occur in both split-samples are seen as erroneous sequences and filtered out. The method is therefore based on the idea that a sequence that was created by PCR or sequencing errors does not occur in both samples. A schematic representation of the split-sample method is shown below:
 
 <p align="center"> 
 <img src="documentation/images/splitsample.png" alt="split_sample" width="300"/>
@@ -226,7 +227,7 @@ If ∆<sup>u</sup><sub>Sθ</sub> = 0 each branch of sample S contains the same s
 the read numbers for each sequence in sample S are within the error margin set by the chosen false discovery rate. The results of the discordance calculations are then plotted for visualization purposes and written to an R data file to allow the filtering of significantly deviating sequences.
 
 ## OTU generation
-OTUs are generated using the Swarm clustering algorithm (Mahé et al. 2015) **REFERENCE** in the identically named rule. Swarm clusters sequences into OTUs using an iterative approach with a local threshold: It creates a pool of amplicons from the input file and a empty OTU. Subsequently, it will remove the first amplicon from the pool, which will become the OTU seed. All amplicons left in the pool that differ in their nucleotide composition from the initial seed by a user given threshold (the default threshold used is 1 nucleotide) are removed from the pool and added to the OTU as subseeds. In the next iteration, each amplicon having at most a difference as high as the threshold to any of the subseeds is then removed from the
+OTUs are generated using the Swarm clustering algorithm (Mahé et al. 2015)in the identically named rule. Swarm clusters sequences into OTUs using an iterative approach with a local threshold: It creates a pool of amplicons from the input file and a empty OTU. Subsequently, it will remove the first amplicon from the pool, which will become the OTU seed. All amplicons left in the pool that differ in their nucleotide composition from the initial seed by a user given threshold (the default threshold used is 1 nucleotide) are removed from the pool and added to the OTU as subseeds. In the next iteration, each amplicon having at most a difference as high as the threshold to any of the subseeds is then removed from the
 pool and added to the OTU. This iterative process will continue until there are no amplicons left in the pool with a nucleotide difference of at most the threshold to any of the subseeds added in the previous iteration to the OTU, leading to the closure of the OTU and the opening of a new one. This approach to OTU generation circumvents two sources of OTU variability that are inherent to greedy clustering algorithms: the input order dependency, in which the first amplicon in a FASTA file will become the centroid of an OTU and the use of a global threshold, recruiting all amplicons that have less differences to the centroid than a user defined threshold. The iterative approach of Swarm produces a star-shaped minimum
 spanning tree, with an (usually highly abundant) amplicon as the center, regardless of the chosen first amplicon of the OTU, as visualized in Figure 12. The sequence of the amplicon at the center of each OTU tree is used in subsequent analysis steps as the representative sequence of the corresponding OTU.
 <p align="center"> 
@@ -234,11 +235,11 @@ spanning tree, with an (usually highly abundant) amplicon as the center, regardl
 </p>
 
 *Schematic representation of the greedy clustering approach and the iterative Swarm approach. The greedy approach (a) that uses a global clustering threshold t and input order dependent centroid selection can lead to the placement of closely related amplicons into different OTUs. The iterative approach of Swarm (b), with a local threshold d, leads to
-OTUs containing only closely related amplicons with a natually forming centroid during the iterative growth process of the OTU. Image from Mahé et al. 2015.**REFERENCE***
+OTUs containing only closely related amplicons with a natually forming centroid during the iterative growth process of the OTU. Image from Mahé et al. 2015.*
 
 ## Sequence comparison
 The assignment of taxonomic information to an OTU is an important part of the processing of environmental amplicon data, as the characteristics of known groups or species can be used to assess the environmental conditions of the samples origin. To find sequences that are similar to the representative sequence of each OTU the BLAST (basic local alignment search
-tool) algorithm (Altschul et al. 1990)**REFERENCE** is used to search for similar sequences in the SILVA database (Pruesse et al. 2007)**REFERENCE**. The SILVA database contains aligned rRNA sequencing data that are curated in a multi-step process. While it has an extensive collection of highquality prokaryotic rRNA sequencing data, it only contains a limited amount of microbial
+tool) algorithm (Altschul et al. 1990) is used to search for similar sequences in the SILVA database (Pruesse et al. 2007). The SILVA database contains aligned rRNA sequencing data that are curated in a multi-step process. While it has an extensive collection of highquality prokaryotic rRNA sequencing data, it only contains a limited amount of microbial
 eukaryotic sequencing data. If the database is not locally available, the required files will automatically be downloaded and the database will be build in the rule make_silva_db. The BLAST algorithm itself will be executed in the blast rule. As the aim is to find similar nucleotide sequences in the database for each query sequence the nucleotide-nucleotide BLAST (BLASTn) variation of the BLAST algorithm is used. The tab separated output file of the blast rule contains the following information for each representative sequence if the output of the BLASTn search meets the criteria defined in the [configuration](#Configfile) file:
 
 | Column Nr. | Column Name | Description                                   |
@@ -310,6 +311,30 @@ Below are the explainations for the configfile (*project*.yaml) entries:
 | ident             | 90.0                                                                              | Minimal identity overlap between target and query sequence.                                                                                                                                                                                   |
 | evalue            | 1e-51                                                                             | Highest accepted evalue.                                                                                                                                                                                                                      |
 | out6              | "6 qseqid qlen length pident mismatch qstart qend sstart send gaps evalue stitle" | Additional BLAST information to be saved.                                                                                                                                                                                                     |
+
+---
+# References
+
+* Andrews, S. (2010). FASTQC. A quality control tool for high throughput sequence data.
+* Ewels, P et al. (2016). “MultiQC: summarize analysis results for multiple tools and samples in a single report”. In: *Bioinformatics* 32.19, pp. 3047–3048.
+* Schmieder, Robert and Robert A. Edwards (2011). “Quality control and preprocessing of metagenomic datasets.” In: *Bioinformatics* 27.6, pp. 863–864.
+* Masella, Andre P et al. (2012). “PANDAseq: paired-end assembler for illumina sequences”. In: *BMC Bioinformatics 13.1*, p. 31.
+* Fu, Limin et al. (2012). “CD-HIT: accelerated for clustering the next-generation sequencing
+data”. In: *Bioinformatics 28.23*, pp. 3150–3152.
+*  Rognes, Torbjørn et al. (2016). “VSEARCH: a versatile open source tool for metagenomics”.
+In: *doi: 10.7287/peerj.preprints.2409v1.*
+* Edgar, Robert (2016). “UCHIME2: improved chimera prediction for amplicon sequencing”. In: *bioRxiv.*
+* Mahé, Frédéric et al. (2015). “Swarm v2: highly-scalable and high-resolution amplicon clustering”. In: *PeerJ 3.*
+* Lange, Anja et al. (2015). “AmpliconDuo: A Split-Sample Filtering Protocol for High-Throughput Amplicon Sequencing of Microbial Communities”. In: *Plos One 10.11.*
+* Altschul, Stephen F. et al. (1990). “Basic local alignment search tool”. In: *Journal of Molecular Biology 215.3*, pp. 403–410.
+* Pruesse, E. et al. (2007). “SILVA: a comprehensive online resource for quality checked and aligned ribosomal RNA sequence data compatible with ARB”. In: *Nucleic Acids Research 35.21*, pp. 7188–7196.
+
+
+
+
+
+
+
 
 
 

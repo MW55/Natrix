@@ -32,3 +32,4 @@ already_assembled_b
 test_data_backup*
 snakemake_backup*
 dag10*
+schema/config.schema_for_pandas.yaml

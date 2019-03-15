@@ -14,7 +14,7 @@ The need for a scalable, reproducible workflow for the processing of environment
 
 ## Dependencies
 * [Conda](https://conda.io/en/latest/index.html)
-* [GNU screen](https://www.gnu.org/software/screen/)
+* [GNU screen](https://www.gnu.org/software/screen/) (optional)
 
 Conda can be downloaded as part of the [Anaconda](https://www.anaconda.com/) or the [Miniconda](https://conda.io/en/latest/miniconda.html) plattforms (Python 3.7).
 GNU screen can be found in the repositories of most Linux distributions:
@@ -53,8 +53,6 @@ $ screen -r
 ```
 
 When the workflow has finished, you can press **Ctrl+a, k** (*first press Ctrl+a and then k*). This will end the screen session and any processes that are still running.
-
-**NOW LINK TO THE EXPLAINATION OF THE RESULTS AND TO THE IN-DEPTH EXPLAINATION HOW TO USE THE PIPELINE.**
 
 ---
 
@@ -138,7 +136,7 @@ Should the pipeline prematurely terminate (either because of an error or by deli
 </p>
 
 
-# Steps of the Pipeline **NOBODY READS ALL THIS, PUT IT IN THE WIKI**
+# Steps of the Pipeline
 ## Initial demultiplexing
 The sorting of reads accoring to their barcode is known as demultiplexing. In Natter, the demultiplexing step is implemented in a separate script, independent from the rest
 of the pipeline, as it is often already done by the sequencing company and therefore in most cases not necessary.

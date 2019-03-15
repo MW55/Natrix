@@ -131,7 +131,7 @@ Should the pipeline prematurely terminate (either because of an error or by deli
 
 ## Output
 
-After the workflow is finished, the original data can be found under *Natter-Pipeline/demultiplexed/*, while files created during the workflow can be found under *Natter-Pipeline/results/*
+After the workflow is finished, the original data can be found under *Natter-Pipeline/demultiplexed/*, while files created during the workflow can be found under *Natter-Pipeline/results/*.
 <p align="center"> 
 <img src="documentation/images/output.svg" alt="split_sample" width="800"/>
 </p>
@@ -177,8 +177,7 @@ sequences, GC content, adapter and the k-mer content of the FASTQ file.
 
 ### MultiQC 
 MultiQC aggregates the FastQC reports for a given set of FASTQ files into a
-single report, allowing reviews of all FASTQ files at once.
-PRINSEQ PRINSEQ is used to filter out sequences with an average quality score below
+single report, allowing reviews of all FASTQ files at once. PRINSEQ is used to filter out sequences with an average quality score below
 the threshold that can be defined in the configuration file of the pipeline.
 
 ## Read assembly
@@ -227,7 +226,7 @@ If ∆<sup>u</sup><sub>Sθ</sub> = 0 each branch of sample S contains the same s
 the read numbers for each sequence in sample S are within the error margin set by the chosen false discovery rate. The results of the discordance calculations are then plotted for visualization purposes and written to an R data file to allow the filtering of significantly deviating sequences.
 
 ## OTU generation
-OTUs are generated using the Swarm clustering algorithm (Mahé et al. 2015)in the identically named rule. Swarm clusters sequences into OTUs using an iterative approach with a local threshold: It creates a pool of amplicons from the input file and a empty OTU. Subsequently, it will remove the first amplicon from the pool, which will become the OTU seed. All amplicons left in the pool that differ in their nucleotide composition from the initial seed by a user given threshold (the default threshold used is 1 nucleotide) are removed from the pool and added to the OTU as subseeds. In the next iteration, each amplicon having at most a difference as high as the threshold to any of the subseeds is then removed from the
+OTUs are generated using the Swarm clustering algorithm (Mahé et al. 2015) in the identically named rule. Swarm clusters sequences into OTUs using an iterative approach with a local threshold: It creates a pool of amplicons from the input file and a empty OTU. Subsequently, it will remove the first amplicon from the pool, which will become the OTU seed. All amplicons left in the pool that differ in their nucleotide composition from the initial seed by a user given threshold (the default threshold used is 1 nucleotide) are removed from the pool and added to the OTU as subseeds. In the next iteration, each amplicon having at most a difference as high as the threshold to any of the subseeds is then removed from the
 pool and added to the OTU. This iterative process will continue until there are no amplicons left in the pool with a nucleotide difference of at most the threshold to any of the subseeds added in the previous iteration to the OTU, leading to the closure of the OTU and the opening of a new one. This approach to OTU generation circumvents two sources of OTU variability that are inherent to greedy clustering algorithms: the input order dependency, in which the first amplicon in a FASTA file will become the centroid of an OTU and the use of a global threshold, recruiting all amplicons that have less differences to the centroid than a user defined threshold. The iterative approach of Swarm produces a star-shaped minimum
 spanning tree, with an (usually highly abundant) amplicon as the center, regardless of the chosen first amplicon of the OTU, as visualized in Figure 12. The sequence of the amplicon at the center of each OTU tree is used in subsequent analysis steps as the representative sequence of the corresponding OTU.
 <p align="center"> 

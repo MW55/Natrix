@@ -20,7 +20,7 @@ import pathlib
 # primertable with config config['general']['filename'] + '.csv'
 with open(sys.argv[1] + '.yaml') as f_:
     config = yaml.load(f_)
-p_table = pd.read_csv(sys.argv[1] + '.csv', index_col='Probe')
+p_table = pd.read_csv(config['general']['primertable'], index_col='Probe') #p_table = pd.read_csv(sys.argv[1] + '.csv', index_col='Probe')
 primertable = p_table.to_dict('index')
 data_folder = config['general']['filename'] 
 file_path_list = sorted(glob.glob(data_folder + "/*.fastq*"))

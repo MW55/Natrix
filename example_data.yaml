@@ -1,9 +1,10 @@
 # General options
 general:
-        filename : example_data # The filename of the project folder, primertable (.csv) and config file (.yaml).
+        filename : example_data # The filename of the project folder, primertable (.csv) and configfile (.yaml).
+        primertable: example_data.csv # Path to the primertable.
+        units: units.tsv # Path to the sequencing unit sheet.
         cores : 4 # Amount of cores available for the workflow.
         multiqc : TRUE  # Initial quality check (fastqc & multiqc), currently only works for not yet assembled reads.
-        units: units.tsv # Path to the sequencing unit sheet.
         demultiplexing: FALSE # Demultiplexing for reads that were not demultiplexed by the sequencing company (slow).
         read_sorting: FALSE # Read sorting for paired end reads that were not sorted by the sequencing company (slow).
         already_assembled: FALSE # Skipping of the quality control and read assembly steps for data that is already assembled.

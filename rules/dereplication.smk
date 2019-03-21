@@ -11,8 +11,9 @@ rule cdhit:
     params:
         id_percent=config["derep"]["clustering"],
         length_cutoff=config["derep"]["length_overlap"]
-    shell:"cd-hit-est -i {input} -o {output[0]} -c {params.id_percent} -T"
-          " {threads} -s {params.length_cutoff} -M 2000 -sc 1 -d 0"
+    shell:
+        "cd-hit-est -i {input} -o {output[0]} -c {params.id_percent} -T"
+        " {threads} -s {params.length_cutoff} -M 2000 -sc 1 -d 0"
 
 rule cluster_sorting:
     input:

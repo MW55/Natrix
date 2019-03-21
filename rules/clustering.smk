@@ -26,7 +26,7 @@ rule swarm:
     output:
         "results/finalData/OTU_representatives.fasta",
         temp("results/finalData/merged.swarms")
-    threads: config["general"]["cores"]
+    threads: 150
     conda:
         "../envs/swarm.yaml"
     shell:

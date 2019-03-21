@@ -14,7 +14,7 @@ rule unzip:
 
 rule define_primer:
     input:
-        primer_table=config["general"]["filename"] + ".csv"
+        primer_table=config["general"]["primertable"]
     output:
         "primer_table.csv"
     params:
@@ -51,8 +51,7 @@ rule assembly:
         primer_t="primer_table.csv"
     output:
         "results/assembly/{sample}_{unit}/{sample}_{unit}_assembled.fastq"
-    threads:
-        config["general"]["cores"]
+    threads: 20
     params:
         paired_end=config["merge"]["paired_End"],
         threshold=config["qc"]["threshold"],

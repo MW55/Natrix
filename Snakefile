@@ -9,20 +9,20 @@ units.index = units.index.set_levels([i.astype(str) for i in units.index.levels]
 name_ext = config["merge"]["name_ext"][:-1]
 
 def is_single_end(sample, unit):
-    return pd.isnull(units.loc[(sample,unit), 'fq2'])
+    return pd.isnull(units.loc[(sample,unit), "fq2"])
 
-if config['merge']['paired_End']:
+if config["merge"]["paired_End"]:
     reads = [1,2]
 else:
     reads = 1
 
 rule all:
     input:
-        'results/finalData/filtered_table.csv',
-        'results/finalData/merged.swarms',
-        'results/qc/multiqc_report.html' if config["general"]["multiqc"] else [],
-        'results/finalData/figures/AmpliconDuo.RData',
-        'results/finalData/filtered_blast_table.csv' if config["blast"]["blast"] else []
+        "results/finalData/filtered_table.csv",
+        "results/finalData/merged.swarms",
+        "results/qc/multiqc_report.html" if config["general"]["multiqc"] else [],
+        "results/finalData/figures/AmpliconDuo.RData",
+        "results/finalData/filtered_blast_table.csv" if config["blast"]["blast"] else []
 
 ruleorder: assembly > prinseq
 

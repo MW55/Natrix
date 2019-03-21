@@ -5,6 +5,14 @@ general:
                 type: string
                 default: project
                 description: The filename of the project folder, primertable (.csv) and config file (.yaml).
+        primertable:
+                type: string
+                default: project.csv
+                description: Path to the primertable.
+        units: 
+                type: string 
+                default: units.tsv
+                description: Path to the sequencing unit sheet.
         cores:
                 type: int
                 default: 4
@@ -14,10 +22,6 @@ general:
                 type: boolean
                 default: FALSE
                 description: Initial quality check (fastqc & multiqc), currently only works for not yet assembled reads.
-        units: 
-                type: string 
-                default: units.tsv
-                description: Path to the sequencing unit sheet.
         demultiplexing: 
                 type: boolean
                 default: FALSE

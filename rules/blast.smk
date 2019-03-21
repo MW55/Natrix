@@ -20,8 +20,7 @@ rule blast:
         expand(config["blast"]["db_path"] + "{file_extension}", file_extension=[".nhr", ".nin", ".nog", ".nsd", ".nsi", ".nsq"])
     output:
         temp("results/finalData/blast_taxonomy.tsv")
-    threads:
-        config["general"]["cores"]
+    threads: 150
     params:
         db_path=config["blast"]["db_path"],
         max_target_seqs=str(config["blast"]["max_target_seqs"]),

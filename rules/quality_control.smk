@@ -4,8 +4,7 @@ rule fastqc:
     output:
         "results/qc/{sample}_{unit}_R{read}_fastqc.html",
         "results/qc/{sample}_{unit}_R{read}_fastqc.zip"
-    threads:
-        config["general"]["cores"]
+    threads: 15
     conda:
         "../envs/quality_control.yaml"
     shell:

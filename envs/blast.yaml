@@ -54,5 +54,4 @@ dependencies:
   - numpy=1.14.2=py36hdbf6ddf_1
   - pip:
     - powerline-status==2.6
-prefix: /home/wintermute/anaconda2/envs/blast
 

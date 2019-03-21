@@ -9,5 +9,4 @@ dependencies:
 - libgcc-ng=7.2.0=hdf63c60_3
 - libstdcxx-ng=7.2.0=hdf63c60_3
 - zlib=1.2.11=h470a237_3
-prefix: /home/botany/miniconda3/envs/vsearch
 

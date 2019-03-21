@@ -8,5 +8,4 @@ dependencies:
   - seqtk=1.3=ha92aebf_0
   - libgcc-ng=7.2.0=hdf63c60_3
   - zlib=1.2.11=h470a237_3
-prefix: /home/wintermute/anaconda2/envs/seqtk
 

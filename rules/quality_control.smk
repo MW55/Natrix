@@ -5,7 +5,7 @@ rule fastqc:
         "results/qc/{sample}_{unit}_R{read}_fastqc.html",
         "results/qc/{sample}_{unit}_R{read}_fastqc.zip"
     threads:
-        config['general']['cores']
+        config["general"]["cores"]
     conda:
         "../envs/quality_control.yaml"
     shell:
@@ -14,7 +14,7 @@ rule fastqc:
 rule multiqc:
     input:
         expand("results/qc/{unit.sample}_{unit.unit}_R{read}_fastqc.zip",
-        unit = units.reset_index().itertuples(), read=reads)
+        unit=units.reset_index().itertuples(), read=reads)
     output:
         "results/qc/multiqc_report.html"
     conda:

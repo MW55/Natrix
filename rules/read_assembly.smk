@@ -9,18 +9,19 @@ rule unzip:
          "demultiplexed/{sample}_{unit}_R{read}.fastq.gz"
     output:
         temp("demultiplexed/{sample}_{unit}_{read}.fastq")
-    shell: "gunzip -c {input} > {output}"
+    shell: 
+         "gunzip -c {input} > {output}"
 
 rule define_primer:
     input:
-        primer_table = config["general"]["filename"] + ".csv"
+        primer_table=config["general"]["filename"] + ".csv"
     output:
         "primer_table.csv"
     params:
-       paired_end = config["merge"]["paired_End"],
-       offset = config["qc"]["primer_offset"],
-       bar_removed = config["qc"]["barcode_removed"],
-       all_removed = config["qc"]["all_primer"]
+       paired_end=config["merge"]["paired_End"],
+       offset=config["qc"]["primer_offset"],
+       bar_removed=config["qc"]["barcode_removed"],
+       all_removed=config["qc"]["all_primer"]
     conda:
         "../envs/define_primer.yaml"
     script:
@@ -47,19 +48,19 @@ rule assembly:
         expand(
         "results/assembly/{{sample}}_{{unit}}/{{sample}}_{{unit}}_{read}.fastq",
         read=reads),
-        primer_t = "primer_table.csv"
+        primer_t="primer_table.csv"
     output:
         "results/assembly/{sample}_{unit}/{sample}_{unit}_assembled.fastq"
     threads:
         config["general"]["cores"]
     params:
-        paired_end = config["merge"]["paired_End"],
-        threshold = config["qc"]["threshold"],
-        minoverlap = config["qc"]["minoverlap"],
-        minlen = config["qc"]["minlen"],
-        maxlen = config["qc"]["maxlen"],
-        minqual = config["qc"]["minqual"],
-        prim_rm = config["qc"]["all_primer"]
+        paired_end=config["merge"]["paired_End"],
+        threshold=config["qc"]["threshold"],
+        minoverlap=config["qc"]["minoverlap"],
+        minlen=config["qc"]["minlen"],
+        maxlen=config["qc"]["maxlen"],
+        minqual=config["qc"]["minqual"],
+        prim_rm=config["qc"]["all_primer"]
     conda:
         "../envs/assembly.yaml"
     log:

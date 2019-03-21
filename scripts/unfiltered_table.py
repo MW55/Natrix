@@ -10,19 +10,19 @@ import collections as col
 seq_dict = col.OrderedDict()
 for i in range(len(snakemake.input)):
     seqs = dinopy.FastaReader(snakemake.input[i])
-    f_name = snakemake.input[i].split('/')[-1].split('.')[0]
+    f_name = snakemake.input[i].split("/")[-1].split(".")[0]
     for entry in seqs.entries():
         if entry.sequence.decode() in seq_dict:
             seq_dict[entry.sequence.decode()][f_name] =(
-                    str(entry.name).split('size=')[1].split(';')[0])
+                    str(entry.name).split("size=")[1].split(";")[0])
         else:
             seq_dict[entry.sequence.decode()] =(
-                    {f_name:str(entry.name).split('size=')[1].split(';')[0]})
+                    {f_name:str(entry.name).split("size=")[1].split(";")[0]})
 
 # Export the dict in json format for further processing.
 # This increases the modularity of the pipeline but cost time to
 # read/write the file.
-with open(str(snakemake.output[1]), 'w') as f_:
+with open(str(snakemake.output[1]), "w") as f_:
     json.dump(seq_dict, f_)
 
 
@@ -30,6 +30,6 @@ with open(str(snakemake.output[1]), 'w') as f_:
 # column being the abundance of each sequence for a particular
 # sample. Same structure than the old pipeline.
 
-df = pd.DataFrame.from_dict(seq_dict, orient='index').fillna(0)
-df.index.name = 'sequences'
+df = pd.DataFrame.from_dict(seq_dict, orient="index").fillna(0)
+df.index.name = "sequences"
 df.to_csv(snakemake.output[0])

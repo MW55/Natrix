@@ -25,6 +25,7 @@ qc:
 derep:
         clustering : 1 # Percent identity for cdhit (dereplication) (1 = 100%), if cdhit is solely to be used for dereplication (recommended), keep the default value.
         length_overlap : 0.0 # Length difference cutoff, default 0.0 if set to 0.9, the shorter sequences need to be at least 90% length of the representative of the cluster.
+        representative: most_common # Which sequence to use as a representative sequence per CDHIT cluster. longest = the longest sequence of the corresponding cluster, most_common = the most common sequence of the corresponding cluster.
 
 # Chimera removal
 chim:
@@ -45,7 +46,7 @@ merge:
 
 # BLAST
 blast:
-        blast : TRUE # Boolean to indicate the use of the BLAST clustering algorithm to assign taxonomic information to the OTUs.
+        blast : FALSE # Boolean to indicate the use of the BLAST clustering algorithm to assign taxonomic information to the OTUs.
         db_path : 'database/silva.db' # Path to the database file against which the BLAST should be carried out, at the moment only the SILVA database will be automatically downloaded, other databases have to be downloaded and configurated manually.
         max_target_seqs : 1 # Number of blast hits that are saved per sequence / OTU.
         ident : 90.0 # Minimal identity overlap between target and query sequence.

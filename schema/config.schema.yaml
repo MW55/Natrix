@@ -94,6 +94,13 @@ derep:
                 minimum: 0.0
                 maximum: 1.0
                 description: Length difference cutoff, default 0.0 if set to 0.9, the shorter sequences need to be at least 90% length of the representative of the cluster.
+        representative:
+                type: string
+                default: longest
+                oneOf:
+                        longest,
+                        most_common
+                description: Which sequence to use as a representative sequence per CDHIT cluster. longest = the longest sequence of the corresponding cluster, most_common = the most common sequence of the corresponding cluster.
 
 chim:
         beta:

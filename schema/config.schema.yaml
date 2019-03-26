@@ -140,7 +140,7 @@ merge:
                         BH,
                         BY,
                         none
-                description: Specifies the correction method for Fisher's excat test.
+                description: Specifies the correction method for Fisher's exact test.
         save_format:
                 type: string
                 default: png

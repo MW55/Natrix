@@ -37,7 +37,7 @@ chim:
 merge:
         filter_method : not_split # If the split sample approach (https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0141590) was used or not.
         cutoff : 3 # An additional abundance filter if the split sample approach was not used.
-        ampli_corr : fdr # Specifies the correction method for Fisher's excat test.
+        ampli_corr : fdr # Specifies the correction method for Fisher's exact test.
         save_format : png # File format for the frequency-frequency plot.
         plot_AmpDuo : TRUE # If the frequency-frequency plot should be saved.
         paired_End : TRUE # The format of the sequencing data, TRUE if the reads are in paired-end format.

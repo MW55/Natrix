@@ -5,8 +5,6 @@ fasta = snakemake.input[0]
 clstr = snakemake.input[1]
 fasta_not_clstr = snakemake.input[2]
 
-print(str(snakemake.params))
-
 def sequence_dict(fasta_file):
     return {entry.name:entry.sequence for entry
                 in dinopy.FastaReader(str(fasta_file)).entries()}
@@ -42,7 +40,6 @@ def get_longest_rep(clstr):
 # sequence header, needed to use the most common sequence
 # of a cluster as representative.
 def not_clstr_dict(not_clstr_fasta):
-    print("not_clstr_dict")
     not_clstr = dict()
     for entry in dinopy.FastaReader(not_clstr_fasta).entries():
         s = entry.sequence.decode()
@@ -56,7 +53,6 @@ def not_clstr_dict(not_clstr_fasta):
     return not_clstr
 
 def header_dict(not_clstr_fasta):
-    print("not_clstr_fasta")
     not_clstr = not_clstr_dict(not_clstr_fasta)
     return {n:not_clstr[s]["count"] for s 
             in not_clstr.keys() for n 
@@ -71,7 +67,6 @@ def dictfilt(header_dict, seq_set):
 # a better representation of the genetic composition of the
 # sample.
 def get_most_common_rep(clstr, fasta_unclstr):
-    print("get_most_common_seq")
     clust_sizes = []
     ids = []
     seqs = dict()
@@ -100,7 +95,6 @@ def get_most_common_rep(clstr, fasta_unclstr):
 # Writes the representatives in a fasta file with the new headers, uses
 # the old header as key to get the matching sequences from the dict.
 def writer(c_size, seq_dict):
-    print("writer")
     with dinopy.FastaWriter(str(snakemake.output), force_overwrite=True,
             line_width=1000) as clust:
         clust.write_entries([(seq_dict[line[1].encode()],

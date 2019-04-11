@@ -19,7 +19,7 @@ else:
 rule all:
     input:
         "results/finalData/filtered_table.csv",
-        "results/finalData/merged.swarms",
+        "results/finalData/swarm_table.csv" if config["merge"]["swarm"] else [],
         "results/qc/multiqc_report.html" if config["general"]["multiqc"] else [],
         "results/finalData/figures/AmpliconDuo.RData",
         "results/finalData/filtered_blast_table.csv" if config["blast"]["blast"] else []

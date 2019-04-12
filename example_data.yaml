@@ -4,7 +4,7 @@ general:
         primertable: example_data.csv # Path to the primertable.
         units: units.tsv # Path to the sequencing unit sheet.
         cores : 4 # Amount of cores available for the workflow.
-        multiqc : TRUE  # Initial quality check (fastqc & multiqc), currently only works for not yet assembled reads.
+        multiqc : FALSE  # Initial quality check (fastqc & multiqc), currently only works for not yet assembled reads.
         demultiplexing: FALSE # Demultiplexing for reads that were not demultiplexed by the sequencing company (slow).
         read_sorting: FALSE # Read sorting for paired end reads that were not sorted by the sequencing company (slow).
         already_assembled: FALSE # Skipping of the quality control and read assembly steps for data that is already assembled.
@@ -46,8 +46,9 @@ merge:
 
 # BLAST
 blast:
-        blast : FALSE # Boolean to indicate the use of the BLAST clustering algorithm to assign taxonomic information to the OTUs.
-        db_path : 'database/silva.db' # Path to the database file against which the BLAST should be carried out, at the moment only the SILVA database will be automatically downloaded, other databases have to be downloaded and configurated manually.
+        blast : TRUE  # Boolean to indicate the use of the BLAST clustering algorithm to assign taxonomic information to the OTUs.
+        database: NCBI # Database against which the BLAST should be carried out, at the moment "NCBI" and "SILVA" are supported.
+        db_path : 'database/ncbi/nt' # Path to the database file against which the BLAST should be carried out, at the moment only the SILVA and NCBI databases will be automatically downloaded, other databases have to be downloaded and configurated manually.
         max_target_seqs : 1 # Number of blast hits that are saved per sequence / OTU.
         ident : 90.0 # Minimal identity overlap between target and query sequence.
         evalue : 1e-51 # Highest accepted evalue.

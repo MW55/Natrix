@@ -1,23 +1,43 @@
-rule make_silva_db:
-    output:
-        expand(config["blast"]["db_path"] + "{file_extension}", file_extension=[".nhr", ".nin", ".nog", ".nsd", ".nsi", ".nsq"])
-    params:
-        db_path=config["blast"]["db_path"]
-    conda:
-        "../envs/blast.yaml"
-    shell:
-        "dir_name=$(dirname {params[0]});"
-        "wget -P $dir_name/ --progress=bar "
-        "https://www.arb-silva.de/fileadmin/silva_databases/current/Exports/"
-        "SILVA_132_SSURef_tax_silva.fasta.gz;"
-        "gunzip $dir_name/SILVA_132_SSURef_tax_silva.fasta.gz;"
-        "makeblastdb -in $dir_name/SILVA_132_SSURef_tax_silva.fasta "
-        "-dbtype nucl -parse_seqids -out $dir_name/silva.db"
+if config["blast"]["database"] == "SILVA":
+
+    rule make_silva_db:
+        output:
+            expand(config["blast"]["db_path"] + "{file_extension}", file_extension=[".nhr", ".nin", ".nog", ".nsd", ".nsi", ".nsq"])
+        params:
+            db_path=config["blast"]["db_path"]
+        conda:
+            "../envs/blast.yaml"
+        shell:
+            "dir_name=$(dirname {params[0]});"
+            "wget -P $dir_name/ --progress=bar "
+            "https://www.arb-silva.de/fileadmin/silva_databases/current/Exports/"
+            "SILVA_132_SSURef_tax_silva.fasta.gz;"
+            "gunzip $dir_name/SILVA_132_SSURef_tax_silva.fasta.gz;"
+            "makeblastdb -in $dir_name/SILVA_132_SSURef_tax_silva.fasta "
+            "-dbtype nucl -parse_seqids -out $dir_name/silva.db"
+
+elif config["blast"]["database"] == "NCBI":
+
+    rule make_ncbi_db:
+        output:
+            expand(config["blast"]["db_path"] + "*" + "{file_extension}", file_extension=[".nhr", ".nin", ".nog", ".nsd", ".nsi", ".nsq"])
+        params:
+            db_path=config["blast"]["db_path"]
+        conda:
+            "../envs/blast.yaml"
+        shell:
+            "dir_name=$(dirname {params[0]});"
+            "wget -P $dir_name/ --progress=bar "
+            "for i in {00..71}; "
+            "do wget -P $dir_name/ --progress=bar "
+            "ftp://ftp.ncbi.nlm.nih.gov/blast/db/nt.${i}.tar.gz; "
+            "tar xvzf $dir_name/nt.${i}.tar.gz -C $dir_name; "
+            "done; touch 'nt'"
 
 rule blast:
     input:
         "results/finalData/OTU_representatives.fasta",
-        expand(config["blast"]["db_path"] + "{file_extension}", file_extension=[".nhr", ".nin", ".nog", ".nsd", ".nsi", ".nsq"])
+        expand(config["blast"]["db_path"] + "{file_extension}", file_extension=[".nhr", ".nin", ".nog", ".nsd", ".nsi", ".nsq"] if config["blast"]["database"] == "SILVA" else "")
     output:
         temp("results/finalData/blast_taxonomy.tsv")
     threads: 150

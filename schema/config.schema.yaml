@@ -177,10 +177,17 @@ blast:
                 type: boolean
                 default: FALSE
                 description: Boolean to indicate the use of the BLAST clustering algorithm to assign taxonomic information to the OTUs.
+        database:
+                type: string
+                default: SILVA
+                description: Database against which the BLAST should be carried out, at the moment "NCBI" and "SILVA" are supported.
+                oneOf:
+                        SILVA,
+                        NCBI
         db_path:
                 type: string
-                default: 'database/silva.db'
-                description: Path to the database file against which the BLAST should be carried out, at the moment only the SILVA database will be automatically downloaded, other databases have to be downloaded and configurated manually.
+                default: 'database/silva/silva.db'
+                description: Path to the database file against which the BLAST should be carried out, at the moment only the SILVA and NCBI databases will be automatically downloaded, other databases have to be downloaded and configurated manually.
         max_target_seqs:
                 type: int
                 default: 1

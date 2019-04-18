@@ -48,8 +48,8 @@ merge:
 blast:
         blast : TRUE  # Boolean to indicate the use of the BLAST clustering algorithm to assign taxonomic information to the OTUs.
         database: NCBI # Database against which the BLAST should be carried out, at the moment "NCBI" and "SILVA" are supported.
-        db_path : 'database/ncbi/nt' # Path to the database file against which the BLAST should be carried out, at the moment only the SILVA and NCBI databases will be automatically downloaded, other databases have to be downloaded and configurated manually.
+        db_path : database/ncbi/nt # Path to the database file against which the BLAST should be carried out, at the moment only the SILVA and NCBI databases will be automatically downloaded, other databases have to be downloaded and configurated manually.
         max_target_seqs : 1 # Number of blast hits that are saved per sequence / OTU.
         ident : 90.0 # Minimal identity overlap between target and query sequence.
         evalue : 1e-51 # Highest accepted evalue.
-        out6 : '"6 qseqid qlen length pident mismatch qstart qend sstart send gaps evalue stitle"' # Additional BLAST information to be saved.
+        out6 : '"6 qseqid qlen length pident mismatch qstart qend sstart send gaps evalue staxids"' # stitle Additional BLAST information to be saved.

@@ -24,6 +24,7 @@ rule cluster_sorting:
     conda:
         "../envs/dereplication.yaml"
     params:
-        config["derep"]["representative"]
+        repr=config["derep"]["representative"],
+        length_cutoff=config["derep"]["length_overlap"]
     script:
         "../scripts/dereplication.py"

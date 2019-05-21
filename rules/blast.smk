@@ -20,6 +20,7 @@ elif config["blast"]["database"] == "NCBI":
     rule make_ncbi_db:
         output:
             expand(config["blast"]["db_path"] + ".00" + "{file_extension}", file_extension=[".nhr", ".nin", ".nog", ".nsd", ".nsi", ".nsq"]),
+            listing = temp(".listing"),
             path = config["blast"]["db_path"]
         params:
             db_path=config["blast"]["db_path"]
@@ -32,7 +33,9 @@ elif config["blast"]["database"] == "NCBI":
                 wget -N -P $dir_name/ --progress=bar ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/new_taxdump/new_taxdump.tar.gz;
                 wget -N -P $dir_name/ --progress=bar ftp://ftp.ncbi.nlm.nih.gov/blast/db/taxdb.tar.gz;
                 tar xvzf $dir_name/new_taxdump.tar.gz -C $dir_name;
-                for i in `seq -w 00 70`;
+                wget --spider --no-remove-listing ftp://ftp.ncbi.nlm.nih.gov/blast/db/
+                number=$(awk '$9 ~ /^nt.[0-9]*.tar.gz[^.]/ {{print substr($9,4,2)}}' {output.listing} | tail -n 1)
+                for i in `seq -w 00 $number`;
                     do wget -N -P $dir_name/ --progress=bar ftp://ftp.ncbi.nlm.nih.gov/blast/db/nt.${{i}}.tar.gz;
                 tar xvzf $dir_name/nt.${{i}}.tar.gz -C $dir_name;
                 done;

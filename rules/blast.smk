@@ -137,10 +137,23 @@ rule merge_results:
         merged_swarm="results/finalData/swarm_table.csv",
         blast_result="results/finalData/blast_taxonomic_lineage.tsv"
     output:
-        "results/finalData/filtered_blast_table.csv"
+        temp("results/finalData/filtered_blast_table.csv")
     conda:
         "../envs/merge_results.yaml"
     log:
         "results/logs/finalData/BLAST.log"
     script:
         "../scripts/merge_results.py"
+
+rule get_taxonomy:
+    input:
+        "results/finalData/filtered_blast_table.csv"
+    output:
+        "results/finalData/filtered_blast_table_tax.csv"
+    params:
+        db_path=config["blast"]["db_path"],
+        db =config["blast"]["database"]
+    conda:
+        "../envs/get_taxonomy.yaml"
+    script:
+        "../scripts/get_taxonomy.R"

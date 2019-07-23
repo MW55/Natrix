@@ -1,41 +1,20 @@
-import json
 import pandas as pd
-import collections as col
+import tables
 
-with open(str(snakemake.input), "r") as f_:
-    seq_dict = json.load(f_)
-
-filtered_out = col.OrderedDict()
-filtered = col.OrderedDict()
+df = pd.read_hdf(str(snakemake.input), 'df')
 
 if snakemake.params.filter_method == "split_sample":
-    # If the list of samples without unit identifier contains only
-    # unique strings, the sequence does not apper in both samples for
-    # any sample pair.
-    for sequence in seq_dict.keys():
-        sample_lcomp = [sample[:-2] for sample in seq_dict[sequence].keys()]
-        if len(sample_lcomp) == len(set(sample_lcomp)):
-            filtered_out[sequence] = seq_dict[sequence]
-        else:
-            filtered[sequence] = seq_dict[sequence]
+    # If more samples contain a value for a sequence than the unique list of
+    # samples without unit identifier, than the sequence is present in at least
+    # one _A, _B combination
+    uniq_samples =  len(set(sample[:-2] for sample in list(df.columns)))
+    df_filtered = df[df[df>=1].sum(axis=1) > uniq_samples]
+    df_filtered = df[df[df>=1].sum(axis=1) <= uniq_samples]
 elif snakemake.params.filter_method == "not_split":
-    for sequence in seq_dict.keys():
-        if all([int(value) <= snakemake.params.cutoff for value
-                in seq_dict[sequence].values()]):
-            filtered_out[sequence] = seq_dict[sequence]
-        else:
-            filtered[sequence] = seq_dict[sequence]
+    df_filtered = df[(df > snakemake.params.cutoff).all(1)]
+    df_filtered_out = df[(df <= snakemake.params.cutoff).all(1)]
 else:
     raise ValueError("Valid filter methods are 'split_sample' and 'not_split'")
 
-df_filtered = pd.DataFrame.from_dict(filtered, orient="index").fillna(0)
-df_filtered.index.name = "sequences"
 df_filtered.to_csv(snakemake.output[0])
-df_filtered_out = pd.DataFrame.from_dict(filtered_out, orient="index").fillna(0)
-df_filtered_out.index.name = "sequences"
 df_filtered_out.to_csv(snakemake.output[1])
-
-with open(str(snakemake.output[2]), "w") as f_:
-    json.dump(filtered, f_)
-with open(str(snakemake.output[3]), "w") as g_:
-    json.dump(filtered_out, g_)

@@ -3,7 +3,7 @@ rule unfiltered_table:
         expand("results/finalData/{unit.sample}_{unit.unit}.nonchimera.fasta", unit=units.reset_index().itertuples())
     output:
         "results/finalData/unfiltered_table.csv",
-        temp("results/finalData/unfiltered_dict.json")
+        temp("results/finalData/unfiltered_dict.hdf5")
     conda:
         "../envs/unfiltered_table.yaml"
     script:
@@ -11,12 +11,10 @@ rule unfiltered_table:
 
 rule filtering:
     input:
-        "results/finalData/unfiltered_dict.json"
+        "results/finalData/unfiltered_dict.hdf5"
     output:
         temp("results/finalData/filtered_table_temp.csv"),
-        "results/finalData/filtered_out_table.csv",
-        temp("results/finalData/filtered_dict.json"),
-        temp("results/finalData/filtered_out_dict.json")
+        "results/finalData/filtered_out_table.csv"
     params:
         filter_method=config["merge"]["filter_method"],
         cutoff=config["merge"]["cutoff"]

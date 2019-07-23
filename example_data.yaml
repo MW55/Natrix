@@ -3,7 +3,7 @@ general:
         filename : example_data # The filename of the project folder, primertable (.csv) and configfile (.yaml).
         primertable: example_data.csv # Path to the primertable.
         units: units.tsv # Path to the sequencing unit sheet.
-        cores : 4 # Amount of cores available for the workflow.
+        cores : 20 # Amount of cores available for the workflow.
         multiqc : FALSE  # Initial quality check (fastqc & multiqc), currently only works for not yet assembled reads.
         demultiplexing: FALSE # Demultiplexing for reads that were not demultiplexed by the sequencing company (slow).
         read_sorting: FALSE # Read sorting for paired end reads that were not sorted by the sequencing company (slow).
@@ -46,10 +46,10 @@ merge:
 
 # BLAST
 blast:
-        blast : TRUE  # Boolean to indicate the use of the BLAST clustering algorithm to assign taxonomic information to the OTUs.
+        blast : FALSE  # Boolean to indicate the use of the BLAST clustering algorithm to assign taxonomic information to the OTUs.
         database: NCBI # Database against which the BLAST should be carried out, at the moment "NCBI" and "SILVA" are supported.
-        db_path : database/ncbi/nt # Path to the database file against which the BLAST should be carried out, at the moment only the SILVA and NCBI databases will be automatically downloaded, other databases have to be downloaded and configurated manually.
-        max_target_seqs : 1 # Number of blast hits that are saved per sequence / OTU.
+        db_path : database/ncbi/nt # Path to the database file against which the BLAST should be carried out, at the moment only the SILVA (database/silva/silva.db) and NCBI (database/ncbi/nt) databases will be automatically downloaded, other databases have to be downloaded and configurated manually.
+        max_target_seqs : 10 # Number of NCBI blast hits that are saved per sequence / OTU.
         ident : 90.0 # Minimal identity overlap between target and query sequence.
         evalue : 1e-51 # Highest accepted evalue.
-        out6 : '"6 qseqid qlen length pident mismatch qstart qend sstart send gaps evalue staxid"' # stitle Additional BLAST information to be saved.
+        out6 : '"6 qseqid qlen length pident mismatch qstart qend sstart send gaps evalue staxid sseqid"' # stitle Additional BLAST information to be saved.

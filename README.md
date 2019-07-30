@@ -1,14 +1,14 @@
-# Natter-Pipeline 
+# Natrix
 
-Natter is an open-source bioinformatics pipeline for the preprocessing of raw sequencing data.
-The need for a scalable, reproducible workflow for the processing of environmental amplicon data led to the development of Natter. It is divided into quality assessment, read assembly, dereplication, chimera detection, split-sample merging, OTU-generation and taxonomic assessment. The pipeline is written in [Snakemake](https://snakemake.readthedocs.io) (Köster and Rahmann 2018), a workflow management engine for the development of data analysis workflows. Snakemake ensures reproducibility of a workflow by automatically deploying dependencies of workflow steps (rules) and scales seamlessly to different computing environments like servers, computer clusters or cloud services. While Natter was only tested with 16S and 18S amplicon data, it should also work for other kinds of sequencing data. The pipeline contains seperate rules for each step of the pipeline and each rule that has additional dependencies has a seperate [conda](https://conda.io/) environment that will be automatically created when starting the pipeline for the first time. The encapsulation of rules and their dependencies allows for hassle-free sharing of rules between workflows.
+Natrix is an open-source bioinformatics workflow for the preprocessing of raw sequencing data.
+The need for a scalable, reproducible workflow for the processing of environmental amplicon data led to the development of Natrix. It is divided into quality assessment, read assembly, dereplication, chimera detection, split-sample merging, OTU-generation and taxonomic assessment. The pipeline is written in [Snakemake](https://snakemake.readthedocs.io) (Köster and Rahmann 2018), a workflow management engine for the development of data analysis workflows. Snakemake ensures reproducibility of a workflow by automatically deploying dependencies of workflow steps (rules) and scales seamlessly to different computing environments like servers, computer clusters or cloud services. While Natrix was only tested with 16S and 18S amplicon data, it should also work for other kinds of sequencing data. The pipeline contains seperate rules for each step of the pipeline and each rule that has additional dependencies has a seperate [conda](https://conda.io/) environment that will be automatically created when starting the pipeline for the first time. The encapsulation of rules and their dependencies allows for hassle-free sharing of rules between workflows.
 
 ![DAG of an example workflow](documentation/images/example_dag.png)
 *DAG of an example workflow: each node represents a rule instance to be executed. The direction of each edge represents the order in which the rules are executed. Disjoint paths in the DAG can be executed in parallel. Below is a schematic representation of the main steps of the pipeline, the color coding represents which rules belong to which main step.*
 
 
 
-*So far, Natter was only tested on Ubuntu 17.10, 18.04 and Arch Linux, feedback if it runs on other operating systems and distributions would be greatly appreciated.*
+*So far, Natrix was only tested on Ubuntu 17.10, 18.04 and Arch Linux, feedback if it runs on other operating systems and distributions would be greatly appreciated.*
 
 ---
 
@@ -29,7 +29,7 @@ All other dependencies will be automatically installed using conda environments 
 
 ## Getting Started
 
-To install Natter, you'll need the open-source package management system [conda](https://conda.io/en/latest/index.html) and, if you want to try Natter using the accompanying `pipeline.sh` script you'll need [GNU screen](https://www.gnu.org/software/screen/).
+To install Natrix, you'll need the open-source package management system [conda](https://conda.io/en/latest/index.html) and, if you want to try Natrix using the accompanying `pipeline.sh` script you'll need [GNU screen](https://www.gnu.org/software/screen/).
 After cloning this repository to a folder of your choice, it is recommended to create a general snakemake conda environment with the accompanying `snakemake.yaml`. In the main folder of the cloned repository, execute the following command:
 
 ```shell
@@ -37,9 +37,9 @@ $ conda env create -f snakemake.yaml
 ```
 This will create a conda environment containing all dependencies for Snakemake itself. 
 
-With Natter comes an example [primertable](#Example-primertable) *example_data.csv*, [configfile](#Configfile) *example_data.yaml* and an example amplicon dataset in the folder *example_data*.
+With Natrix comes an example [primertable](#Example-primertable) *example_data.csv*, [configfile](#Configfile) *example_data.yaml* and an example amplicon dataset in the folder *example_data*.
 
-To try out Natter using the example data, type in the following command:
+To try out Natrix using the example data, type in the following command:
 
 ```shell
 $ ./pipeline.sh
@@ -75,11 +75,11 @@ S2016RU_A_R2.fastq.gz
 S2016BY_A_R1.fastq.gz
 S2016BY_A_R2.fastq.gz
 ```
-Besides the FASTQ data from the sequencing process Natter needs a [primertable](#Example-primertable) containing the sample names and, if they exists in the data, the length of the poly-N tails, the sequence of the primers and the barcodes used for each sample and direction. Besides the sample names all other information can be omitted if the data was already preprocessed or did not contain the corresponding subsequence. Natter also needs a [configuration](#Configfile) file in YAML format, specifying parameter values for tools used in the pipeline.
+Besides the FASTQ data from the sequencing process Natrix needs a [primertable](#Example-primertable) containing the sample names and, if they exists in the data, the length of the poly-N tails, the sequence of the primers and the barcodes used for each sample and direction. Besides the sample names all other information can be omitted if the data was already preprocessed or did not contain the corresponding subsequence. Natrix also needs a [configuration](#Configfile) file in YAML format, specifying parameter values for tools used in the pipeline.
 
 The primertable, configfile and the folder containing the FASTQ files all have to be in the root directory of the pipeline and have the same name (with their corresponding file extensions, so *project*.yaml, *project*.csv and the *project* folder containing the FASTQ files). The first [configfile](#Configfile) entry (`filename`) also needs to be the name of the project.
 
-### Running Natter with the `pipeline.sh` script
+### Running Natrix with the `pipeline.sh` script
 
 IF everything is configured correctly, you can start the pipeline by typing in the following commands into your terminal emulator:
 
@@ -97,7 +97,7 @@ $ screen -r
 
 When the workflow has finished, you can press **Ctrl+a, k** (*first press Ctrl+a and then k*). This will end the screen session and any processes that are still running.
 
-### Running Natter manually
+### Running Natrix manually
 
 If you prefer to run the preperation scripts and snakemake manually, you have to start by activating the snakemake environment:
 
@@ -113,7 +113,7 @@ $ python3 demultiplexing.py *project*
 
 with *project* being the name of your project. The demultiplexing script will, depending on the options choosen in the configuration file, demultiplex your data, sort your reads or at the very least move the data files to the locations they need to be in for the pipeline.
 
-The second preperation script will create the `units.tsv` file, containing the file information in a way that Natter can use it:
+The second preperation script will create the `units.tsv` file, containing the file information in a way that Natrix can use it:
 
 ```shell
 $ python3 create_dataframe.py *project*.yaml
@@ -123,7 +123,7 @@ To start the main pipeline, type in:
 ```shell
 snakemake --use-conda --configfile *project*.yaml --cores *cores*
 ```
-with *project* being the name of your project and *cores* being the amount of cores you want to allocate for Natter to use.
+with *project* being the name of your project and *cores* being the amount of cores you want to allocate for Natrix to use.
 
 Should the pipeline prematurely terminate (either because of an error or by deliberatly stopping it) running the command above again will start the pipeline from the point it was terminated.
 
@@ -131,7 +131,7 @@ Should the pipeline prematurely terminate (either because of an error or by deli
 
 ## Output
 
-After the workflow is finished, the original data can be found under *Natter-Pipeline/demultiplexed/*, while files created during the workflow can be found under *Natter-Pipeline/results/*.
+After the workflow is finished, the original data can be found under *Natrix/demultiplexed/*, while files created during the workflow can be found under *Natrix/results/*.
 <p align="center"> 
 <img src="documentation/images/output.svg" alt="split_sample" width="800"/>
 </p>
@@ -163,7 +163,7 @@ After the workflow is finished, the original data can be found under *Natter-Pip
 
 # Steps of the Pipeline
 ## Initial demultiplexing
-The sorting of reads accoring to their barcode is known as demultiplexing. In Natter, the demultiplexing step is implemented in a separate script, independent from the rest
+The sorting of reads accoring to their barcode is known as demultiplexing. In Natrix, the demultiplexing step is implemented in a separate script, independent from the rest
 of the pipeline, as it is often already done by the sequencing company and therefore in most cases not necessary.
 
 ## Quality control
@@ -197,7 +197,7 @@ sequence as required by the UCHIME chimera detection algorithm.
 
 ## Chimera detection
 ### VSEARCH
-VSEARCH is a open-source alternative to the USEARCH toolkit, which aims to functionally replicate the algorithms used by USEARCH for which the source code is not openly available and which are often only rudimentarily described (Rognes et al. 2016). Natter uses as an alternative to UCHIME the VSEARCH uchime3_denovo algorithm to detect chimeric sequences (further referred to as VSEARCH3). The VSEARCH3 algorithm is a replication of the UCHIME2 algorithm with optimized standard parameters. The UCHIME2 algorithm is described by R. Edgar 2016 as follows:
+VSEARCH is a open-source alternative to the USEARCH toolkit, which aims to functionally replicate the algorithms used by USEARCH for which the source code is not openly available and which are often only rudimentarily described (Rognes et al. 2016). Natrix uses as an alternative to UCHIME the VSEARCH uchime3_denovo algorithm to detect chimeric sequences (further referred to as VSEARCH3). The VSEARCH3 algorithm is a replication of the UCHIME2 algorithm with optimized standard parameters. The UCHIME2 algorithm is described by R. Edgar 2016 as follows:
 
 "Given a query sequence *Q*, UCHIME2 uses the UCHIME algorithm to construct a model
 (*M*), then makes a multiple alignment of *Q* with the model and top hit (*T*, the most similar reference sequence). The following metrics are calculated from the alignment: number of differences d<sub>QT</sub> between Q and T and d<sub>QM</sub> between *Q* and *M*, the alignment score (*H*) using eq. 2 in R. C. Edgar et al. 2011. The fractional divergence with respect to the top hit is calculated as div<sub>T</sub> = (d<sub>QT</sub> − d<sub>QM</sub>)/|Q|. If divT is large, the model is a much better match than the top hit and the query is more likely to be chimeric, and conversely if div<sub>T</sub> is small, the model is more likely to be a fake." 

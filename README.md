@@ -1,10 +1,12 @@
 # Natrix
 
 Natrix is an open-source bioinformatics workflow for the preprocessing of raw sequencing data.
-The need for a scalable, reproducible workflow for the processing of environmental amplicon data led to the development of Natrix. It is divided into quality assessment, read assembly, dereplication, chimera detection, split-sample merging, OTU-generation and taxonomic assessment. The pipeline is written in [Snakemake](https://snakemake.readthedocs.io) (Köster and Rahmann 2018), a workflow management engine for the development of data analysis workflows. Snakemake ensures reproducibility of a workflow by automatically deploying dependencies of workflow steps (rules) and scales seamlessly to different computing environments like servers, computer clusters or cloud services. While Natrix was only tested with 16S and 18S amplicon data, it should also work for other kinds of sequencing data. The pipeline contains seperate rules for each step of the pipeline and each rule that has additional dependencies has a seperate [conda](https://conda.io/) environment that will be automatically created when starting the pipeline for the first time. The encapsulation of rules and their dependencies allows for hassle-free sharing of rules between workflows.
+The need for a scalable, reproducible workflow for the processing of environmental amplicon data led to the development of Natrix. It is divided into quality assessment, read assembly, dereplication, chimera detection, split-sample merging, OTU-generation and taxonomic assessment. The workflow is written in [Snakemake](https://snakemake.readthedocs.io) (Köster and Rahmann 2018), a workflow management engine for the development of data analysis workflows. Snakemake ensures reproducibility of a workflow by automatically deploying dependencies of workflow steps (rules) and scales seamlessly to different computing environments like servers, computer clusters or cloud services. While Natrix was only tested with 16S and 18S amplicon data, it should also work for other kinds of sequencing data. The workflow contains seperate rules for each step of the workflow and each rule that has additional dependencies has a seperate [conda](https://conda.io/) environment that will be automatically created when starting the workflow for the first time. The encapsulation of rules and their dependencies allows for hassle-free sharing of rules between workflows.
+
+The development of Natrix was initiated at the [department of Biodiversity](https://www.uni-due.de/biodiversitaet/home_englisch.php) at the University of Duisburg-Essen and it is currently maintained and further developed as a joint project between the [department of Biodiversity](https://www.uni-due.de/biodiversitaet/home_englisch.php) at the University of Duisburg-Essen and the [Department of Bioinformatics / Heiderlab](http://heiderlab.de/) at the University of Marburg.
 
 ![DAG of an example workflow](documentation/images/example_dag.png)
-*DAG of an example workflow: each node represents a rule instance to be executed. The direction of each edge represents the order in which the rules are executed. Disjoint paths in the DAG can be executed in parallel. Below is a schematic representation of the main steps of the pipeline, the color coding represents which rules belong to which main step.*
+*DAG of an example workflow: each node represents a rule instance to be executed. The direction of each edge represents the order in which the rules are executed. Disjoint paths in the DAG can be executed in parallel. Below is a schematic representation of the main steps of the workflow, the color coding represents which rules belong to which main step.*
 
 
 
@@ -23,7 +25,7 @@ GNU screen can be found in the repositories of most Linux distributions:
 * RHEL based: yum install screen
 * Arch based: pacman -S screen
 
-All other dependencies will be automatically installed using conda environments and can be found in the corresponding environment.yaml files in the *envs* folder and the `snakemake.yaml` file in the root directory of the pipeline.
+All other dependencies will be automatically installed using conda environments and can be found in the corresponding environment.yaml files in the *envs* folder and the `snakemake.yaml` file in the root directory of the workflow.
 
 ---
 
@@ -46,7 +48,7 @@ $ ./pipeline.sh
 Please enter the name of the project
 $ example_data
 ```
-The pipeline will then start a screen session using the project name (here, *example_data*) as session name and will beginn downloading dependencies for the rules. To detach from the screen session, press **Ctrl+a, d** (*first press Ctrl+a and then d*). To reattach to a running screen session, type in:
+The workflow will then start a screen session using the project name (here, *example_data*) as session name and will beginn downloading dependencies for the rules. To detach from the screen session, press **Ctrl+a, d** (*first press Ctrl+a and then d*). To reattach to a running screen session, type in:
 
 ```shell
 $ screen -r
@@ -75,13 +77,13 @@ S2016RU_A_R2.fastq.gz
 S2016BY_A_R1.fastq.gz
 S2016BY_A_R2.fastq.gz
 ```
-Besides the FASTQ data from the sequencing process Natrix needs a [primertable](#Example-primertable) containing the sample names and, if they exists in the data, the length of the poly-N tails, the sequence of the primers and the barcodes used for each sample and direction. Besides the sample names all other information can be omitted if the data was already preprocessed or did not contain the corresponding subsequence. Natrix also needs a [configuration](#Configfile) file in YAML format, specifying parameter values for tools used in the pipeline.
+Besides the FASTQ data from the sequencing process Natrix needs a [primertable](#Example-primertable) containing the sample names and, if they exists in the data, the length of the poly-N tails, the sequence of the primers and the barcodes used for each sample and direction. Besides the sample names all other information can be omitted if the data was already preprocessed or did not contain the corresponding subsequence. Natrix also needs a [configuration](#Configfile) file in YAML format, specifying parameter values for tools used in the workflow.
 
-The primertable, configfile and the folder containing the FASTQ files all have to be in the root directory of the pipeline and have the same name (with their corresponding file extensions, so *project*.yaml, *project*.csv and the *project* folder containing the FASTQ files). The first [configfile](#Configfile) entry (`filename`) also needs to be the name of the project.
+The primertable, configfile and the folder containing the FASTQ files all have to be in the root directory of the workflow and have the same name (with their corresponding file extensions, so *project*.yaml, *project*.csv and the *project* folder containing the FASTQ files). The first [configfile](#Configfile) entry (`filename`) also needs to be the name of the project.
 
 ### Running Natrix with the `pipeline.sh` script
 
-IF everything is configured correctly, you can start the pipeline by typing in the following commands into your terminal emulator:
+IF everything is configured correctly, you can start the workflow by typing in the following commands into your terminal emulator:
 
 ```shell
 $ ./pipeline.sh
@@ -89,7 +91,7 @@ Please enter the name of the project
 $ example_data
 ```
 
-The pipeline will then start a screen session using the project name as session name and will beginn downloading dependencies for the rules. To detach from the screen session, press **Ctrl+a, d** (*first press Ctrl+a and then d*). To reattach to a running screen session, type in:
+The workflow will then start a screen session using the project name as session name and will beginn downloading dependencies for the rules. To detach from the screen session, press **Ctrl+a, d** (*first press Ctrl+a and then d*). To reattach to a running screen session, type in:
 
 ```shell
 $ screen -r
@@ -111,7 +113,7 @@ Followed by starting the demultiplexing script:
 $ python3 demultiplexing.py *project*
 ```
 
-with *project* being the name of your project. The demultiplexing script will, depending on the options choosen in the configuration file, demultiplex your data, sort your reads or at the very least move the data files to the locations they need to be in for the pipeline.
+with *project* being the name of your project. The demultiplexing script will, depending on the options choosen in the configuration file, demultiplex your data, sort your reads or at the very least move the data files to the locations they need to be in for the workflow.
 
 The second preperation script will create the `units.tsv` file, containing the file information in a way that Natrix can use it:
 
@@ -119,13 +121,13 @@ The second preperation script will create the `units.tsv` file, containing the f
 $ python3 create_dataframe.py *project*.yaml
 ```
 
-To start the main pipeline, type in:
+To start the main workflow, type in:
 ```shell
 snakemake --use-conda --configfile *project*.yaml --cores *cores*
 ```
 with *project* being the name of your project and *cores* being the amount of cores you want to allocate for Natrix to use.
 
-Should the pipeline prematurely terminate (either because of an error or by deliberatly stopping it) running the command above again will start the pipeline from the point it was terminated.
+Should the workflow prematurely terminate (either because of an error or by deliberatly stopping it) running the command above again will start the workflow from the point it was terminated.
 
 ---
 
@@ -161,13 +163,13 @@ After the workflow is finished, the original data can be found under *Natrix/dem
 
 ---
 
-# Steps of the Pipeline
+# Steps of the workflow
 ## Initial demultiplexing
 The sorting of reads accoring to their barcode is known as demultiplexing. In Natrix, the demultiplexing step is implemented in a separate script, independent from the rest
-of the pipeline, as it is often already done by the sequencing company and therefore in most cases not necessary.
+of the workflow, as it is often already done by the sequencing company and therefore in most cases not necessary.
 
 ## Quality control
-For quality control the pipeline uses the programs FastQC (Andrews 2010), MultiQC (Ewels
+For quality control the workflow uses the programs FastQC (Andrews 2010), MultiQC (Ewels
 et al. 2016) and PRINSEQ (Schmieder and Edwards 2011).
 
 ### FastQC 
@@ -178,7 +180,7 @@ sequences, GC content, adapter and the k-mer content of the FASTQ file.
 ### MultiQC 
 MultiQC aggregates the FastQC reports for a given set of FASTQ files into a
 single report, allowing reviews of all FASTQ files at once. PRINSEQ is used to filter out sequences with an average quality score below
-the threshold that can be defined in the configuration file of the pipeline.
+the threshold that can be defined in the configuration file of the workflow.
 
 ## Read assembly
 ### Define primer
@@ -206,14 +208,14 @@ The difference between the UCHIME2 and UCHIME3 algorithm is that to be selected 
 
 ## Table creation and filtering
 ### Merging of all FASTA files into a single table
-For further processing the rule unfiltered_table merges all FASTA files into a single, nested dictionary, containing each sequence as the key with another dictionary as value, whose keys are all (split -) samples in which the sequence occurred in and as values the abundance of the sequence in the particular (split - ) sample. For further pipeline processing the dictionary is temporarily saved in JSON format. To ease statistical analysis of the data the dictionary is also exported as a comma separated table. Filtering In the filtering rule of the pipeline all sequences that do not occur in both splitsamples of at least one sample are filtered out. For single-sample data, the filtering rule uses an abundance cutoff value that can be specified in the configuration file to filter out all sequences which have abundances less
+For further processing the rule unfiltered_table merges all FASTA files into a single, nested dictionary, containing each sequence as the key with another dictionary as value, whose keys are all (split -) samples in which the sequence occurred in and as values the abundance of the sequence in the particular (split - ) sample. For further workflow processing the dictionary is temporarily saved in JSON format. To ease statistical analysis of the data the dictionary is also exported as a comma separated table. Filtering In the filtering rule of the workflow all sequences that do not occur in both splitsamples of at least one sample are filtered out. For single-sample data, the filtering rule uses an abundance cutoff value that can be specified in the configuration file to filter out all sequences which have abundances less
 or equal the specified cutoff value. The filtered data and the filtered out data is subsequently exported as comma separated tables.
 
 ### Table conversion to FASTA files
 As the swarm rule needs FASTA files as input, the resulting table of the filtering is converted to a FASTA file by the rule write_fasta.
 
 ## AmpliconDuo / Split-sample approach
-The pipeline supports both single-sample and split-sample FASTQ amplicon data. The split-sample protocol (Lange et al. 2015) aims to reduce the amount of sequences that are the result of PCR or sequencing errors without the usage of stringent abundance cutoffs, which often lead to the loss of rare but naturally occurring sequences. To achieve this, extracted DNA from a single sample is divided into two split-samples, which are then separately amplified and sequenced. All sequences that do not occur in both split-samples are seen as erroneous sequences and filtered out. The method is therefore based on the idea that a sequence that was created by PCR or sequencing errors does not occur in both samples. A schematic representation of the split-sample method is shown below:
+The workflow supports both single-sample and split-sample FASTQ amplicon data. The split-sample protocol (Lange et al. 2015) aims to reduce the amount of sequences that are the result of PCR or sequencing errors without the usage of stringent abundance cutoffs, which often lead to the loss of rare but naturally occurring sequences. To achieve this, extracted DNA from a single sample is divided into two split-samples, which are then separately amplified and sequenced. All sequences that do not occur in both split-samples are seen as erroneous sequences and filtered out. The method is therefore based on the idea that a sequence that was created by PCR or sequencing errors does not occur in both samples. A schematic representation of the split-sample method is shown below:
 
 <p align="center"> 
 <img src="documentation/images/splitsample.png" alt="split_sample" width="300"/>

@@ -35,3 +35,5 @@ dag10*
 schema/config.schema_for_pandas.yaml
 cleanup.sh
 scripts/*_backup*
+.idea
+.idea/*

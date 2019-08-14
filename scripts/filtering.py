@@ -8,8 +8,8 @@ if snakemake.params.filter_method == "split_sample":
     # samples without unit identifier, than the sequence is present in at least
     # one _A, _B combination
     uniq_samples =  len(set(sample[:-2] for sample in list(df.columns)))
-    df_filtered = df[df[df>=1].sum(axis=1) > uniq_samples]
-    df_filtered = df[df[df>=1].sum(axis=1) <= uniq_samples]
+    df_filtered = df[(df >= 1).sum(axis=1) > uniq_samples]
+    df_filtered_out = df[(df >= 1).sum(axis=1) <= uniq_samples]
 elif snakemake.params.filter_method == "not_split":
     df_filtered = df[(df > snakemake.params.cutoff).all(1)]
     df_filtered_out = df[(df <= snakemake.params.cutoff).all(1)]

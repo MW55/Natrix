@@ -14,8 +14,6 @@ uniq_seqs = set(uniq_seqs)
 sample_names = [i.split("/")[-1].split(".")[0] for i in snakemake.input]
 df = pd.DataFrame(0, index=uniq_seqs, columns=sample_names, dtype=np.uint16)
 
-del uniq_seqs
-
 # fill matrix
 for i in range(len(snakemake.input)):
     sample_name = sample_names[i]

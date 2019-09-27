@@ -35,7 +35,7 @@ chim:
 
 # Merging
 merge:
-        filter_method : not_split # If the split sample approach was used (split_sample) or not (not_split).
+        filter_method : spli_sample # If the split sample approach was used (split_sample) or not (not_split).
         cutoff : 3 # An additional abundance filter if the split sample approach was not used.
         ampli_corr : fdr # Specifies the correction method for Fisher's exact test.
         save_format : png # File format for the frequency-frequency plot.
@@ -52,4 +52,4 @@ blast:
         max_target_seqs : 10 # Number of NCBI blast hits that are saved per sequence / OTU.
         ident : 90.0 # Minimal identity overlap between target and query sequence.
         evalue : 1e-51 # Highest accepted evalue.
-        out6 : '"6 qseqid qlen length pident mismatch qstart qend sstart send gaps evalue staxid sseqid"' # stitle Additional BLAST information to be saved.
+        out6 : '"6 qseqid qlen length pident mismatch qstart qend sstart send gaps evalue staxid sseqid"' # Additional BLAST information to be saved.

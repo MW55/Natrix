@@ -21,7 +21,7 @@ Using Linux you can get it with:
 
 ```shell
 $ wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
-$ bash bash Miniconda3-latest-Linux-x86_64.sh
+$ bash Miniconda3-latest-Linux-x86_64.sh
 ```
 
 GNU screen can be found in the repositories of most Linux distributions:

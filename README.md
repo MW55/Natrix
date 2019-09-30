@@ -16,7 +16,12 @@ The need for a scalable, reproducible workflow for the processing of environment
 * [Conda](https://conda.io/en/latest/index.html)
 * [GNU screen](https://www.gnu.org/software/screen/) (optional)
 
-Conda can be downloaded as part of the [Anaconda](https://www.anaconda.com/) or the [Miniconda](https://conda.io/en/latest/miniconda.html) plattforms (Python 3.7). We recommend to install miniconda3.
+Conda can be downloaded as part of the [Anaconda](https://www.anaconda.com/) or the [Miniconda](https://conda.io/en/latest/miniconda.html) plattforms (Python 3.7). We recommend to install miniconda3. 
+Using Linux you can get it with:
+
+> wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+> bash bash Miniconda3-latest-Linux-x86_64.sh
+
 GNU screen can be found in the repositories of most Linux distributions:
 
 * Debian / Ubuntu based: apt-get install screen

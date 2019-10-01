@@ -9,7 +9,6 @@ import sys
 import shutil
 import subprocess
 import pathlib
-
 # This script is used for moving already assembled fastq files to the correct folder for further processing,
 # demultiplexing samples that were pooled in-lab (instead of at the sequencing company) and
 # to manually sort reads depending on their primersequence. the latter two functions are very slow and only serve niche
@@ -19,7 +18,7 @@ import pathlib
 # Config and p_table has to be adjusted for the corresponding path to the 
 # primertable with config config['general']['filename'] + '.csv'
 with open(sys.argv[1] + '.yaml') as f_:
-    config = yaml.load(f_)
+    config = yaml.load(f_, Loader=yaml.FullLoader)
 p_table = pd.read_csv(config['general']['primertable'], index_col='Probe') #p_table = pd.read_csv(sys.argv[1] + '.csv', index_col='Probe')
 primertable = p_table.to_dict('index')
 data_folder = config['general']['filename'] 

@@ -9,7 +9,7 @@ import sys
 # pipeline, without it, the wildcards can't be created.
 
 with open(sys.argv[1]) as f_:
-    config = yaml.load(f_)
+    config = yaml.load(f_, Loader=yaml.FullLoader)
 
 def create_dataframe(fl, fpl, config, slice):
     if config['merge']['paired_End'] and not config['general']['already_assembled']:

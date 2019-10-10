@@ -6,6 +6,7 @@ validate(config, "schema/config.schema.yaml")
 units = pd.read_table(config["general"]["units"], index_col=["sample", "unit"],
     dtype=str)
 units.index = units.index.set_levels([i.astype(str) for i in units.index.levels])
+
 name_ext = config["merge"]["name_ext"][:-1]
 
 def is_single_end(sample, unit):
@@ -21,8 +22,8 @@ rule all:
         "results/finalData/filtered_table.csv",
         "results/finalData/swarm_table.csv" if config["merge"]["swarm"] else [],
         "results/qc/multiqc_report.html" if config["general"]["multiqc"] else [],
-        "results/finalData/figures/AmpliconDuo.RData",
-        "results/finalData/filtered_blast_table.csv" if config["blast"]["blast"] else []
+        "results/finalData/figures/AmpliconDuo.RData" if config["merge"]["ampliconduo"] else [],
+        "results/finalData/filtered_blast_table_tax.csv" if config["blast"]["blast"] else []
 
 ruleorder: assembly > prinseq
 

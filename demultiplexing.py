@@ -22,7 +22,7 @@ with open(sys.argv[1] + '.yaml') as f_:
 p_table = pd.read_csv(config['general']['primertable'], index_col='Probe') #p_table = pd.read_csv(sys.argv[1] + '.csv', index_col='Probe')
 primertable = p_table.to_dict('index')
 data_folder = config['general']['filename'] 
-file_path_list = sorted(glob.glob(data_folder + "/*.fastq*"))
+file_path_list = sorted(glob.glob(data_folder + "/*.fast*"))
 
 # Regex substitution dict.
 iupac_dict_regex = {'M':'[AC]', 'R':'[AG]', 'W':'[AT]', 'S':'[CG]', 'Y':'[CT]',
@@ -177,7 +177,8 @@ def already_assembled(primertable, file_path_list):
         for sample in primertable.keys():
             pathlib.Path('results/assembly/' + sample).mkdir(parents=True, exist_ok=True)
             if sample in f_:
-                shutil.move(f_, 'results/assembly/' + sample + '/' + sample + '_assembled.fastq')
+                shutil.copy(f_, 'results/assembly/' + sample + '/' + sample + '_assembled.fastq')
+                shutil.move(f_, 'demultiplexed/')
 
 # Run the demultiplexing / read sorting script.
 if config['general']['demultiplexing']:

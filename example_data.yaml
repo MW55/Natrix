@@ -36,6 +36,7 @@ chim:
 # Merging
 merge:
         filter_method : split_sample # If the split sample approach was used (split_sample) or not (not_split).
+        ampliconduo: FALSE # If AmpliconDuo should be used for statistical analysis of the data.
         cutoff : 3 # An additional abundance filter if the split sample approach was not used.
         ampli_corr : fdr # Specifies the correction method for Fisher's exact test.
         save_format : png # File format for the frequency-frequency plot.

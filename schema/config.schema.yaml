@@ -14,6 +14,10 @@ blast:
     default: database/silva/silva.db
     description: "Path to the database file against which the BLAST should be carried out, at the moment only the SILVA and NCBI databases will be automatically downloaded, other databases have to be downloaded and configurated manually."
     type: string
+  drop_tax_classes:
+    default: ""
+    description: "Comma-sparated list of taxations to dismiss. Either by name, id or regular expression"
+    type: string
   evalue:
     default: 1e-51
     description: "Highest accepted evalue."

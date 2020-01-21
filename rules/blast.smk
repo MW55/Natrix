@@ -109,7 +109,8 @@ if config["blast"]["database"] == "NCBI":
             tax_lineage = temp("results/finalData/blast_taxonomic_lineage.tsv"),
             all_tax = "results/finalData/blast_taxonomy_all.tsv"
         params:
-            max_target_seqs=config["blast"]["max_target_seqs"]
+            max_target_seqs=config["blast"]["max_target_seqs"],
+            drop_tax_classes=str(config["blast"]["drop_tax_classes"])
         conda:
             "../envs/blast.yaml"
         log:
@@ -125,6 +126,8 @@ elif config["blast"]["database"] == "SILVA":
             lineage = os.path.join(os.path.dirname(config["blast"]["db_path"]), "tax_lineage.h5")
         output:
             temp("results/finalData/blast_taxonomic_lineage.tsv")
+        params:
+            drop_tax_classes=str(config["blast"]["drop_tax_classes"])
         conda:
             "../envs/blast.yaml"
         log:

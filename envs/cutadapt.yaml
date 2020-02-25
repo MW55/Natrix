@@ -1,0 +1,32 @@
+name: cutadapt
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - _libgcc_mutex=0.1=conda_forge
+  - _openmp_mutex=4.5=0_gnu
+  - ca-certificates=2019.11.28=hecc5488_0
+  - certifi=2019.11.28=py37_0
+  - cutadapt=2.8=py37h516909a_0
+  - dnaio=0.4.1=py37h516909a_0
+  - ld_impl_linux-64=2.33.1=h53a641e_8
+  - libffi=3.2.1=he1b5a44_1006
+  - libgcc-ng=9.2.0=h24d8f2e_2
+  - libgomp=9.2.0=h24d8f2e_2
+  - libstdcxx-ng=9.2.0=hdf63c60_2
+  - ncurses=6.1=hf484d3e_1002
+  - openssl=1.1.1d=h516909a_0
+  - pigz=2.3.4=0
+  - pip=20.0.2=py_2
+  - python=3.7.6=h357f687_2
+  - readline=8.0=hf8c457e_0
+  - setuptools=45.2.0=py37_0
+  - sqlite=3.30.1=hcee41ef_0
+  - tk=8.6.10=hed695b0_0
+  - wheel=0.34.2=py_1
+  - xopen=0.8.4=py37_0
+  - xz=5.2.4=h14c3975_1001
+  - zlib=1.2.11=h516909a_1006
+prefix: /home/welzelm/anaconda3/envs/cutadapt
+

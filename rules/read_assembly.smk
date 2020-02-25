@@ -43,6 +43,23 @@ rule prinseq:
     script:
         "../scripts/prinseq.py"
 
+rule cutadapt:
+    input:
+        expand(
+        "results/assembly/{{sample}}_{{unit}}/{{sample}}_{{unit}}_{read}.fastq",
+        read=reads),
+        primer_t="primer_table.csv"
+    output:
+        expand(
+        "results/assembly/{{sample}}_{{unit}}/{{sample}}_{{unit}}_{read}_cut.fastq",
+        read=reads)
+    params:
+        paired_end=config["merge"]["paired_End"],
+        threshold=config["qc"]["threshold"],
+        minoverlap=config["qc"]["minoverlap"],
+        prim_rm=config["qc"]["all_primer"]
+
+
 rule assembly:
     input:
         expand(

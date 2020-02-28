@@ -31,9 +31,9 @@ rule prinseq:
     input:
         sample=get_fastq
     output:
-        temp(expand(
+        expand(
         "results/assembly/{{sample}}_{{unit}}/{{sample}}_{{unit}}_{read}.fastq",
-        read=reads))
+        read=reads)
     params:
         config["qc"]["mq"]
     log:
@@ -55,9 +55,12 @@ rule cutadapt:
         read=reads)
     params:
         paired_end=config["merge"]["paired_End"],
-        threshold=config["qc"]["threshold"],
-        minoverlap=config["qc"]["minoverlap"],
+        bar_removed=config["qc"]["barcode_removed"],
         prim_rm=config["qc"]["all_primer"]
+    conda:
+        "../envs/cutadapt.yaml"
+    script:
+        "../scripts/cutadapt.py"
 
 
 rule assembly:

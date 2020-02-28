@@ -30,9 +30,9 @@ if snakemake.params.paired_end:
             "-C" "min_phred:" + str(snakemake.params.minqual)])
     else:
         r1_primer = primer_table[snakemake.wildcards.sample + "_"
-            + snakemake.wildcards.unit]["f_primer"]
+            + snakemake.wildcards.unit]["specific_forward_primer"]
         r2_primer = primer_table[snakemake.wildcards.sample + "_"
-            + snakemake.wildcards.unit]["r_primer"]
+            + snakemake.wildcards.unit]["specific_reverse_primer"]
 
         subprocess.call(["pandaseq",
             "-f", snakemake.input[0], "-r", snakemake.input[1], "-B", "-a", "-F",

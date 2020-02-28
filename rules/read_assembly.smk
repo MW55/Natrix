@@ -56,7 +56,9 @@ rule cutadapt:
     params:
         paired_end=config["merge"]["paired_End"],
         bar_removed=config["qc"]["barcode_removed"],
-        prim_rm=config["qc"]["all_primer"]
+        prim_rm=config["qc"]["all_primer"],
+        minlen=config["qc"]["minlen"],
+        maxlen=config["qc"]["maxlen"]
     conda:
         "../envs/cutadapt.yaml"
     script:

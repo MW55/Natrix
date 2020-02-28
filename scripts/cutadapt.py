@@ -22,3 +22,7 @@ if snakemake.params.paired_end:
 
         subprocess.call(["cutadapt", "-g", r1_primer, "-G", r2_primer, "-o",
                          snakemake.output[0], "-p", snakemake.output[1], snakemake.input[0], snakemake.output[1]])
+else:
+    r1_primer = primer_table[snakemake.wildcards.sample + "_"
+                             + snakemake.wildcards.unit]["f_primer"]
+    subprocess.call(["cutadapt", "-g", r1_primer, "-o", snakemake.output[0], snakemake.input[0]])

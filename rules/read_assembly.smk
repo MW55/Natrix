@@ -64,6 +64,19 @@ rule cutadapt:
     script:
         "../scripts/cutadapt.py"
 
+rule DADA2:
+    input:
+        forward = expand(
+            "results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}_1_cut.fastq", unit=units.reset_index().itertuples()),
+        reverse = expand(
+            "results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}_2_cut.fastq", unit=units.reset_index().itertuples())
+    output:
+        expand("results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}_dada.fasta", unit=units.reset_index().itertuples())
+    conda:
+        "../envs/dada2.yaml"
+    script:
+        "../scripts/dada2.R"
+
 
 rule assembly:
     input:

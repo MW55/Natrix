@@ -1,17 +1,6 @@
 library(dada2); packageVersion("dada2")
 library(ShortRead)
 
-# WIP
-
-#pathf<- "~/projects/Natrix/results/assembly/*/*_[AB]_[1]_cut.fastq"
-#pathr <- "~/projects/Natrix/results/assembly/*/*_[AB]_[2]_cut.fastq"
-
-#fnFs <- sort(Sys.glob(pathf))
-#fnRs <- sort(Sys.glob(pathr))
-
-print(snakemake@input[["forward"]])
-print(snakemake@output)
-
 sample.names <- sapply(strsplit(basename(snakemake@input[["forward"]]), "_[12]_cut.fastq"), `[`, 1)
 
 #plotQualityProfile(fnFs[1:2])
@@ -41,7 +30,7 @@ for (i in seq(nrow(seqtab))) {
   only_present_seqs <- t(as.data.frame(sample_df[,-(which(colSums(sample_df)==0))]))
   seq_uniq <- getUniques(only_present_seqs)
   seq_names <- paste0(as.character(seq(length(only_present_seqs))), ";size=", seq_uniq, ";")
-  uniquesToFasta(seq_uniq, fout = snakemake@output[i], ids = seq_names)
+  uniquesToFasta(seq_uniq, fout = snakemake@output[[i]], ids = seq_names)
   
 }
   

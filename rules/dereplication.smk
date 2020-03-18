@@ -2,7 +2,7 @@ rule cdhit:
     input:
         "results/assembly/{sample}_{unit}/{sample}_{unit}.fasta"
     output:
-        temp("results/assembly/{sample}_{unit}/{sample}_{unit}_cdhit.fasta"),
+        "results/assembly/{sample}_{unit}/{sample}_{unit}_cdhit.fasta",
         temp("results/assembly/{sample}_{unit}/{sample}_{unit}_cdhit.fasta.clstr")
     conda:
         "../envs/dereplication.yaml"

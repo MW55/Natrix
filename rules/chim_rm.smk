@@ -1,6 +1,6 @@
 rule vsearch:
     input:
-        "results/assembly/{sample}_{unit}/{sample}_{unit}.dereplicated.fasta"
+        "results/assembly/{sample}_{unit}/{sample}_{unit}.dereplicated.fasta" if config["general"]["seq_rep"] == "OTU" else "results/assembly/{sample}_{unit}/{sample}_{unit}.dada.fasta"
     output:
         uchime_out=temp("results/assembly/{sample}_{unit}/{sample}_{unit}.vsearch.txt"),
         chim="results/assembly/{sample}_{unit}/{sample}_{unit}.chimera.fasta",   

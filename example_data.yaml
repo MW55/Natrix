@@ -8,6 +8,7 @@ general:
         demultiplexing: FALSE # Demultiplexing for reads that were not demultiplexed by the sequencing company (slow).
         read_sorting: FALSE # Read sorting for paired end reads that were not sorted by the sequencing company (slow).
         already_assembled: FALSE # Skipping of the quality control and read assembly steps for data that is already assembled.
+        seq_rep: OTU # How the sequences should be represented, possible values are: "ASV", amplicon sequence variants, created with DADA2 or "OTU", created with SWARM
 
 # Quality check and primer removal
 qc:
@@ -19,7 +20,7 @@ qc:
         primer_offset : FALSE # Using PANDAseq to remove primer sequences by length offset instead of sequence identity.
         mq : 25 # Minimum quality sequence check (prinseq), filtering of sequences according to the PHRED quality score before the assembly.
         barcode_removed: TRUE # Boolean that indicates if the sequence is free of barcodes.
-        all_primer : TRUE # Boolean that indicates if the sequence is free of any kind of additional subsequences (primer, barcodes etc.).
+        all_primer : FALSE # Boolean that indicates if the sequence is free of any kind of additional subsequences (primer, barcodes etc.).
 
 # Dereplication
 derep:
@@ -47,7 +48,7 @@ merge:
 
 # BLAST
 blast:
-        blast : TRUE  # Boolean to indicate the use of the BLAST clustering algorithm to assign taxonomic information to the OTUs.
+        blast : FALSE  # Boolean to indicate the use of the BLAST clustering algorithm to assign taxonomic information to the OTUs.
         database: SILVA # Database against which the BLAST should be carried out, at the moment "NCBI" and "SILVA" are supported.
         drop_tax_classes: '.*unclassified Bacteria.*,.*uncultured.*bacterium.*' # given a comma-separated list, drops undesired classes either by id, by name or using regex
         db_path : database/silva/silva.db # Path to the database file against which the BLAST should be carried out, at the moment only the SILVA (database/silva/silva.db) and NCBI (database/ncbi/nt) databases will be automatically downloaded, other databases have to be downloaded and configurated manually.

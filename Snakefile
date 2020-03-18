@@ -24,6 +24,10 @@ rule all:
         "results/qc/multiqc_report.html" if config["general"]["multiqc"] else [],
         "results/finalData/figures/AmpliconDuo.RData" if config["merge"]["ampliconduo"] else [],
         "results/finalData/filtered_blast_table.csv" if config["blast"]["blast"] else []
+        #"results/assembly/A071SE_A/A071SE_A_dada.fasta",
+        #"results/assembly/A071SE_B/A071SE_B_dada.fasta",
+        #"results/assembly/A172WA_A/A172WA_A_dada.fasta",
+        #"results/assembly/A172WA_B/A172WA_B_dada.fasta"
 
 ruleorder: assembly > prinseq
 

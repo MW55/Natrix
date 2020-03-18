@@ -13,8 +13,8 @@ rule filtering:
     input:
         "results/finalData/unfiltered_dict.hdf5"
     output:
-        temp("results/finalData/filtered_table_temp.csv"),
-        "results/finalData/filtered_out_table.csv"
+          temp("results/finalData/filtered_table_temp.csv"),
+          "results/finalData/filtered_out_table.csv"
     params:
         filter_method=config["merge"]["filter_method"],
         cutoff=config["merge"]["cutoff"]

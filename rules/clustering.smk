@@ -25,7 +25,7 @@ if config["general"]["seq_rep"] == "OTU":
         input:
             "results/finalData/filtered.fasta"
         output:
-            "results/finalData/OTU_representatives.fasta",
+            "results/finalData/representatives.fasta",
             temp("results/finalData/merged.swarms")
         threads: 150
         conda:
@@ -46,8 +46,10 @@ if config["general"]["seq_rep"] == "OTU":
 else:
     rule blast_prep:
         input:
-             "results/finalData/filtered_table.csv"
+             "results/finalData/filtered_table.csv",
+             "results/finalData/filtered.fasta"
         output:
-              "results/finalData/swarm_table.csv"
+              "results/finalData/swarm_table.csv",
+              "results/finalData/representatives.fasta"
         shell:
-             "cp {input} {output}"
+             "cp {input[0]} {output[0]}; cp {input[1]} {output[1]}"

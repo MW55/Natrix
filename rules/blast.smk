@@ -80,7 +80,7 @@ elif config["blast"]["database"] == "NCBI":
 
 rule blast:
     input:
-        "results/finalData/OTU_representatives.fasta",
+        "results/finalData/representatives.fasta",
         expand(config["blast"]["db_path"] + "{file_extension}", file_extension=[".ndb", ".nhr", ".nin", ".nog", ".nos", ".not", ".nsq", ".ntf", ".nto"] if config["blast"]["database"] == "SILVA" else "")
     output:
         temp("results/finalData/blast_taxonomy.tsv")

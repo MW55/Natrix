@@ -48,10 +48,10 @@ merge:
 
 # BLAST
 blast:
-        blast : FALSE  # Boolean to indicate the use of the BLAST clustering algorithm to assign taxonomic information to the OTUs.
-        database: SILVA # Database against which the BLAST should be carried out, at the moment "NCBI" and "SILVA" are supported.
+        blast : TRUE  # Boolean to indicate the use of the BLAST clustering algorithm to assign taxonomic information to the OTUs.
+        database: NCBI # Database against which the BLAST should be carried out, at the moment "NCBI" and "SILVA" are supported.
         drop_tax_classes: '.*unclassified Bacteria.*,.*uncultured.*bacterium.*' # given a comma-separated list, drops undesired classes either by id, by name or using regex
-        db_path : database/silva/silva.db # Path to the database file against which the BLAST should be carried out, at the moment only the SILVA (database/silva/silva.db) and NCBI (database/ncbi/nt) databases will be automatically downloaded, other databases have to be downloaded and configurated manually.
+        db_path : database/ncbi/nt # Path to the database file against which the BLAST should be carried out, at the moment only the SILVA (database/silva/silva.db) and NCBI (database/ncbi/nt) databases will be automatically downloaded, other databases have to be downloaded and configurated manually.
         max_target_seqs : 10 # Number of NCBI blast hits that are saved per sequence / OTU.
         ident : 90.0 # Minimal identity overlap between target and query sequence.
         evalue : 1e-51 # Highest accepted evalue.

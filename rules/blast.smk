@@ -4,7 +4,7 @@ if config["blast"]["database"] == "SILVA":
 
     rule make_silva_db:
         output:
-            expand(config["blast"]["db_path"] + "{file_extension}", file_extension=[".nhr", ".nin", ".nog", ".nsd", ".nsi", ".nsq"]),
+            expand(config["blast"]["db_path"] + "{file_extension}", file_extension=[".ndb", ".nhr", ".nin", ".nog", ".nos", ".not", ".nsq", ".ntf", ".nto"]),
             config["blast"]["db_path"] + ".fasta"
         params:
             db_path=config["blast"]["db_path"]
@@ -13,9 +13,9 @@ if config["blast"]["database"] == "SILVA":
         shell:
             """
                 dir_name=$(dirname {params[0]});
-                wget -P $dir_name/ --progress=bar https://www.arb-silva.de/fileadmin/silva_databases/current/Exports/SILVA_132_SSURef_tax_silva.fasta.gz;
-                gunzip -c $dir_name/SILVA_132_SSURef_tax_silva.fasta.gz > $dir_name/silva.db.fasta;
-                makeblastdb -in $dir_name/silva.db.fasta -dbtype nucl -parse_seqids -out $dir_name/silva.db
+                wget -P $dir_name/ --progress=bar ftp://ftp.arb-silva.de/current/Exports/SILVA_*_SSURef_tax_silva.fasta.gz;
+                gunzip -c $dir_name/SILVA_*_SSURef_tax_silva.fasta.gz > $dir_name/silva.db.fasta;
+                makeblastdb -in $dir_name/silva.db.fasta -dbtype nucl -parse_seqids -out $dir_name/silva.db -blastdb_version 5
             """
 
     rule create_silva_taxonomy:
@@ -30,7 +30,7 @@ elif config["blast"]["database"] == "NCBI":
 
     rule make_ncbi_db:
         output:
-            expand(config["blast"]["db_path"] + ".00" + "{file_extension}", file_extension=[".nhr", ".nin", ".nog", ".nsd", ".nsi", ".nsq"]),
+            expand(config["blast"]["db_path"] + ".00" + "{file_extension}", file_extension=[".nhd", ".nhi", ".nhr", ".nin", ".nnd", ".nni", ".nog", ".nsq"]),
             listing = temp(".listing"),
             path = config["blast"]["db_path"]
         params:
@@ -81,13 +81,13 @@ elif config["blast"]["database"] == "NCBI":
 rule blast:
     input:
         "results/finalData/OTU_representatives.fasta",
-        expand(config["blast"]["db_path"] + "{file_extension}", file_extension=[".nhr", ".nin", ".nog", ".nsd", ".nsi", ".nsq"] if config["blast"]["database"] == "SILVA" else "")
+        expand(config["blast"]["db_path"] + "{file_extension}", file_extension=[".ndb", ".nhr", ".nin", ".nog", ".nos", ".not", ".nsq", ".ntf", ".nto"] if config["blast"]["database"] == "SILVA" else "")
     output:
         temp("results/finalData/blast_taxonomy.tsv")
     threads: 150
     params:
         db_path=config["blast"]["db_path"],
-        max_target_seqs=str(config["blast"]["max_target_seqs"]) if config["blast"]["database"] == "BLAST" else "1",
+        max_target_seqs=str(config["blast"]["max_target_seqs"]) if config["blast"]["database"] == "NCBI" else "1",
         ident=str(config["blast"]["ident"]),
         evalue=str(config["blast"]["evalue"]),
         out6=str(config["blast"]["out6"])

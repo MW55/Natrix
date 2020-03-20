@@ -8,7 +8,7 @@ general:
         demultiplexing: FALSE # Demultiplexing for reads that were not demultiplexed by the sequencing company (slow).
         read_sorting: FALSE # Read sorting for paired end reads that were not sorted by the sequencing company (slow).
         already_assembled: FALSE # Skipping of the quality control and read assembly steps for data that is already assembled.
-        seq_rep: ASV # How the sequences should be represented, possible values are: "ASV", amplicon sequence variants, created with DADA2 or "OTU", created with SWARM
+        seq_rep: OTU # How the sequences should be represented, possible values are: "ASV", amplicon sequence variants, created with DADA2 or "OTU", operational taxonomic units, created with SWARM
 
 # Quality check and primer removal
 qc:

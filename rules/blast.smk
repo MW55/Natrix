@@ -80,7 +80,7 @@ elif config["blast"]["database"] == "NCBI":
 
 rule blast:
     input:
-        "results/finalData/representatives.fasta",
+        "results/finalData/representatives.fasta" if config["general"]["seq_rep"] == "OTU" else "results/finalData/filtered.fasta",
         expand(config["blast"]["db_path"] + "{file_extension}", file_extension=[".ndb", ".nhr", ".nin", ".nog", ".nos", ".not", ".nsq", ".ntf", ".nto"] if config["blast"]["database"] == "SILVA" else "")
     output:
         temp("results/finalData/blast_taxonomy.tsv")
@@ -137,7 +137,7 @@ elif config["blast"]["database"] == "SILVA":
 
 rule merge_results:
     input:
-        merged_swarm="results/finalData/swarm_table.csv",
+        merged="results/finalData/swarm_table.csv" if config["general"]["seq_rep"] == "OTU" else "results/finalData/filtered_table.csv",
         blast_result="results/finalData/blast_taxonomic_lineage.tsv"
     output:
         "results/finalData/filtered_blast_table.csv"

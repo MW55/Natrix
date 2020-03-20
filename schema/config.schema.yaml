@@ -100,6 +100,11 @@ general:
     default: units.tsv
     description: "Path to the sequencing unit sheet."
     type: string
+  seq_rep:
+    default: OTU
+    description: "How the sequences should be represented, possible values are: 'ASV', amplicon sequence variants, created with DADA2 or 'OTU', operational taxonomic units, created with SWARM"
+    oneOf: "OTU, ASV"
+    type: string
 merge:
   ampli_corr:
     default: fdr

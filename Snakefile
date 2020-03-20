@@ -20,9 +20,9 @@ else:
 rule all:
     input:
         "results/finalData/filtered_table.csv",
-        "results/finalData/swarm_table.csv" if config["merge"]["swarm"] else [],
+        "results/finalData/swarm_table.csv" if config["merge"]["swarm"] and config["general"]["seq_rep"] == "OTU" else [],
         "results/qc/multiqc_report.html" if config["general"]["multiqc"] else [],
-        "results/finalData/figures/AmpliconDuo.RData" if config["merge"]["ampliconduo"] else [],
+        "results/finalData/figures/AmpliconDuo.RData" if config["merge"]["ampliconduo"] and config["merge"]["filter_method"] == "split_sample" else [],
         "results/finalData/filtered_blast_table.csv" if config["blast"]["blast"] else []
        #"results/assembly/A071SE_A/A071SE_A_dada.fasta",
        # "results/assembly/A071SE_B/A071SE_B_dada.fasta",

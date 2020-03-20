@@ -5,7 +5,7 @@ import numpy as np
 
 blast = pd.read_csv(snakemake.input['blast_result'], sep="\t")
 
-swarm = pd.read_csv(snakemake.input['merged_swarm'], index_col=0, sep=",")
+swarm = pd.read_csv(snakemake.input['merged'], index_col=0, sep=",")
 
 new_index = blast["seqid"].tolist()[0:]
 splitted = [i.replace("size=", "").split(";")[0:2] for i in new_index]

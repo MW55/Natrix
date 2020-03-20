@@ -20,36 +20,25 @@ rule write_fasta:
                 else:
                     filtered_table_seqid.writerow(["seqid"] + row[1])
 
-if config["general"]["seq_rep"] == "OTU":
-    rule swarm:
-        input:
-            "results/finalData/filtered.fasta"
-        output:
-            "results/finalData/representatives.fasta",
-            temp("results/finalData/merged.swarms")
-        threads: 150
-        conda:
-            "../envs/swarm.yaml"
-        shell:
-            "swarm -t {threads} -f -z -w {output[0]} < {input} > {output[1]}"
+rule swarm:
+    input:
+        "results/finalData/filtered.fasta"
+    output:
+        "results/finalData/representatives.fasta",
+        temp("results/finalData/merged.swarms")
+    threads: 150
+    conda:
+        "../envs/swarm.yaml"
+    shell:
+        "swarm -t {threads} -f -z -w {output[0]} < {input} > {output[1]}"
 
-    rule swarm_results:
-        input:
-            merged="results/finalData/merged.swarms",
-            final_table_path2="results/finalData/filtered_table.csv"
-        output:
-            "results/finalData/swarm_table.csv"
-        conda:
-            "../envs/merge_results.yaml"
-        script:
-            "../scripts/merge_swarm_results.py"
-else:
-    rule blast_prep:
-        input:
-             "results/finalData/filtered_table.csv",
-             "results/finalData/filtered.fasta"
-        output:
-              "results/finalData/swarm_table.csv",
-              "results/finalData/representatives.fasta"
-        shell:
-             "cp {input[0]} {output[0]}; cp {input[1]} {output[1]}"
+rule swarm_results:
+    input:
+        merged="results/finalData/merged.swarms",
+        final_table_path2="results/finalData/filtered_table.csv"
+    output:
+        "results/finalData/swarm_table.csv"
+    conda:
+        "../envs/merge_results.yaml"
+    script:
+        "../scripts/merge_swarm_results.py"

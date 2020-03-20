@@ -9,7 +9,7 @@ rule vsearch:
         beta=config["chim"]["beta"],
         pseudo_c=config["chim"]["pseudo_count"],
         abskew=config["chim"]["abskew"]
-    threads: 20
+    threads: config["general"]["cores"]
     conda:
          "../envs/vsearch.yaml"                                                                  
     shell:

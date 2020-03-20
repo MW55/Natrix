@@ -74,6 +74,8 @@ rule DADA2:
         expand("results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}_dada.fasta", unit=units.reset_index().itertuples())
     conda:
         "../envs/dada2.yaml"
+    log:
+        "results/logs/finalData/DADA2.log"
     script:
         "../scripts/dada2.R"
 

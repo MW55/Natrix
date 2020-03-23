@@ -6,29 +6,25 @@ sample.names <- sapply(strsplit(basename(snakemake@input[["forward"]]), "_[12]_c
 
 #plotQualityProfile(fnFs[1:2])
 derepF1 <- derepFastq(snakemake@input[["forward"]], verbose=TRUE)
-derepF2 <- derepFastq(snakemake@input[["reverse"]], verbose=TRUE)
-
 errF <- learnErrors(derepF1, multithread=TRUE, verbose=TRUE)
-errR <- learnErrors(derepF2, multithread=TRUE, verbose=TRUE)
+dadaFs <- dada(derepF1, err=errF, multithread=TRUE, verbose=TRUE)
+print("DADA2 forward reads:")
+dadaFs[[1]]
+
+if(snakemake@params[["paired_end"]] == TRUE){
+  derepF2 <- derepFastq(snakemake@input[["reverse"]], verbose=TRUE)
+  errR <- learnErrors(derepF2, multithread=TRUE, verbose=TRUE)
+  dadaRs <- dada(derepF2, err=errR, multithread=TRUE, verbose=TRUE)
+  mergers <- mergePairs(dadaFs, snakemake@input[["forward"]], dadaRs, snakemake@input[["reverse"]], verbose=TRUE)
+  seqtab <- makeSequenceTable(mergers)
+  print("DADA2 reverse reads:\n")
+  dadaRs[[1]]
+} else {
+  seqtab <- makeSequenceTable(dadaFs)
+}
 
 #plotErrors(errF, nominalQ=TRUE)
 #plotErrors(errR, nominalQ=TRUE)
-
-dadaFs <- dada(derepF1, err=errF, multithread=TRUE, verbose=TRUE)
-dadaRs <- dada(derepF2, err=errR, multithread=TRUE, verbose=TRUE)
-
-# Few successful merges, might be better to use PandaSeq 
-mergers <- mergePairs(dadaFs, snakemake@input[["forward"]], dadaRs, snakemake@input[["reverse"]], verbose=TRUE)
-
-#seqtabF <- t(makeSequenceTable(dadaFs))
-#seqtabR <- t(makeSequenceTable(dadaRs))
-
-seqtab <- makeSequenceTable(mergers)
-
-print("DADA2 forward reads:")
-dadaFs[[1]]
-print("DADA2 reverse reads:\n")
-dadaRs[[1]]
 
 for (i in seq(nrow(seqtab))) {
   sample_df <- t(as.data.frame(seqtab[i,]))

@@ -4,10 +4,11 @@ import pandas as pd
 primer_table = pd.read_csv(snakemake.input.primer_t, index_col="Probe",
         na_filter=False).to_dict("index")
 
-r1_barcode = primer_table[snakemake.wildcards.sample + "_"
-+ snakemake.wildcards.unit]["Barcode_forward"]
-r2_barcode = primer_table[snakemake.wildcards.sample + "_"
-             + snakemake.wildcards.unit]["Barcode_reverse"]
+if not snakemake.params.bar_removed:
+    r1_barcode = primer_table[snakemake.wildcards.sample + "_"
+    + snakemake.wildcards.unit]["Barcode_forward"]
+    r2_barcode = primer_table[snakemake.wildcards.sample + "_"
+                 + snakemake.wildcards.unit]["Barcode_reverse"]
 r1_primer = primer_table[snakemake.wildcards.sample + "_"
                          + snakemake.wildcards.unit]["specific_forward_primer"]
 r2_primer = primer_table[snakemake.wildcards.sample + "_"

@@ -39,7 +39,6 @@ elif config["blast"]["database"] == "NCBI":
             "../envs/blast.yaml"
         shell:
             """
-                echo 'what--------------';
                 dir_name=$(dirname {params[0]});
                 wget --spider --no-remove-listing ftp://ftp.ncbi.nlm.nih.gov/blast/db/
                 number=$(awk '$9 ~ /^nt.[0-9]*.tar.gz[^.]/ {{print substr($9,4,2)}}' {output.listing} | tail -n 1)
@@ -59,7 +58,6 @@ elif config["blast"]["database"] == "NCBI":
             "../envs/blast.yaml"
         shell:
             """
-                echo 'what--------------';
                 dir_name=$(dirname {params[0]});
                 wget -N -P $dir_name/ --progress=bar ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/new_taxdump/new_taxdump.tar.gz;
                 wget -N -P $dir_name/ --progress=bar ftp://ftp.ncbi.nlm.nih.gov/blast/db/taxdb.tar.gz;

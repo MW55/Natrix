@@ -1,7 +1,7 @@
 library(dada2); packageVersion("dada2")
 library(ShortRead)
 
-sink(snakemake@log, append = TRUE)
+sink(toString(snakemake@log), append = TRUE)
 sample.names <- sapply(strsplit(basename(snakemake@input[["forward"]]), "_[12]_cut.fastq"), `[`, 1)
 
 #plotQualityProfile(fnFs[1:2])

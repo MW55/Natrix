@@ -3,28 +3,41 @@ library(ShortRead)
 
 sink(toString(snakemake@log), append = TRUE)
 sample.names <- sapply(strsplit(basename(snakemake@input[["forward"]]), "_[12]_cut.fastq"), `[`, 1)
+fnFs <- snakemake@input[["forward"]]
 
-#plotQualityProfile(fnFs[1:2])
-derepF1 <- derepFastq(snakemake@input[["forward"]], verbose=TRUE)
-errF <- learnErrors(derepF1, multithread=TRUE, verbose=TRUE)
-dadaFs <- dada(derepF1, err=errF, multithread=TRUE, verbose=TRUE)
-print("DADA2 forward reads:")
-dadaFs[[1]]
+names(fnFs) <- sample.names
+set.seed(100)
+# Learn forward error rates
+errF <- learnErrors(fnFs, nbases=1e8, multithread=TRUE, randomize = TRUE, verbose = TRUE)
 
 if(snakemake@params[["paired_end"]] == TRUE){
-  derepF2 <- derepFastq(snakemake@input[["reverse"]], verbose=TRUE)
-  errR <- learnErrors(derepF2, multithread=TRUE, verbose=TRUE)
-  dadaRs <- dada(derepF2, err=errR, multithread=TRUE, verbose=TRUE)
-  mergers <- mergePairs(dadaFs, snakemake@input[["forward"]], dadaRs, snakemake@input[["reverse"]], verbose=TRUE)
-  seqtab <- makeSequenceTable(mergers)
-  print("DADA2 reverse reads:\n")
-  dadaRs[[1]]
-} else {
-  seqtab <- makeSequenceTable(dadaFs)
+  fnRs <- snakemake@input[["reverse"]]
+  # Learn reverse error rates 
+  names(fnRs) <- sample.names
+  errR <- learnErrors(fnRs, nbases=1e8, multithread=TRUE, randomize = TRUE, verbose = TRUE)
 }
 
-#plotErrors(errF, nominalQ=TRUE)
-#plotErrors(errR, nominalQ=TRUE)
+# Sample inference and merger of paired-end reads
+mergers <- vector("list", length(sample.names))
+names(mergers) <- sample.names
+for(sam in sample.names) {
+  cat("Processing:", sam, "\n")
+  derepF <- derepFastq(fnFs[[sam]], verbose = TRUE)
+  ddF <- dada(derepF, err=errF, multithread=TRUE, verbose = TRUE)
+  if (snakemake@params[["paired_end"]] == TRUE) {
+    derepR <- derepFastq(fnRs[[sam]], verbose = TRUE)
+    ddR <- dada(derepR, err=errR, multithread=TRUE, verbose = TRUE)
+    merger <- mergePairs(ddF, derepF, ddR, derepR)
+    mergers[[sam]] <- merger
+  } else {
+    mergers[[sam]] <- ddF
+  }
+}
+rm(derepF)
+if (snakemake@params[["paired_end"]] == TRUE) {
+  rm(derepR)
+}
+seqtab <- makeSequenceTable(mergers)
 
 for (i in seq(nrow(seqtab))) {
   sample_df <- t(as.data.frame(seqtab[i,]))
@@ -32,6 +45,5 @@ for (i in seq(nrow(seqtab))) {
   seq_uniq <- getUniques(only_present_seqs)
   seq_names <- paste0(as.character(seq(length(only_present_seqs))), ";size=", seq_uniq, ";")
   uniquesToFasta(seq_uniq, fout = snakemake@output[[i]], ids = seq_names)
-  
 }
-  
+sink()

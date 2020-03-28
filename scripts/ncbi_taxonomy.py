@@ -29,7 +29,9 @@ def create_filter_set():
     res_set = set()
     for f in snakemake.params.drop_tax_classes.split(","):
         f = f.strip()
-        if f.isdigit():
+        if not f:
+            pass
+        elif f.isdigit():
             res_set.add(int(f))
         else:
             # f = f.replace("*", ".*")

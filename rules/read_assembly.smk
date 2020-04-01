@@ -61,6 +61,8 @@ rule cutadapt:
         maxlen=config["qc"]["maxlen"]
     conda:
         "../envs/cutadapt.yaml"
+    log:
+        "results/logs/{sample}_{unit}/cutadapt.log"
     script:
         "../scripts/cutadapt.py"
 

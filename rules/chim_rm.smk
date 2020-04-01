@@ -11,8 +11,10 @@ rule vsearch:
         abskew=config["chim"]["abskew"]
     threads: config["general"]["cores"]
     conda:
-         "../envs/vsearch.yaml"                                                                  
+         "../envs/vsearch.yaml"
+    log:
+        "results/logs/{sample}_{unit}/vsearch.log"
     shell:
         "vsearch --uchime3_denovo {input} -uchimeout {output.uchime_out}"
         " -chimeras {output.chim} -nonchimeras {output.nonchim} -xn {params.beta}"
-        "  -dn {params.pseudo_c} -abskew {params.abskew} 2>&1"
+        "  -dn {params.pseudo_c} -abskew {params.abskew} --log {log} 2>&1"

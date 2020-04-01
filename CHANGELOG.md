@@ -12,3 +12,8 @@
 ### Changed
 - Added support for amplicon sequence variants using the DADA2 algorithm
 
+## 2020-04-01
+
+### Changed
+- Added more logging information
+

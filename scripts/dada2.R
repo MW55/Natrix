@@ -1,7 +1,10 @@
 library(dada2); packageVersion("dada2")
 library(ShortRead)
 
-sink(toString(snakemake@log), append = TRUE)
+log <- file(toString(snakemake@log), open="wt")
+sink(log, append = TRUE)
+sink(log, type="message", append =TRUE)
+
 sample.names <- sapply(strsplit(basename(snakemake@input[["forward"]]), "_[12]_cut.fastq"), `[`, 1)
 fnFs <- snakemake@input[["forward"]]
 
@@ -17,6 +20,8 @@ if(snakemake@params[["paired_end"]] == TRUE){
   errR <- learnErrors(fnRs, nbases=1e8, multithread=TRUE, randomize = TRUE, verbose = TRUE)
 }
 
+derep_count <- 0
+denoised_count <- 0
 # Sample inference and merger of paired-end reads
 mergers <- vector("list", length(sample.names))
 names(mergers) <- sample.names
@@ -24,15 +29,37 @@ for(sam in sample.names) {
   cat("Processing:", sam, "\n")
   derepF <- derepFastq(fnFs[[sam]], verbose = TRUE)
   ddF <- dada(derepF, err=errF, multithread=TRUE, verbose = TRUE)
+  print("Forward After Dereplication:")
+  uniq <- length(derepF$uniques)
+  print(uniq)
+  derep_count <- derep_count + uniq
+  print("Forward After DADA2 denoising:")
+  denois <-length(ddF$denoised) 
+  print(denois)
+  denoised_count <- denoised_count + denois
   if (snakemake@params[["paired_end"]] == TRUE) {
     derepR <- derepFastq(fnRs[[sam]], verbose = TRUE)
     ddR <- dada(derepR, err=errR, multithread=TRUE, verbose = TRUE)
-    merger <- mergePairs(ddF, derepF, ddR, derepR)
+    print("After Dereplication:")
+    uniq <- length(derepR$uniques)
+    print(uniq)
+    derep_count <- derep_count + uniq
+    print("After DADA2 denoising:")
+    denois <-length(ddR$denoised) 
+    print(denois)
+    denoised_count <- denoised_count + denois
+    merger <- mergePairs(ddF, derepF, ddR, derepR, verbose = TRUE)
     mergers[[sam]] <- merger
   } else {
     mergers[[sam]] <- ddF
   }
 }
+
+print("Sum of sequences left after dereplication:")
+print(derep_count)
+print("Sum of sequences left after DADA2 denoising:")
+print(denoised_count)
+
 rm(derepF)
 if (snakemake@params[["paired_end"]] == TRUE) {
   rm(derepR)
@@ -47,3 +74,4 @@ for (i in seq(nrow(seqtab))) {
   uniquesToFasta(seq_uniq, fout = snakemake@output[[i]], ids = seq_names)
 }
 sink()
+sink(type="message")

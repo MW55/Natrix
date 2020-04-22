@@ -6,7 +6,7 @@ rule cdhit:
         temp("results/assembly/{sample}_{unit}/{sample}_{unit}_cdhit.fasta.clstr")
     conda:
         "../envs/dereplication.yaml"
-    threads: 20
+    threads: config["general"]["cores"]
     params:
         id_percent=config["derep"]["clustering"],
         length_cutoff=config["derep"]["length_overlap"]

@@ -81,8 +81,8 @@ rule blast:
         "results/finalData/representatives.fasta" if config["general"]["seq_rep"] == "OTU" else "results/finalData/filtered.fasta",
         expand(config["blast"]["db_path"] + "{file_extension}", file_extension=[".ndb", ".nhr", ".nin", ".nog", ".nos", ".not", ".nsq", ".ntf", ".nto"] if config["blast"]["database"] == "SILVA" else "")
     output:
-        temp("results/finalData/blast_taxonomy.tsv")
-    threads: 150
+        "results/finalData/blast_taxonomy.tsv" #temp
+    threads: config["general"]["cores"]
     params:
         db_path=config["blast"]["db_path"],
         max_target_seqs=str(config["blast"]["max_target_seqs"]) if config["blast"]["database"] == "NCBI" else "1",
@@ -139,6 +139,8 @@ rule merge_results:
         blast_result="results/finalData/blast_taxonomic_lineage.tsv"
     output:
         "results/finalData/filtered_blast_table.csv"
+    params:
+        seq_rep=str(config["general"]["seq_rep"])
     conda:
         "../envs/merge_results.yaml"
     log:

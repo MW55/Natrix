@@ -40,11 +40,11 @@ for(sam in sample.names) {
   if (snakemake@params[["paired_end"]] == TRUE) {
     derepR <- derepFastq(fnRs[[sam]], verbose = TRUE)
     ddR <- dada(derepR, err=errR, multithread=TRUE, verbose = TRUE)
-    print("After Dereplication:")
+    print("Reverse After Dereplication:")
     uniq <- length(derepR$uniques)
     print(uniq)
     derep_count <- derep_count + uniq
-    print("After DADA2 denoising:")
+    print("Reverse After DADA2 denoising:")
     denois <-length(ddR$denoised) 
     print(denois)
     denoised_count <- denoised_count + denois

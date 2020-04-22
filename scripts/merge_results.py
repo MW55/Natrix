@@ -5,17 +5,23 @@ import numpy as np
 
 blast = pd.read_csv(snakemake.input['blast_result'], sep="\t")
 
-swarm = pd.read_csv(snakemake.input['merged'], index_col=0, sep=",")
+merged = pd.read_csv(snakemake.input['merged'], sep=",") #merged = pd.read_csv(snakemake.input['merged'], index_col=0, sep=",")
 
-new_index = blast["seqid"].tolist()[0:]
-splitted = [i.replace("size=", "").split(";")[0:2] for i in new_index]
-new_index = ["N{}_{}".format(i[0], i[1]) for i in splitted]
 
-df = pd.DataFrame(new_index)
-blast["seqid"] = df[0]
+def new_index(table):
+    new_index = table["seqid"].tolist()[0:]
+    splitted = [i.lstrip(">").replace("size=", "").split(";")[0:2] for i in new_index]
+    new_index = ["N{}_{}".format(i[0], i[1]) for i in splitted]
+    df = pd.DataFrame(new_index)
+    table["seqid"] = df[0]
+    table = table.set_index('seqid')
+    return table
 
-blast = blast.set_index('seqid')
-result = swarm.join(blast, how='outer')
+blast = new_index(blast)
+if snakemake.params['seq_rep'] == 'ASV':
+    merged = new_index(merged)
+
+result = merged.join(blast, how='outer')
 
 logging.basicConfig(filename=str(snakemake.log), level=logging.DEBUG)
 

@@ -5,8 +5,11 @@ import numpy as np
 
 blast = pd.read_csv(snakemake.input['blast_result'], sep="\t")
 
-merged = pd.read_csv(snakemake.input['merged'], sep=",") #merged = pd.read_csv(snakemake.input['merged'], index_col=0, sep=",")
-
+if snakemake.params['seq_rep'] == 'ASV':
+    merged = pd.read_csv(snakemake.input['merged'], sep=",") #merged = pd.read_csv(snakemake.input['merged'], index_col=0, sep=",")
+else:
+    merged = pd.read_csv(snakemake.input['merged'], index_col=0, sep=",")
+    
 
 def new_index(table):
     new_index = table["seqid"].tolist()[0:]

@@ -65,7 +65,9 @@ When the workflow has finished, you can press **Ctrl+a, k** (*first press Ctrl+a
 
 ### Prerequisites: dataset, primertable and configuration file
 The FASTQ files need to follow a specific naming convention:
-![naming](documentation/images/filename.png =500x)
+<p align="center"> 
+<img src="documentation/images/filename.png" alt="naming" width="400"/>
+</p>
 ```
 samplename_unit_direction.fastq.gz
 ```
@@ -139,7 +141,7 @@ Should the pipeline prematurely terminate (either because of an error or by deli
 
 After the workflow is finished, the original data can be found under *Natrix-Pipeline/demultiplexed/*, while files created during the workflow can be found under *Natrix-Pipeline/results/*.
 <p align="center"> 
-<img src="documentation/images/output_files.png" alt="ouput" width="500"/>
+<img src="documentation/images/output_files.png" alt="ouput" width="700"/>
 </p>
 
 *Output file hierachy, green nodes represent folders, purple nodes represent files.*

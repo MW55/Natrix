@@ -147,7 +147,7 @@ After the workflow is finished, the original data can be found under *Natrix-Pip
 <img src="documentation/images/output_files.png" alt="ouput" width="700"/>
 </p>
 
-*Output file hierachy, green nodes represent folders, purple nodes represent files.*
+*Output file hierarchy, blue nodes represent folders, orange nodes represent files that are created in both variants of the workflow, green nodes are files exclusive to the OTU variant and purple nodes are files exclusive to the ASV variant of the workflow.*
 
 |Folder                               |File(s)                   |Description                                                                                              |
 |-------------------------------------|--------------------------|---------------------------------------------------------------------------------------------------------|

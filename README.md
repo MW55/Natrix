@@ -1,10 +1,10 @@
 # Natrix-Pipeline 
 
 Natrix is an open-source bioinformatics pipeline for the preprocessing of raw sequencing data.
-The need for a scalable, reproducible workflow for the processing of environmental amplicon data led to the development of Natrix. It is divided into quality assessment, read assembly, dereplication, chimera detection, split-sample merging, OTU-generation and taxonomic assessment. The pipeline is written in [Snakemake](https://snakemake.readthedocs.io) (Köster and Rahmann 2018), a workflow management engine for the development of data analysis workflows. Snakemake ensures reproducibility of a workflow by automatically deploying dependencies of workflow steps (rules) and scales seamlessly to different computing environments like servers, computer clusters or cloud services. While Natrix was only tested with 16S and 18S amplicon data, it should also work for other kinds of sequencing data. The pipeline contains seperate rules for each step of the pipeline and each rule that has additional dependencies has a seperate [conda](https://conda.io/) environment that will be automatically created when starting the pipeline for the first time. The encapsulation of rules and their dependencies allows for hassle-free sharing of rules between workflows.
+The need for a scalable, reproducible workflow for the processing of environmental amplicon data led to the development of Natrix. It is divided into quality assessment, read assembly, dereplication, chimera detection, split-sample merging, ASV or OTU-generation and taxonomic assessment. The pipeline is written in [Snakemake](https://snakemake.readthedocs.io) (Köster and Rahmann 2018), a workflow management engine for the development of data analysis workflows. Snakemake ensures reproducibility of a workflow by automatically deploying dependencies of workflow steps (rules) and scales seamlessly to different computing environments like servers, computer clusters or cloud services. While Natrix was only tested with 16S and 18S amplicon data, it should also work for other kinds of sequencing data. The pipeline contains seperate rules for each step of the pipeline and each rule that has additional dependencies has a seperate [conda](https://conda.io/) environment that will be automatically created when starting the pipeline for the first time. The encapsulation of rules and their dependencies allows for hassle-free sharing of rules between workflows.
 
-![DAG of an example workflow](documentation/images/example_dag.png)
-*DAG of an example workflow: each node represents a rule instance to be executed. The direction of each edge represents the order in which the rules are executed. Disjoint paths in the DAG can be executed in parallel. Below is a schematic representation of the main steps of the pipeline, the color coding represents which rules belong to which main step.*
+![DAG of an example workflow](documentation/images/combined_graph_4.png)
+*DAG of an example workflow: each node represents a rule instance to be executed. The direction of each edge represents the order in which the rules are executed, which dashed lines showing rules that are exclusive to the OTU version and dotted lines rules exclusive to the ASV variant of the workflow. Disjoint paths in the DAG can be executed in parallel. Below is a schematic representation of the main steps of the pipeline, the color coding represents which rules belong to which main step.*
 
 
 
@@ -65,6 +65,7 @@ When the workflow has finished, you can press **Ctrl+a, k** (*first press Ctrl+a
 
 ### Prerequisites: dataset, primertable and configuration file
 The FASTQ files need to follow a specific naming convention:
+![naming](documentation/images/filename.png =500x)
 ```
 samplename_unit_direction.fastq.gz
 ```
@@ -138,7 +139,7 @@ Should the pipeline prematurely terminate (either because of an error or by deli
 
 After the workflow is finished, the original data can be found under *Natrix-Pipeline/demultiplexed/*, while files created during the workflow can be found under *Natrix-Pipeline/results/*.
 <p align="center"> 
-<img src="documentation/images/output.svg" alt="split_sample" width="800"/>
+<img src="documentation/images/output_files.png" alt="ouput" width="500"/>
 </p>
 
 *Output file hierachy, green nodes represent folders, purple nodes represent files.*
@@ -182,7 +183,10 @@ sequences, GC content, adapter and the k-mer content of the FASTQ file.
 
 ### MultiQC 
 MultiQC aggregates the FastQC reports for a given set of FASTQ files into a
-single report, allowing reviews of all FASTQ files at once. PRINSEQ is used to filter out sequences with an average quality score below
+single report, allowing reviews of all FASTQ files at once. 
+
+### PRINSEQ
+PRINSEQ is used to filter out sequences with an average quality score below
 the threshold that can be defined in the configuration file of the pipeline.
 
 ## Read assembly
@@ -190,12 +194,18 @@ the threshold that can be defined in the configuration file of the pipeline.
 The define_primer rule specifies the subsequences to be removed by the
 assembly rule, specified by entries of the configuration file and a primer table that contains information about the primer and barcode sequences used and the length of the poly-N subsequences. Besides removing the subsequences based on their nucleotide sequence, it is also possible to remove them based solely on their length using an offset. Using an offset can be useful if the sequence has many uncalled bases in the primer region, which could otherwise hinder matches between the target sequence defined in the primer table and the sequence read.
 
-### Assembly 
+### Assembly & removal of undesired subsequences (OTU-variant)
 To assemble paired-end reads and remove the subsequences described in the pre-
 vious section PANDAseq (Masella et al. 2012) is used, which uses a probabilistic error correction to assemble overlapping forward- and reverse-reads. After assembly and sequence trimming, it will remove sequences that do not meet a minimal or maximal length threshold, have an assembly quality score below a threshold that can be defined in the configuration file and sequences whose forward- and reverse-read do not have an sufficiently long overlap. The thresholds for each of these procedures can be adjusted in the configuration file. If the reads are single-end, the subsequences (poly-N, barcode and the primer) that are defined in the define_primer rule are removed, followed by the removal of sequences that do not meet a minimal or maximal length threshold as defined in the configuration file.
 
+### Removal of undesired subsequences (ASV-variant)
+In the ASV variant of the workflow Cutadapt (Martin 2011) is used to remove the undesired subsequences defined in the primer table.
+
+### ASV denoising (ASV-Variant)
+After the removal of undesired subsequences ASVs are generated using the DADA2 (Callahan et al. 2016) algorithm. It dereplicates the dataset and uses a denoising algorithm. This algorithm infers if a sequence was produced by a different sequence based on the composition, quality, and abundance of a sequence and an Illumina error model. After ASV generation, exactly overlapping forward and reverse reads are assembled. The assembled ASVs are saved as FASTA files for downstream analysis.
+
 ## Similarity clustering
-### Conversion of FASTQ files to FASTA files 
+### Conversion of FASTQ files to FASTA files (OTU-variant)
 The rule copy_to_fasta converts the FASTQ files to FASTA files to reduce the disc space occupied by the files and to allow the usage of CD-HIT, which requires FASTA formated sequencing files. Clustering of similar sequences The CD-HIT-EST algorithm (Fu et al. 2012) clusters sequences together if they are either identical or if a sequence is a subsequence of another. This clustering approach is known as dereplication. Beginning with the longest sequence of the dataset as the first representative sequence, it iterates through the dataset in order of
 decreasing sequence length, comparing at each iteration the current query sequence to all representative sequences. If the sequence identity threshold defined in the configuration file is met for a representative sequence, the counter of the representative sequence is increased by one. If the threshold could not be met for any of the existing representative sequences, the query sequence is added to the pool of representative sequences. Cluster sorting The cluster_sorting rule uses the output of the cdhit rule to count the amount of sequences represented by each cluster, followed by sorting the representative sequences in descending order according to the cluster size and adds a specific header to each
 sequence as required by the UCHIME chimera detection algorithm.
@@ -278,7 +288,7 @@ The primertable should be a .csv file (*project*.csv) in the following format:
 # Configfile
 Below are the explainations for the configfile (*project*.yaml) entries:
 
-|FIELD1           |default                                                                          |description                                                                                                                                                                                                                                  |
+|Option           |Default                                                                          |Description                                                                                                                                                                                                                                  |
 |-----------------|---------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 |filename         |project                                                                          |The filename of the project folder, primertable (.csv) and config file (.yaml).                                                                                                                                                              |
 |primertable      |project.csv                                                                      |Path to the primertable.                                                                                                                                                                                                                     |
@@ -288,6 +298,7 @@ Below are the explainations for the configfile (*project*.yaml) entries:
 |demultiplexing   |False                                                                            |Demultiplexing for reads that were not demultiplexed by the sequencing company (slow).                                                                                                                                                       |
 |read_sorting     |False                                                                            |Read sorting for paired end reads that were not sorted by the sequencing company (slow).                                                                                                                                                     |
 |already_assembled|False                                                                            |Skipping of the quality control and read assembly steps for data that is already assembled.                                                                                                                                                  |
+|seq_rep          |OTU                                                                              |How the sequences should be represented, possible values are: "ASV", amplicon sequence variants, created with DADA2 or "OTU", operational taxonomic units, created with SWARM                                                                |
 |threshold        |0.9                                                                              |PANDAseq score threshold a sequence must meet to be kept in the output.                                                                                                                                                                      |
 |minoverlap       |15                                                                               |Sets the minimum overlap between forward and reverse reads.                                                                                                                                                                                  |
 |minqual          |1                                                                                |Minimal quality score for bases in an assembled read to be accepted by PANDAseq.                                                                                                                                                             |
@@ -312,8 +323,9 @@ Below are the explainations for the configfile (*project*.yaml) entries:
 |name_ext         |R1                                                                               |The identifier for the forward read (for the reverse read the 1 is switched with 2, if the data is in paired-end format), has to be included at the end of the file name, before the file format identifier (including for single end files).|
 |swarm            |True                                                                             |Boolean to indicate the use of the SWARM clustering algorithm to create operational taxonomic units (OTUs) from the data.                                                                                                                    |
 |blast            |False                                                                            |Boolean to indicate the use of the BLAST clustering algorithm to assign taxonomic information to the OTUs.                                                                                                                                   |
-|database          |SILVA                                                                |Database against which the BLAST should be carried out, at the moment "NCBI" and "SILVA" are supported.                          |
-|db_path          |database/silva/silva.db                                                                |Path to the database file against which the BLAST should be carried out, at the moment only the SILVA and NCBI databases will be automatically downloaded, other databases have to be downloaded and configurated manually.                           |
+|database         |SILVA                                                                            |Database against which the BLAST should be carried out, at the moment "NCBI" and "SILVA" are supported.                          |
+|drop_tax_classes |'.\*unclassified Bacteria.\*,.\*uncultured.\*bacterium.*'                        |Given a comma-separated list, drops undesired classes either by id, by name or using regex.                                                                                                                                                  |
+|db_path          |database/silva/silva.db                                                          |Path to the database file against which the BLAST should be carried out, at the moment only the SILVA and NCBI databases will be automatically downloaded, other databases have to be downloaded and configurated manually.                  |
 |max_target_seqs  |1                                                                                |Number of blast hits that are saved per sequence / OTU.                                                                                                                                                                                      |
 |ident            |90.0                                                                             |Minimal identity overlap between target and query sequence.                                                                                                                                                                                  |
 |evalue           |1e-51                                                                            |Highest accepted evalue.                                                                                                                                                                                                                     |
@@ -330,6 +342,8 @@ Below are the explainations for the configfile (*project*.yaml) entries:
 * Masella, Andre P et al. (2012). “PANDAseq: paired-end assembler for illumina sequences”. In: *BMC Bioinformatics 13.1*, p. 31.
 * Fu, Limin et al. (2012). “CD-HIT: accelerated for clustering the next-generation sequencing
 data”. In: *Bioinformatics 28.23*, pp. 3150–3152.
+* Martin, M. (2011). “Cutadapt removes adapter sequences from high-throughput sequencing reads.“ In: EMB-
+net.journal, 17(1):10.
 *  Rognes, Torbjørn et al. (2016). “VSEARCH: a versatile open source tool for metagenomics”.
 In: *doi: 10.7287/peerj.preprints.2409v1.*
 * Edgar, Robert (2016). “UCHIME2: improved chimera prediction for amplicon sequencing”. In: *bioRxiv.*

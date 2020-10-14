@@ -108,6 +108,27 @@ $ screen -r
 
 When the workflow has finished, you can press **Ctrl+a, k** (*first press Ctrl+a and then k*). This will end the screen session and any processes that are still running.
 
+### Running Natrix with Docker or docker-compose
+Natrix can be run inside a Docker-container. the easiest way to run it is using the docker-compose command:
+```shell
+$ PROJECT_NAME="*project*" docker-compose up (-d)
+```
+with *project* being the name of your project. e.g.:
+```shell
+$ PROJECT_NAME="example_data" docker-compose up
+```
+
+all output folders will be available at /srv/docker/natrix/
+make sure to copy your project to /srv/docker/natrix/input/ or create a new volume-mapping using the docker-compose.yml file
+at the first launch the container will download the required databases to /srv/docker/natrix/databases/ , this process might take a while.
+
+alternatively the container can be started directly:
+TODO
+```shell
+docker build . --tag natrix
+docker run -it natrix
+```
+
 ### Running Natrix manually
 
 If you prefer to run the preperation scripts and snakemake manually, you have to start by activating the snakemake environment:

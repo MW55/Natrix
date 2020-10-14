@@ -1,0 +1,17 @@
+.git
+.cache
+database
+.idea
+.snakemake
+README.md
+.gitignore
+dag.svg
+results
+documentation
+tests
+results
+logs
+qc
+assembly
+finalData
+figures

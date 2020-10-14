@@ -11,23 +11,30 @@ import subprocess
 import pathlib
 # This script is used for moving already assembled fastq files to the correct folder for further processing,
 # demultiplexing samples that were pooled in-lab (instead of at the sequencing company) and
-# to manually sort reads depending on their primersequence. the latter two functions are very slow and only serve niche
-# purposes for the people over at the biodiversity lab. It might be a better idea to remove these functions from
-# the script and only leave it in a branch specific for the people over at the biodiv. lab.
+# to manually sort reads depending on their primersequence.
 
 # Config and p_table has to be adjusted for the corresponding path to the 
 # primertable with config config['general']['filename'] + '.csv'
-with open(sys.argv[1] + '.yaml') as f_:
+
+#with open(sys.argv[1] + '.yaml') as f_:
+#    config = yaml.load(f_, Loader=yaml.FullLoader)
+#p_table = pd.read_csv(config['general']['primertable'], index_col='Probe') #p_table = pd.read_csv(sys.argv[1] + '.csv', index_col='Probe')
+#primertable = p_table.to_dict('index')
+#data_folder = config['general']['filename']
+#file_path_list = sorted(glob.glob(data_folder + "/*.fast*"))
+
+with open(str(snakemake.params.filename) + '.yaml') as f_:
     config = yaml.load(f_, Loader=yaml.FullLoader)
-p_table = pd.read_csv(config['general']['primertable'], index_col='Probe') #p_table = pd.read_csv(sys.argv[1] + '.csv', index_col='Probe')
+p_table = pd.read_csv(snakemake.params.primertable, index_col='Probe')
 primertable = p_table.to_dict('index')
-data_folder = config['general']['filename'] 
+data_folder = str(snakemake.params.filename)
 file_path_list = sorted(glob.glob(data_folder + "/*.fast*"))
 
 # Regex substitution dict.
 iupac_dict_regex = {'M':'[AC]', 'R':'[AG]', 'W':'[AT]', 'S':'[CG]', 'Y':'[CT]',
                     'K':'[GT]', 'V':'[ACG]', 'H':'[ACT]', 'D':'[AGT]',
                     'B':'[CGT]', 'X':'[ACGT]', 'N':'[ACGT]'}
+
 
 # Substitution helper function.
 def iupac_replace(sequence, iupac_dict):
@@ -54,15 +61,17 @@ def define_direction_demulti(polyN, prim, barcode):
             return False
     return check_for_match_demulti
 
+
 # These are the variations of the check_for_match closure for the
 # forward and reverse primer, the arguments are the column indices
 # of the corresponding polyN col, the col after the primer
 # (as the slice beginning is inclusive, end is exclusive) and the
 # col index of the barcode.
 check_for_match_fwd_demulti = define_direction_demulti('poly_N', 'specific_forward_primer',
-                                       'Barcode_forward')
+                                        'Barcode_forward')
 check_for_match_rev_demulti = define_direction_demulti('poly_N_rev', 'specific_reverse_primer',
                                        'Barcode_reverse')
+
 
 def define_direction_sort(prim):
     def check_for_match_sort(sequence, sample):
@@ -74,8 +83,10 @@ def define_direction_sort(prim):
             return False
     return check_for_match_sort
 
+
 check_for_match_sort_fwd = define_direction_sort('specific_forward_primer')
 check_for_match_sort_rev = define_direction_sort('specific_reverse_primer')
+
 
 # Create a dict of Dinopy writer instances and write the sequences
 # according to their barcode and primer sequence in the corresponding
@@ -115,11 +126,13 @@ def demultiplexer(file_path_list):
     for writer in writers.values():
         writer.close()
 
+
 if not os.path.exists('demultiplexed'):
     os.mkdir('demultiplexed')
 
 if not os.path.exists('demultiplexed/not_sorted'):
     os.mkdir('demultiplexed/not_sorted')
+
 
 def read_sorter(primertable):
     samples = []
@@ -142,9 +155,9 @@ def read_sorter(primertable):
 
     # Start writing.
     for sample in primertable.keys():
-        fwd = dinopy.FastqReader(data_folder + '/' + sample + config['merge']['name_ext'][:-1] + '1.fastq.gz')
-        rev = dinopy.FastqReader(data_folder + '/' + sample + config['merge']['name_ext'][:-1] + '2.fastq.gz')
-        for read_f, read_r in zip(fwd.reads(quality_values=True),rev.reads(quality_values=True)):
+        fwd = dinopy.FastqReader('../' + data_folder + '/' + sample + str(snakemake.params.name_ext)[:-1] + '1.fastq.gz')
+        rev = dinopy.FastqReader('../' + data_folder + '/' + sample + str(snakemake.params.name_ext)[:-1] + '2.fastq.gz')
+        for read_f, read_r in zip(fwd.reads(quality_values=True), rev.reads(quality_values=True)):
             if check_for_match_sort_fwd(read_f.sequence.decode(), 
                 sample.split('/')[-1]) and check_for_match_sort_rev(read_r.sequence.decode(),
                     sample.split('/')[-1]):
@@ -169,26 +182,33 @@ def read_sorter(primertable):
     for writer in writers.values():
         writer.close()
 
+
 def already_assembled(primertable, file_path_list):
     for f_ in file_path_list:
         if '.gz' in f_:
             subprocess.run(['gunzip', f_])
             f_ = f_.split('.gz')[0]
         for sample in primertable.keys():
-            pathlib.Path('results/assembly/' + sample).mkdir(parents=True, exist_ok=True)
+            pathlib.Path('../results/assembly/' + sample).mkdir(parents=True, exist_ok=True)
             if sample in f_:
-                shutil.copy(f_, 'results/assembly/' + sample + '/' + sample + '_assembled.fastq')
-                shutil.move(f_, 'demultiplexed/')
+                shutil.copy(f_, '../results/assembly/' + sample + '/' + sample + '_assembled.fastq')
+                shutil.move(f_, '../demultiplexed/')
+
 
 # Run the demultiplexing / read sorting script.
-if config['general']['demultiplexing']:
+if snakemake.params.demultiplexing:
+    print('1')
     demultiplexer(file_path_list)
-elif config['general']['read_sorting']:
+elif snakemake.params.read_sorting:
     read_sorter(primertable)
-elif config['general']['already_assembled']:
+    print('2')
+elif snakemake.params.assembled:
     already_assembled(primertable, file_path_list)
+    print('3')
 else:
+    print('4')
     # If the files do not need demultiplexing / sorting, just move them to
     # the demultiplexed folder.
     for file in file_path_list:
+        print(file)
         shutil.move(file, 'demultiplexed/')

@@ -44,11 +44,11 @@ merge:
         plot_AmpDuo : TRUE # If the frequency-frequency plot should be saved.
         paired_End : TRUE # The format of the sequencing data, TRUE if the reads are in paired-end format.
         name_ext : R1 # The identifier for the forward read (for the reverse read the 1 is switched with 2, if the data is in paired-end format), has to be included at the end of the file name, before the file format identifier (including for single end files).
-        swarm : TRUE # Boolean to indicate the use of the SWARM clustering algorithm to create operational taxonomic units (OTUs) from the data.
+        swarm : FALSE # Boolean to indicate the use of the SWARM clustering algorithm to create operational taxonomic units (OTUs) from the data.
 
 # BLAST
 blast:
-        blast : TRUE  # Boolean to indicate the use of the BLAST clustering algorithm to assign taxonomic information to the OTUs.
+        blast : FALSE  # Boolean to indicate the use of the BLAST clustering algorithm to assign taxonomic information to the OTUs.
         database: NCBI # Database against which the BLAST should be carried out, at the moment "NCBI" and "SILVA" are supported.
         drop_tax_classes: '.*unclassified Bacteria.*,.*uncultured.*bacterium.*' # given a comma-separated list, drops undesired classes either by id, by name or using regex
         db_path : database/ncbi/nt # Path to the database file against which the BLAST should be carried out, at the moment only the SILVA (database/silva/silva.db) and NCBI (database/ncbi/nt) databases will be automatically downloaded, other databases have to be downloaded and configurated manually.

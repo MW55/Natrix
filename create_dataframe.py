@@ -11,6 +11,7 @@ import sys
 with open(sys.argv[1]) as f_:
     config = yaml.load(f_, Loader=yaml.FullLoader)
 
+
 def create_dataframe(fl, fpl, config, slice):
     if config['merge']['paired_End'] and not config['general']['already_assembled']:
         df = pd.DataFrame(columns=['sample', 'unit', 'fq1', 'fq2'],
@@ -35,10 +36,12 @@ def create_dataframe(fl, fpl, config, slice):
             i += 1
     return df
 
+
 if __name__ == '__main__':
     if not config['general']['already_assembled']:
-        file_path_list = sorted(glob('demultiplexed/*.gz'))
-        file_list = sorted([file_.split('/')[-1] for file_ 
+        file_path_list = ['demultiplexed/' + name.split('/')[-1] for name in
+                          sorted(glob(config['general']['filename'] + '/*.gz'))]
+        file_list = sorted([file_.split('/')[-1] for file_
                     in file_path_list])
         slice = -3 # Remove the .gz extension from the file paths.
     else:

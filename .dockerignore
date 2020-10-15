@@ -3,6 +3,7 @@
 database
 .idea
 .snakemake
+.snakemake/*
 README.md
 .gitignore
 dag.svg

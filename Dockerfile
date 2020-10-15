@@ -1,15 +1,16 @@
 FROM continuumio/miniconda3
+SHELL ["/bin/bash", "-c"]
+
 COPY . /app
 WORKDIR /app
 RUN apt update && apt-get install -y libltdl7 && apt upgrade -y && apt-get purge -y && apt-get clean
 
 # Create the environment:
-#COPY snakemake.yaml .
 RUN conda env create -f snakemake.yaml
 RUN chmod +x docker_pipeline.sh
 # Make RUN commands use the new environment:
 #SHELL ["conda", "run", "-n", "myenv", "/bin/bash", "-c"]
 
-#ENTRYPOINT ["bash"] 
-#ENTRYPOINT ["./docker_pipeline.sh"]
+# Creating envs for each task:
+RUN env_loc=$(conda info --base)/etc/profile.d/conda.sh && source $env_loc && conda activate snakemake && mkdir docker_dummy_env1 && touch docker_dummy_env1.csv && cp units.tsv docker_dummy.tsv && mkdir docker_dummy_env2 && touch docker_dummy_env2.csv && snakemake --configfile docker_dummy_env1.yaml --use-conda --create-envs-only && snakemake --configfile docker_dummy_env2.yaml --use-conda --create-envs-only && rm -rf docker_dummy_env1 && rm docker_dummy_env1.csv && rm docker_dummy_env1.yaml && rm -rf docker_dummy_env2 && rm docker_dummy_env2.csv && rm docker_dummy_env2.yaml && rm docker_dummy.tsv
 CMD ["sh","-c", "./docker_pipeline.sh $PROJECT_NAME"]

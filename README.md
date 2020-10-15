@@ -119,14 +119,14 @@ $ PROJECT_NAME="example_data" docker-compose up
 ```
 
 all output folders will be available at /srv/docker/natrix/
-make sure to copy your project to /srv/docker/natrix/input/ or create a new volume-mapping using the docker-compose.yml file
-at the first launch the container will download the required databases to /srv/docker/natrix/databases/ , this process might take a while.
+make sure to copy your project to /srv/docker/natrix/input/ or create a new volume-mapping using the docker-compose.yml file.
+By default the container will wait until the input files exist.
+At first launch the container will download the required databases to /srv/docker/natrix/databases/, this process might take a while.
 
-alternatively the container can be started directly:
-TODO
+alternatively the container can be started directly: (*host* folders have to be changed!)
 ```shell
 docker build . --tag natrix
-docker run -it natrix
+docker run -it --label natrix_container -v */host/database*:/app/database -v */host/results*:/app/results -v */host/input_folder*:/app/input natrix bash # -v /host/database:/app/database is optional
 ```
 
 ### Running Natrix manually

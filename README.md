@@ -140,6 +140,28 @@ Should the pipeline prematurely terminate (either because of an error or by deli
 
 ---
 
+## Cluster computing
+Natrix can be easily run on a cluster computer using either conda or the docker container.
+Adding --cluster to the start command of Natrix, together with a command to submit jobs (e. g. qsub) is enough for most 
+cluster computing environments. An example command would be:
+
+```shell
+$ snakemake -s *full/path/to/Snakefile* --use-conda --configfile *full/path/to/configfile.yaml* --cluster "qsub -N *project name* -S /bin/bash/ -l h_vmem=*memory per job* -pe smp *number of cores per job* -l h_rt=*maximum run time per job* -e /path/to/folder/for/stderr/files -o /path/to/folder/for/stdout/files" --jobs *number of parallel jobs* --rerun-incomplete
+```
+
+Some more qsub arguments including brief explanations for each can be found under [qsub arguments](http://bioinformatics.mdc-berlin.de/intro2UnixandSGE/sun_grid_engine_for_beginners/how_to_submit_a_job_using_qsub.html).
+For additional commands that should be executed for each job the argument --jobscript *path/to/jobscript.sh* can be used. 
+A simple jobscript that sources before the execution of each job the bashrc and activates the snakemake environment looks like this:
+
+```shell
+#!/usr/bin/env bash
+
+source ~/.bashrc
+conda activate snakemake
+
+{exec_job}
+```
+
 ## Output
 
 After the workflow is finished, the original data can be found under *Natrix-Pipeline/demultiplexed/*, while files created during the workflow can be found under *Natrix-Pipeline/results/*.

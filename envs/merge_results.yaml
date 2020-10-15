@@ -5,30 +5,8 @@ channels:
   - defaults
   - r
 dependencies:
-  - ca-certificates=2018.4.16
-  - certifi=2018.4.16
-  - mkl_fft=1.0.3
-  - mkl_random=1.0.1
-  - ncurses=5.9
-  - openssl=1.0.2o
   - pandas=0.23.3
-  - pip=9.0.3
   - python=3.6.5
-  - python-dateutil=2.7.3
-  - pytz=2018.5
-  - readline=7.0
-  - setuptools=40.0.0
-  - six=1.11.0
-  - sqlite=3.20.1
-  - tk=8.6.8
-  - wheel=0.31.1
-  - xz=5.2.3
-  - zlib=1.2.11
-  - intel-openmp=2018.0.3
-  - libgcc-ng=7.2.0
-  - libgfortran-ng=7.2.0
-  - mkl=2018.0.3
   - numpy=1.14.2
-  - pytables
-  - pip:
-    - powerline-status==2.6
+  - pytables=3.4.4
+  - hdf5=1.10.1

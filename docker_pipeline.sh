@@ -16,7 +16,7 @@ do
   echo File "$varname".yaml does not exists. Waiting 5 seconds
   sleep 5
 done
-python demultiplexing.py "$varname"
+#python demultiplexing.py "$varname"
 
 varname+=".yaml"
 cores=$(grep "cores : " $varname | awk '{print $3}')

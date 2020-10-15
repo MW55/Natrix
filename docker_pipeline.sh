@@ -6,13 +6,16 @@ then
 else
 	varname=$PROJECT_NAME
 fi
-echo $varname
-echo $1
-echo $PROJECT_NAME
+
 env_loc=$(conda info --base)/etc/profile.d/conda.sh
 
 source $env_loc
 conda activate snakemake
+while [ ! -f "$varname".yaml ]
+do
+  echo File "$varname".yaml does not exists. Waiting 5 seconds
+  sleep 5
+done
 python demultiplexing.py "$varname"
 
 varname+=".yaml"

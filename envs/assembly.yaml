@@ -8,3 +8,5 @@ dependencies:
   - dinopy=2.0.0
   - pandas=0.22.0
   - pandaseq=2.11
+  - libgcc
+  - libtool

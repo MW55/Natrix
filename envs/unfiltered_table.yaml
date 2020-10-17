@@ -7,4 +7,5 @@ dependencies:
   - python=3.6.4
   - dinopy=2.0.0
   - pandas=0.22.0
-  - pytables
+  - pytables=3.6.1
+  - hdf5=1.10.6

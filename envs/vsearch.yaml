@@ -5,7 +5,3 @@ channels:
 - defaults
 dependencies:
 - vsearch=2.7.0
-- bzip2=1.0.6
-- libgcc-ng=7.2.0
-- libstdcxx-ng=7.2.0
-- zlib=1.2.11

@@ -1,0 +1,58 @@
+# General options
+general:
+        filename : docker_dummy_env2 # The filename of the project folder, primertable (.csv) and configfile (.yaml).
+        primertable: docker_dummy_env2.csv # Path to the primertable.
+        units: docker_dummy.tsv # Path to the sequencing unit sheet.
+        cores : 8 # Amount of cores available for the workflow.
+        multiqc : TRUE  # Initial quality check (fastqc & multiqc), currently only works for not yet assembled reads.
+        demultiplexing: FALSE # Demultiplexing for reads that were not demultiplexed by the sequencing company (slow).
+        read_sorting: FALSE # Read sorting for paired end reads that were not sorted by the sequencing company (slow).
+        already_assembled: FALSE # Skipping of the quality control and read assembly steps for data that is already assembled.
+        seq_rep: ASV # How the sequences should be represented, possible values are: "ASV", amplicon sequence variants, created with DADA2 or "OTU", operational taxonomic units, created with SWARM
+
+# Quality check and primer removal
+qc:
+        threshold : 0.9 # PANDAseq score threshold a sequence must meet to be kept in the output.
+        minoverlap : 15 # Sets the minimum overlap between forward and reverse reads.
+        minqual : 1 # Minimal quality score for bases in an assembled read to be accepted by PANDAseq.
+        minlen : 100 # The minimal length of a sequence after primer removal to be accepted by PANDAseq.
+        maxlen : 600 # The maximal length of a sequence after primer removal to be accepted by PANDAseq.
+        primer_offset : FALSE # Using PANDAseq to remove primer sequences by length offset instead of sequence identity.
+        mq : 25 # Minimum quality sequence check (prinseq), filtering of sequences according to the PHRED quality score before the assembly.
+        barcode_removed: TRUE # Boolean that indicates if the sequence is free of barcodes.
+        all_primer : FALSE # Boolean that indicates if the sequence is free of any kind of additional subsequences (primer, barcodes etc.).
+
+# Dereplication
+derep:
+        clustering : 1 # Percent identity for cdhit (dereplication) (1 = 100%), if cdhit is solely to be used for dereplication (recommended), keep the default value.
+        length_overlap : 0.0 # Length difference cutoff, default 0.0 if set to 0.9, the shorter sequences need to be at least 90% length of the representative of the cluster.
+        representative: most_common # Which sequence to use as a representative sequence per CDHIT cluster. longest = the longest sequence of the corresponding cluster, most_common = the most common sequence of the corresponding cluster.
+
+# Chimera removal
+chim:
+        beta : 8.0 # Weight of a "no" vote for the VSEARCH chimera detection algorithm.
+        pseudo_count : 1.2 # Pseudo - count prior on number of “no” votes.
+        abskew : 16 # Minimum abundance skew, definied by (min(abund.(paren1), abund.(paren2))) / abund.(child).
+
+# Merging
+merge:
+        filter_method : split_sample # If the split sample approach was used (split_sample) or not (not_split).
+        ampliconduo: TRUE # If AmpliconDuo should be used for statistical analysis of the data.
+        cutoff : 3 # An additional abundance filter if the split sample approach was not used.
+        ampli_corr : fdr # Specifies the correction method for Fisher's exact test.
+        save_format : png # File format for the frequency-frequency plot.
+        plot_AmpDuo : TRUE # If the frequency-frequency plot should be saved.
+        paired_End : TRUE # The format of the sequencing data, TRUE if the reads are in paired-end format.
+        name_ext : R1 # The identifier for the forward read (for the reverse read the 1 is switched with 2, if the data is in paired-end format), has to be included at the end of the file name, before the file format identifier (including for single end files).
+        swarm : TRUE # Boolean to indicate the use of the SWARM clustering algorithm to create operational taxonomic units (OTUs) from the data.
+
+# BLAST
+blast:
+        blast : TRUE  # Boolean to indicate the use of the BLAST clustering algorithm to assign taxonomic information to the OTUs.
+        database: SILVA # Database against which the BLAST should be carried out, at the moment "NCBI" and "SILVA" are supported.
+        drop_tax_classes: '.*unclassified Bacteria.*,.*uncultured.*bacterium.*' # given a comma-separated list, drops undesired classes either by id, by name or using regex
+        db_path : database/silva/silva.db # Path to the database file against which the BLAST should be carried out, at the moment only the SILVA (database/silva/silva.db) and NCBI (database/ncbi/nt) databases will be automatically downloaded, other databases have to be downloaded and configurated manually.
+        max_target_seqs : 10 # Number of NCBI blast hits that are saved per sequence / OTU.
+        ident : 90.0 # Minimal identity overlap between target and query sequence.
+        evalue : 1e-51 # Highest accepted evalue.
+        out6 : '"6 qseqid qlen length pident mismatch qstart qend sstart send gaps evalue staxid sseqid"' # Additional BLAST information to be saved.

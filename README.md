@@ -119,15 +119,17 @@ $ PROJECT_NAME="example_data" docker-compose up
 ```
 
 all output folders will be available at /srv/docker/natrix/
-make sure to copy your project to /srv/docker/natrix/input/ or create a new volume-mapping using the docker-compose.yml file.
+make sure to copy your *project* folder, *project*.yaml and *project*.csv files to /srv/docker/natrix/input/ or create a new volume-mapping using the docker-compose.yml file.
 By default the container will wait until the input files exist.
 At first launch the container will download the required databases to /srv/docker/natrix/databases/, this process might take a while.
 
-alternatively the container can be started directly: (*host* folders have to be changed!)
+Alternatively the container can be started directly: (*host* folders have to be changed!)
 ```shell
 docker build . --tag natrix
 docker run -it --label natrix_container -v */host/database*:/app/database -v */host/results*:/app/results -v */host/input_folder*:/app/input natrix bash # -v /host/database:/app/database is optional
 ```
+
+You will then be at the command prompt inside the docker container, from there you can follow the tutorial for [running Natrix manually](###-running-natrix-manually).
 
 ### Running Natrix manually
 
@@ -137,19 +139,13 @@ If you prefer to run the preperation scripts and snakemake manually, you have to
 $ conda activate snakemake
 ```
 
-Followed by starting the demultiplexing script:
-
-```shell
-$ python3 demultiplexing.py *project*
-```
-
-with *project* being the name of your project. The demultiplexing script will, depending on the options choosen in the configuration file, demultiplex your data, sort your reads or at the very least move the data files to the locations they need to be in for the pipeline.
-
-The second preperation script will create the `units.tsv` file, containing the file information in a way that Natrix can use it:
+Followed by running the preperation script, with *project* being the name of your project:
 
 ```shell
 $ python3 create_dataframe.py *project*.yaml
 ```
+
+This command will create the `units.tsv` file, containing the file information in a way that Natrix can use it.
 
 To start the main pipeline, type in:
 ```shell

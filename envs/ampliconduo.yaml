@@ -6,3 +6,4 @@ channels:
   - r
 dependencies:
   - r-ampliconduo=1.1
+  - r-data.table

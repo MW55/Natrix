@@ -1,14 +1,14 @@
 # General options
 general:
-        filename : example_data # The filename of the project folder, primertable (.csv) and configfile (.yaml).
-        primertable: example_data.csv # Path to the primertable.
-        units: units.tsv # Path to the sequencing unit sheet.
+        filename : docker_dummy_env2 # The filename of the project folder, primertable (.csv) and configfile (.yaml).
+        primertable: docker_dummy_env2.csv # Path to the primertable.
+        units: docker_dummy.tsv # Path to the sequencing unit sheet.
         cores : 8 # Amount of cores available for the workflow.
-        multiqc : FALSE  # Initial quality check (fastqc & multiqc), currently only works for not yet assembled reads.
+        multiqc : TRUE  # Initial quality check (fastqc & multiqc), currently only works for not yet assembled reads.
         demultiplexing: FALSE # Demultiplexing for reads that were not demultiplexed by the sequencing company (slow).
         read_sorting: FALSE # Read sorting for paired end reads that were not sorted by the sequencing company (slow).
         already_assembled: FALSE # Skipping of the quality control and read assembly steps for data that is already assembled.
-        seq_rep: OTU # How the sequences should be represented, possible values are: "ASV", amplicon sequence variants, created with DADA2 or "OTU", operational taxonomic units, created with SWARM
+        seq_rep: ASV # How the sequences should be represented, possible values are: "ASV", amplicon sequence variants, created with DADA2 or "OTU", operational taxonomic units, created with SWARM
 
 # Quality check and primer removal
 qc:
@@ -37,7 +37,7 @@ chim:
 # Merging
 merge:
         filter_method : split_sample # If the split sample approach was used (split_sample) or not (not_split).
-        ampliconduo: FALSE # If AmpliconDuo should be used for statistical analysis of the data.
+        ampliconduo: TRUE # If AmpliconDuo should be used for statistical analysis of the data.
         cutoff : 3 # An additional abundance filter if the split sample approach was not used.
         ampli_corr : fdr # Specifies the correction method for Fisher's exact test.
         save_format : png # File format for the frequency-frequency plot.

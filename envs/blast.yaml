@@ -9,3 +9,4 @@ dependencies:
   - blast=2.9.0
   - pandas=1.1.3
   - pytables=3.5.1
+  - numpy=1.14.2

@@ -179,6 +179,16 @@ conda activate snakemake
 {exec_job}
 ```
 
+Instead of directly passing the cluster submission arguments to the snakemake command it is also possible to
+write a profile that contains cluster commands and arguments. Using profiles allows the assigning 
+of rule-specific hardware requirements. For example, the BLAST rule benefits from a large amount of CPU cores, while other
+rules, like AmpliconDuo, do not. With profiles, rules could be assigned a low amount of CPU cores as default, with rules
+like BLAST being assigned a larger amount of cores. This allows optimal usage of cluster resources and shorter waiting times.
+The creation of profiles is largely dependant on the software and hardware available on the cluster.
+The Snakemake documentation contains a tutorial for [profile creation](https://snakemake.readthedocs.io/en/stable/executing/cli.html#profiles) 
+and the [Snakemake profiles GitHub page](https://github.com/snakemake-profiles/doc) contains example profiles for different
+cluster systems.
+
 ## Output
 
 After the workflow is finished, the original data can be found under *Natrix-Pipeline/demultiplexed/*, while files created during the workflow can be found under *Natrix-Pipeline/results/*.

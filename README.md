@@ -129,7 +129,7 @@ docker build . --tag natrix
 docker run -it --label natrix_container -v */host/database*:/app/database -v */host/results*:/app/results -v */host/input_folder*:/app/input natrix bash # -v /host/database:/app/database is optional
 ```
 
-You will then be at the command prompt inside the docker container, from there you can follow the tutorial for [running Natrix manually](###-running-natrix-manually).
+You will then be at the command prompt inside the docker container, from there you can follow the tutorial for [running Natrix manually](#running-natrix-manually).
 
 ### Running Natrix manually
 

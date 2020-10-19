@@ -19,6 +19,7 @@ else:
 
 rule all:
     input:
+        "results/finalData/unfiltered_table.csv",
         "results/finalData/filtered_table.csv",
         "results/finalData/swarm_table.csv" if config["merge"]["swarm"] and config["general"]["seq_rep"] == "OTU" else [],
         "results/qc/multiqc_report.html" if config["general"]["multiqc"] else [],

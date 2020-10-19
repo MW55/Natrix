@@ -27,7 +27,7 @@ dag3.svg
 dag4.svg
 primer_table.csv
 samples.tsv
-units.tsv
+./units.tsv
 already_assembled_b
 test_data_backup*
 snakemake_backup*

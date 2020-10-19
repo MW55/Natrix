@@ -109,7 +109,7 @@ $ screen -r
 When the workflow has finished, you can press **Ctrl+a, k** (*first press Ctrl+a and then k*). This will end the screen session and any processes that are still running.
 
 ### Running Natrix with Docker or docker-compose
-Natrix can be run inside a Docker-container. Therefore, Docker has to be installed. Please have a look at the [Docker website](https://docs.docker.com/get-started/) to find out how to install Docker and set up an environment if you have not used it before.
+Natrix can be run inside a Docker-container. Therefore, Docker has to be installed. Please have a look at the [Docker website](https://docs.docker.com/) to find out how to install Docker and set up an environment if you have not used it before.
 
 
 The easiest way to run it is using the docker-compose command:
@@ -118,7 +118,7 @@ $ PROJECT_NAME="*project*" docker-compose up (-d)
 ```
 with *project* being the name of your project. e.g.:
 ```shell
-$ PROJECT_NAME="example_data" docker-compose up
+$ PROJECT_NAME="example_data" docker-compose up # sudo might be needed
 ```
 
 all output folders will be available at /srv/docker/natrix/

@@ -111,8 +111,28 @@ When the workflow has finished, you can press **Ctrl+a, k** (*first press Ctrl+a
 ### Running Natrix with Docker or docker-compose
 Natrix can be run inside a Docker-container. Therefore, Docker has to be installed. Please have a look at the [Docker website](https://docs.docker.com/) to find out how to install Docker and set up an environment if you have not used it before.
 
+The easiest way to run the docker container is to download the pre-build container from [dockerhub](https://hub.docker.com/r/mw55/natrix).
+```shell
+$ docker pull mw55/natrix
+```
+The docker container has all environments pre-installed, eliminating the need for downloading the environments during first-time initialization of the workflow.
+To connect to the shell inside the docker container, input the following command:
+```shell
+docker run -it --label natrix_container -v */host/database*:/app/database -v */host/results*:/app/results -v */host/input_folder*:/app/input mw55/natrix bash
+```
+*/host/database* is the full path to a local folder, in which you wish to install the database (SILVA or NCBI). This part is optional and only needed if 
+you want to use BLAST for taxonomic assignment.
 
-The easiest way to run it is using the docker-compose command:
+*/host/results* is the full path to a local folder in which the results of the workflow should be stored for the container to use.
+
+*/host/input_folder* is the full path to a local folder in which the input (the *project* folder, the *project*.yaml and the *project*.csv) should be saved.
+
+After you connected to the container shell, you can follow the [running Natrix manually](#running-natrix-manually) tutorial
+
+
+If you prefer to build the docker container yourself from the repository (for example, if you modified the source code of Natrix) there are two options:
+
+You can start the workflow using the the docker-compose command in the root directory of the workflow:
 ```shell
 $ PROJECT_NAME="*project*" docker-compose up (-d)
 ```
@@ -126,7 +146,7 @@ make sure to copy your *project* folder, *project*.yaml and *project*.csv files 
 By default the container will wait until the input files exist.
 At first launch the container will download the required databases to /srv/docker/natrix/databases/, this process might take a while.
 
-Alternatively the container can be started directly: (*host* folders have to be changed!)
+Alternatively the container can be build and started directly: (*host* folders have to be changed!)
 ```shell
 docker build . --tag natrix
 docker run -it --label natrix_container -v */host/database*:/app/database -v */host/results*:/app/results -v */host/input_folder*:/app/input natrix bash # -v /host/database:/app/database is optional

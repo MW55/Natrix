@@ -1,7 +1,8 @@
 version: '3'
 services:
   natrix:
-    build: .
+    image: mw55/natrix
+    #build: .
     restart: on-failure
     environment:
       PROJECT_NAME: /app/input/${PROJECT_NAME}

@@ -30,17 +30,17 @@ GNU screen can be found in the repositories of most Linux distributions:
 * RHEL based: yum install screen
 * Arch based: pacman -S screen
 
-All other dependencies will be automatically installed using conda environments and can be found in the corresponding environment.yaml files in the *envs* folder and the `snakemake.yaml` file in the root directory of the pipeline.
+All other dependencies will be automatically installed using conda environments and can be found in the corresponding environment.yaml files in the *envs* folder and the `natrix.yaml` file in the root directory of the pipeline.
 
 ---
 
 ## Getting Started
 
 To install Natrix, you'll need the open-source package management system [conda](https://conda.io/en/latest/index.html) and, if you want to try Natrix using the accompanying `pipeline.sh` script you'll need [GNU screen](https://www.gnu.org/software/screen/).
-After cloning this repository to a folder of your choice, it is recommended to create a general snakemake conda environment with the accompanying `snakemake.yaml`. In the main folder of the cloned repository, execute the following command:
+After cloning this repository to a folder of your choice, it is recommended to create a general natrix conda environment with the accompanying `natrix.yaml`. In the main folder of the cloned repository, execute the following command:
 
 ```shell
-$ conda env create -f snakemake.yaml
+$ conda env create -f natrix.yaml
 ```
 This will create a conda environment containing all dependencies for Snakemake itself. 
 
@@ -109,6 +109,7 @@ $ screen -r
 When the workflow has finished, you can press **Ctrl+a, k** (*first press Ctrl+a and then k*). This will end the screen session and any processes that are still running.
 
 ### Running Natrix with Docker or docker-compose
+#### Pulling the image from Dockerhub
 Natrix can be run inside a Docker-container. Therefore, Docker has to be installed. Please have a look at the [Docker website](https://docs.docker.com/) to find out how to install Docker and set up an environment if you have not used it before.
 
 The easiest way to run the docker container is to download the pre-build container from [dockerhub](https://hub.docker.com/r/mw55/natrix).
@@ -118,7 +119,7 @@ $ docker pull mw55/natrix
 The docker container has all environments pre-installed, eliminating the need for downloading the environments during first-time initialization of the workflow.
 To connect to the shell inside the docker container, input the following command:
 ```shell
-docker run -it --label natrix_container -v */host/database*:/app/database -v */host/results*:/app/results -v */host/input_folder*:/app/input mw55/natrix bash
+docker run -it --label natrix_container -v </host/database>:/app/database -v </host/results>:/app/results -v </host/input_folder>:/app/input mw55/natrix bash
 ```
 */host/database* is the full path to a local folder, in which you wish to install the database (SILVA or NCBI). This part is optional and only needed if 
 you want to use BLAST for taxonomic assignment.
@@ -127,14 +128,13 @@ you want to use BLAST for taxonomic assignment.
 
 */host/input_folder* is the full path to a local folder in which the input (the *project* folder, the *project*.yaml and the *project*.csv) should be saved.
 
-After you connected to the container shell, you can follow the [running Natrix manually](#running-natrix-manually) tutorial
+After you connected to the container shell, you can follow the [running Natrix manually](#running-natrix-manually) tutorial.
 
+#### Directly starting the workflow using docker-compose
 
-If you prefer to build the docker container yourself from the repository (for example, if you modified the source code of Natrix) there are two options:
-
-You can start the workflow using the the docker-compose command in the root directory of the workflow:
+Alternatively, you can start the workflow using the the docker-compose command in the root directory of the workflow (it will pull the latest natrix image from DockerHub):
 ```shell
-$ PROJECT_NAME="*project*" docker-compose up (-d)
+$ PROJECT_NAME="<project>" docker-compose up (-d)
 ```
 with *project* being the name of your project. e.g.:
 ```shell
@@ -146,33 +146,35 @@ make sure to copy your *project* folder, *project*.yaml and *project*.csv files 
 By default the container will wait until the input files exist.
 At first launch the container will download the required databases to /srv/docker/natrix/databases/, this process might take a while.
 
-Alternatively the container can be build and started directly: (*host* folders have to be changed!)
+#### Building the container yourself
+If you prefer to build the docker container yourself from the repository (for example, if you modified the source code of Natrix) the container can be build and started directly: (*host* folders have to be changed!)
+
 ```shell
 docker build . --tag natrix
-docker run -it --label natrix_container -v */host/database*:/app/database -v */host/results*:/app/results -v */host/input_folder*:/app/input natrix bash # -v /host/database:/app/database is optional
+docker run -it --label natrix_container -v </host/database>:/app/database -v </host/results>:/app/results -v </host/input_folder>:/app/input natrix bash # -v /host/database:/app/database is optional
 ```
 
 You will then be at the command prompt inside the docker container, from there you can follow the tutorial for [running Natrix manually](#running-natrix-manually).
 
 ### Running Natrix manually
 
-If you prefer to run the preperation scripts and snakemake manually, you have to start by activating the snakemake environment:
+If you prefer to run the preperation script and snakemake manually, you have to start by activating the snakemake environment:
 
 ```shell
-$ conda activate snakemake
+$ conda activate natrix
 ```
 
 Followed by running the preperation script, with *project* being the name of your project:
 
 ```shell
-$ python3 create_dataframe.py *project*.yaml
+$ python3 create_dataframe.py <project>.yaml
 ```
 
 This command will create the `units.tsv` file, containing the file information in a way that Natrix can use it.
 
 To start the main pipeline, type in:
 ```shell
-snakemake --use-conda --configfile *project*.yaml --cores *cores*
+snakemake --use-conda --configfile <project>.yaml --cores <cores>
 ```
 with *project* being the name of your project and *cores* being the amount of cores you want to allocate for Natrix to use.
 
@@ -186,7 +188,7 @@ Adding --cluster to the start command of Natrix, together with a command to subm
 cluster computing environments. An example command would be:
 
 ```shell
-$ snakemake -s *full/path/to/Snakefile* --use-conda --configfile *full/path/to/configfile.yaml* --cluster "qsub -N *project name* -S /bin/bash/ -l h_vmem=*memory per job* -pe smp *number of cores per job* -l h_rt=*maximum run time per job* -e /path/to/folder/for/stderr/files -o /path/to/folder/for/stdout/files" --jobs *number of parallel jobs* --rerun-incomplete
+$ snakemake -s <full/path/to/Snakefile> --use-conda --configfile <full/path/to/configfile.yaml> --cluster "qsub -N <project name> -S /bin/bash/ -l h_vmem=<memory per job> -pe smp <number of cores per job> -l h_rt=<maximum run time per job> -e </path/to/folder/for/stderr/files> -o </path/to/folder/for/stdout/files>" --jobs <number of parallel jobs> --rerun-incomplete
 ```
 
 Further qsub arguments including brief explanations can be found under [qsub arguments](http://bioinformatics.mdc-berlin.de/intro2UnixandSGE/sun_grid_engine_for_beginners/how_to_submit_a_job_using_qsub.html).
@@ -197,7 +199,7 @@ A simple jobscript that sources before the execution of each job the bashrc and 
 #!/usr/bin/env bash
 
 source ~/.bashrc
-conda activate snakemake
+conda activate natrix
 
 {exec_job}
 ```
@@ -246,8 +248,7 @@ After the workflow is finished, the original data can be found under *Natrix-Pip
 
 # Steps of the Pipeline
 ## Initial demultiplexing
-The sorting of reads accoring to their barcode is known as demultiplexing. In Natrix, the demultiplexing step is implemented in a separate script, independent from the rest
-of the pipeline, as it is often already done by the sequencing company and therefore in most cases not necessary.
+The sorting of reads according to their barcode is known as demultiplexing.
 
 ## Quality control
 For quality control the pipeline uses the programs FastQC (Andrews 2010), MultiQC (Ewels
@@ -367,8 +368,8 @@ Below are the explainations for the configfile (*project*.yaml) entries:
 
 |Option           |Default                                                                          |Description                                                                                                                                                                                                                                  |
 |-----------------|---------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-|filename         |project                                                                          |The filename of the project folder, primertable (.csv) and config file (.yaml).                                                                                                                                                              |
-|primertable      |project.csv                                                                      |Path to the primertable.                                                                                                                                                                                                                     |
+|filename         |project                                                                          |The path / filename of the project folder, primertable (.csv) and configfile (.yaml). If the raw data folder is not in the root directory of Natrix, please add the path relative to the root directory (e.g. input/example_data)            |
+|primertable      |project.csv                                                                      |Path to the primertable. If the primertable is not in the root directory of Natrix, please add the path relative to the root directory (e.g. input/example_data.yaml)                                                                        |
 |units            |units.tsv                                                                        |Path to the sequencing unit sheet.                                                                                                                                                                                                           |
 |cores            |4                                                                                |Amount of cores available for the workflow.                                                                                                                                                                                                  |
 |multiqc          |False                                                                            |Initial quality check (fastqc & multiqc), currently only works for not yet assembled reads.                                                                                                                                                  |

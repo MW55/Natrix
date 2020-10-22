@@ -1,7 +1,7 @@
 # General options
 general:
-        filename : example_data # The filename of the project folder, primertable (.csv) and configfile (.yaml).
-        primertable: example_data.csv # Path to the primertable.
+        filename : example_data # The path / filename of the project folder, primertable (.csv) and configfile (.yaml). If the raw data folder is not in the root directory of Natrix, please add the path relative to the root directory (e.g. input/example_data)
+        primertable: example_data.csv # Path to the primertable. If the primertable is not in the root directory of Natrix, please add the path relative to the root directory (e.g. input/example_data.yaml)
         units: units.tsv # Path to the sequencing unit sheet.
         cores : 8 # Amount of cores available for the workflow.
         multiqc : FALSE  # Initial quality check (fastqc & multiqc), currently only works for not yet assembled reads.

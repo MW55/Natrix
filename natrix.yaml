@@ -1,4 +1,4 @@
-name: snakemake
+name: natrix
 channels:
   - conda-forge
   - bioconda

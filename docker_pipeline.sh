@@ -10,7 +10,7 @@ fi
 env_loc=$(conda info --base)/etc/profile.d/conda.sh
 
 source $env_loc
-conda activate snakemake
+conda activate natrix
 while [ ! -f "$varname".yaml ]
 do
   echo File "$varname".yaml does not exists. Waiting 5 seconds

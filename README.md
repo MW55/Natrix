@@ -188,7 +188,7 @@ Adding --cluster to the start command of Natrix, together with a command to subm
 cluster computing environments. An example command would be:
 
 ```shell
-$ snakemake -s <full/path/to/Snakefile> --use-conda --configfile <full/path/to/configfile.yaml> --cluster "qsub -N <project name> -S /bin/bash/" --jobs 100
+$ snakemake -s <path/to/Snakefile> --use-conda --configfile <path/to/configfile.yaml> --cluster "qsub -N <project name> -S /bin/bash/" --jobs 100
 ```
 
 Further qsub arguments including brief explanations can be found under [qsub arguments](http://bioinformatics.mdc-berlin.de/intro2UnixandSGE/sun_grid_engine_for_beginners/how_to_submit_a_job_using_qsub.html).
@@ -213,7 +213,7 @@ The creation of profiles is largely dependant on the software and hardware avail
 With a profile Natrix can simply be run with
 
 ```shell
-$ snakemake -s <full/path/to/Snakefile> --profile myprofile 
+$ snakemake -s <path/to/Snakefile> --profile myprofile 
 ```
 
 The Snakemake documentation contains a tutorial for [profile creation](https://snakemake.readthedocs.io/en/stable/executing/cli.html#profiles) 

@@ -188,7 +188,7 @@ Adding --cluster to the start command of Natrix, together with a command to subm
 cluster computing environments. An example command would be:
 
 ```shell
-$ snakemake -s <full/path/to/Snakefile> --use-conda --configfile <full/path/to/configfile.yaml> --cluster "qsub -N <project name> -S /bin/bash/ -l h_vmem=<memory per job> -pe smp <number of cores per job> -l h_rt=<maximum run time per job> -e </path/to/folder/for/stderr/files> -o </path/to/folder/for/stdout/files>" --jobs <number of parallel jobs> --rerun-incomplete
+$ snakemake -s <full/path/to/Snakefile> --use-conda --configfile <full/path/to/configfile.yaml> --cluster "qsub -N <project name> -S /bin/bash/" --jobs 100
 ```
 
 Further qsub arguments including brief explanations can be found under [qsub arguments](http://bioinformatics.mdc-berlin.de/intro2UnixandSGE/sun_grid_engine_for_beginners/how_to_submit_a_job_using_qsub.html).
@@ -210,6 +210,12 @@ of rule-specific hardware requirements. For example, the BLAST rule benefits fro
 rules, like AmpliconDuo, do not. With profiles, rules could be assigned a low amount of CPU cores as default, with rules
 like BLAST being assigned a larger amount of cores. This allows optimal usage of cluster resources and shorter waiting times.
 The creation of profiles is largely dependant on the software and hardware available on the cluster.
+With a profile Natrix can simply be run with
+
+```shell
+$ snakemake -s <full/path/to/Snakefile> --profile myprofile 
+```
+
 The Snakemake documentation contains a tutorial for [profile creation](https://snakemake.readthedocs.io/en/stable/executing/cli.html#profiles) 
 and the [Snakemake profiles GitHub page](https://github.com/snakemake-profiles/doc) contains example profiles for different
 cluster systems.

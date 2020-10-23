@@ -119,7 +119,7 @@ $ docker pull mw55/natrix
 The docker container has all environments pre-installed, eliminating the need for downloading the environments during first-time initialization of the workflow.
 To connect to the shell inside the docker container, input the following command:
 ```shell
-docker run -it --label natrix_container -v </host/database>:/app/database -v </host/results>:/app/results -v </host/input_folder>:/app/input mw55/natrix bash
+docker run -it --label natrix_container -v </host/database>:/app/database -v </host/results>:/app/results -v </host/input_folder>:/app/input -v </host/demultiplexed>:/app/demultiplexed mw55/natrix bash
 ```
 */host/database* is the full path to a local folder, in which you wish to install the database (SILVA or NCBI). This part is optional and only needed if 
 you want to use BLAST for taxonomic assignment.
@@ -127,6 +127,9 @@ you want to use BLAST for taxonomic assignment.
 */host/results* is the full path to a local folder in which the results of the workflow should be stored for the container to use.
 
 */host/input_folder* is the full path to a local folder in which the input (the *project* folder, the *project*.yaml and the *project*.csv) should be saved.
+
+*/host/demultiplexed* is the full path to a local folder in which the demultiplexed data, or, if demultiplexing is turned off, the input data will be saved.
+
 
 After you connected to the container shell, you can follow the [running Natrix manually](#running-natrix-manually) tutorial.
 
@@ -151,7 +154,7 @@ If you prefer to build the docker container yourself from the repository (for ex
 
 ```shell
 docker build . --tag natrix
-docker run -it --label natrix_container -v </host/database>:/app/database -v </host/results>:/app/results -v </host/input_folder>:/app/input natrix bash # -v /host/database:/app/database is optional
+docker run -it --label natrix_container -v </host/database>:/app/database -v </host/results>:/app/results -v </host/input_folder>:/app/input -v </host/demultiplexed>:/app/demultiplexed natrix bash # -v /host/database:/app/database is optional
 ```
 
 You will then be at the command prompt inside the docker container, from there you can follow the tutorial for [running Natrix manually](#running-natrix-manually).

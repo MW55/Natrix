@@ -10,3 +10,4 @@ services:
       - /srv/docker/natrix/database:/app/database
       - /srv/docker/natrix/results:/app/results
       - /srv/docker/natrix/input:/app/input
+      - /srv/docker/natrix/demultiplexed:/app/demultiplexed

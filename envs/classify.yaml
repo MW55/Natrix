@@ -1,0 +1,9 @@
+name: classify
+channels:
+    - bioconda
+    - conda-forge
+    - defaults
+dependencies:
+    - dinopy=2.2.0
+    - blast=2.9.0
+    - mothur

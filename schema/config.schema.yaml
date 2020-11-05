@@ -47,6 +47,70 @@ chim:
     default: 1.2
     description: "Pseudo - count prior on number of “no” votes."
     type: float
+classify:
+  classify: 
+    default: false
+    description: "Boolean to indicate the use of the classify.seqs command in mothur to assign taxonomic information to the OTUs."
+    type: boolean
+  db_path:
+    default: database/pr2/pr2.db
+    description: "Path to the database file against which the classify.seqs should be carried out."
+    type: string
+  dnamol:
+    default: 18S
+    description: "Which pr2 database to use, 18S = protists 18S, 16S = protist plastids 16S."
+    oneOf: "18S, 16S"
+    type: string
+  ksize:
+    default: 8
+    description: "Size (length) of k-mer used in the Wang classify method."
+    type: int
+  iters:
+    default: 100
+    description: "How many iterations to do when calculating the bootstrap confidence score for your taxonomy."
+    type: int
+  cutoff:
+    default: 80
+    description: "Cutoff of bootstrap value for taxonomic assignment."
+    type: int
+  probs:
+    default: true
+    description: "Boolean to indicate whether the bootstrap values should be included in the taxonomy output of classify."
+    type: boolean
+  method:
+    default: wang
+    description: "Which method to use with classify.seqs."
+    oneOf: "wang, knn"
+    type: string
+  search:
+    default: kmer
+    description: "Which search algorithm to use with the knn method."
+    oneOf: "kmer, blast, suffix, distance"
+    type: string
+  numwanted:
+    default: 10
+    description: "Number of nearest neighbors (most similar sequences) used to determine the consensus taxonomy with the knn method."
+    type: int
+  gapopen:
+    default: -5
+    description: "Punishment for creating gap, used in blast search method within classify.seqs."
+    type: int
+  gapextend:
+    default: -1
+    description: "Punishment for extending gap, used in blast search method within classify.seqs."
+    type: int
+  relabund: 
+    default: false
+    description: "Boolean to indicate whether the summary files should be relative abundances rather than raw abundances."
+    type: boolean
+  output:
+    default: detail
+    description: "Format of the tax.summary file from classify.seqs"
+    oneOf: "detail, simple"
+  printlevel:
+    default: -1
+    description: "Specify how many taxonomic levels you want printed to your tax.summary file. Default -1 means max level."
+    type: int
 derep:
   clustering:
     default: 1.0

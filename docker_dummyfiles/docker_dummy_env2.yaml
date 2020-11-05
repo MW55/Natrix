@@ -56,3 +56,9 @@ blast:
         ident : 90.0 # Minimal identity overlap between target and query sequence.
         evalue : 1e-51 # Highest accepted evalue.
         out6 : '"6 qseqid qlen length pident mismatch qstart qend sstart send gaps evalue staxid sseqid"' # Additional BLAST information to be saved.
+# classify
+classify:
+        classify: FALSE
+        db_path: database/pr2/pr2.db
+        dnamol: 16S
+        cutoff: 80 # Cutoff of bootstrap value for taxonomic assignment.

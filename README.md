@@ -249,6 +249,8 @@ After the workflow is finished, the original data can be found under *Natrix-Pip
 |                                     |filtered_out_table.csv    |Table containing the sequences that did not pass the filtering rule.                                     |
 |                                     |filtered.fasta            |The sequences of the filtered_table.csv in FASTA format.                                                 |
 |                                     |filtered_blast_table.csv  |Table containing the sequences of the filtered_table.csv and the taxonomic information assigned to each. |
+|                                     |classify_taxonomy.tsv     |Table containing the taxonomy of each OTU/ASV, in the format outputted by mothur's 'classify.seqs'.      |
+|                                     |classify_summary.txt      |Taxonomic outline indicating the number of sequences that were found at each level.                      |
 |figures                              |ampliconduo_unfiltered.png|Discordance graph before the filtering.                                                                  |
 |                                     |ampliconduo_filtered.png  |Discordance graph after filtering.                                                                       |
 |                                     |AmpliconDuo.Rdata         |RData file containing the results of the AmpliconDuo statistical analysis.                               |
@@ -358,6 +360,8 @@ eukaryotic sequencing data. If the database is not locally available, the requir
 | 11.        | evalue      | E-value                                       |
 | 12.        | stitle      | Title (taxonomy) of the target sequence       |
 
+To obtain taxonomic information about OTUs/ASVs from microbial eukaryotes/protist communities, the Protist Ribosomal Reference Database (PR2: Guillou et al. 2013) is recommended as a reference database. This database is curated by experts in protist taxonomy, and continuously updated. PR2 comes pre-formatted for mothur (Schloss et al. 2009), among others (https://github.com/pr2database). Search against PR2 has been implemented by including mothur's 'classify.seqs'-command. So far only the Wang k-mer search algorithm has been implemented.
+
 ## Merging of the results
 The output data from the write_fasta, swarm and blast rules are merged to a single comma
 separated table in the merge_results rule, containing for each representative sequence the
@@ -417,7 +421,10 @@ Below are the explainations for the configfile (*project*.yaml) entries:
 |ident            |90.0                                                                             |Minimal identity overlap between target and query sequence.                                                                                                                                                                                  |
 |evalue           |1e-51                                                                            |Highest accepted evalue.                                                                                                                                                                                                                     |
 |out6             |"6 qseqid qlen length pident mismatch qstart qend sstart send gaps evalue stitle"|Additional BLAST information to be saved.                                                                                                                                                                                                    |
-
+|classify         |False                                                                            |Boolean to indicate the use of classify.seqs to assign taxonomic information to protist OTUs/ASVs.                                                                                   |
+|db_path          |database/pr2db/pr2.db                                                            |Path to the database file against which classify.seqs should be carried out. 
+|dnamol           |18S                                                                              |Marker gene to classify against, nuclear 18S rDNA or plastid 16S rDNA.
+|cutoff           |80                                                                               |Cutoff of bootstrap value for taxonomic assignment.
 
 ---
 # References
@@ -439,7 +446,8 @@ In: *doi: 10.7287/peerj.preprints.2409v1.*
 * Lange, Anja et al. (2015). “AmpliconDuo: A Split-Sample Filtering Protocol for High-Throughput Amplicon Sequencing of Microbial Communities”. In: *Plos One 10.11.*
 * Altschul, Stephen F. et al. (1990). “Basic local alignment search tool”. In: *Journal of Molecular Biology 215.3*, pp. 403–410.
 * Pruesse, E. et al. (2007). “SILVA: a comprehensive online resource for quality checked and aligned ribosomal RNA sequence data compatible with ARB”. In: *Nucleic Acids Research 35.21*, pp. 7188–7196.
-
+* Guillou, L. et al. (2013). "The Protist Ribosomal Reference database (PR2): a catalog of unicellular eukaryote small sub-unit rRNA sequences with curated taxonomy." In: *Nucleic Acids Research 41*, pp. D597–604.
+* Schloss, P. D. et al. (2009). "Introducing mothur: open-source, platform-independent, community-supported software for describing and comparing microbial communities." In: *Applied and environmental microbiology 75.23*, pp. 7537-7541.
 
 
 

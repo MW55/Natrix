@@ -25,6 +25,19 @@ rule classify:
 	output:
 		"results/finalData/classify_taxonomy.tsv",
 		"results/finalData/classify_summary.txt"
+	params: 
+		method=config["classify"]["method"],
+		ksize=config["classify"]["ksize"],
+		iters=config["classify"]["iters"],
+		cutoff=config["classify"]["cutoff"],
+		probs=config["classify"]["probs"],
+		search=config["classify"]["search"],
+		numwanted=config["classify"]["numwanted"],
+		gapopen=config["classify"]["gapopen"],
+		gapextend=config["classify"]["gapextend"],
+		relabund=config["classify"]["relabund"],
+		output=config["classify"]["output"],
+		printlevel=config["classify"]["printlevel"]
 	threads: 
 		config["general"]["cores"]
 	conda:
@@ -32,7 +45,7 @@ rule classify:
 	
 	shell:
 		"""
-		mothur "#classify.seqs(fasta={input[0]}, template={input[1]}, taxonomy = {input[2]}, method=wang)" > mothurlog; #mothur creates another log file
+		mothur "#classify.seqs(fasta={input[0]}, template={input[1]}, taxonomy = {input[2]}, method={params[0]}, ksize={params[1]}, cutoff ={params[2]}, gapopen={params[7]})" > mothurlog; #mothur creates another log file
 		mv results/finalData/representatives.db.wang.taxonomy results/finalData/classify_taxonomy.tsv;
 		mv results/finalData/representatives.db.wang.tax.summary results/finalData/classify_summary.txt;
 		mv mothur*logfile results/finalData/;

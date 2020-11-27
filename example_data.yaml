@@ -58,7 +58,18 @@ blast:
         out6 : '"6 qseqid qlen length pident mismatch qstart qend sstart send gaps evalue staxid sseqid"' # Additional BLAST information to be saved.
 # classify
 classify:
-        classify: FALSE
+        classify: TRUE
         db_path: database/pr2/pr2.db
         dnamol: 16S
-        cutoff: 80 # Cutoff of bootstrap value for taxonomic assignment.
+        method: wang
+        ksize: 8
+        iters: 100
+        cutoff: 90 # Cutoff of bootstrap value for taxonomic assignment.
+        probs: TRUE
+        search: kmer
+        numwanted: 10
+        gapopen: -5
+        gapextend: -1
+        relabund: false
+        output: detail
+        printlevel: -1

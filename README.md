@@ -360,7 +360,8 @@ eukaryotic sequencing data. If the database is not locally available, the requir
 | 11.        | evalue      | E-value                                       |
 | 12.        | stitle      | Title (taxonomy) of the target sequence       |
 
-To obtain taxonomic information about OTUs/ASVs from microbial eukaryotes/protist communities, the Protist Ribosomal Reference Database (PR2: Guillou et al. 2013) is recommended as a reference database. This database is curated by experts in protist taxonomy, and continuously updated. PR2 comes pre-formatted for mothur (Schloss et al. 2009), among others (https://github.com/pr2database). Search against PR2 has been implemented by including mothur's 'classify.seqs'-command. So far only the Wang k-mer search algorithm has been implemented.
+To obtain taxonomic information about OTUs/ASVs from microbial eukaryotes/protist communities, the Protist Ribosomal Reference Database (PR2: Guillou et al. 2013) is recommended as a reference database. This database is curated by experts in protist taxonomy, and continuously updated. PR2 comes pre-formatted for mothur (Schloss et al. 2009), among others (https://github.com/pr2database). Search against PR2 has been implemented by including mothur's 'classify.seqs'-command (https://mothur.org/wiki/classify.seqs/).
+Classify.seqs can also be used with the SILVA, RDP and Unite databases. Classify.seqs uses either the Wang classification method (Wang et al. 2007) or k-nearest neighbors (knn). With knn the available search algorithms are "BLAST" (Altschul et al. 1990), "k-mer", "suffix" and "distance".
 
 ## Merging of the results
 The output data from the write_fasta, swarm and blast rules are merged to a single comma
@@ -415,16 +416,29 @@ Below are the explainations for the configfile (*project*.yaml) entries:
 |swarm            |True                                                                             |Boolean to indicate the use of the SWARM clustering algorithm to create operational taxonomic units (OTUs) from the data.                                                                                                                    |
 |blast            |False                                                                            |Boolean to indicate the use of the BLAST clustering algorithm to assign taxonomic information to the OTUs.                                                                                                                                   |
 |database         |SILVA                                                                            |Database against which the BLAST should be carried out, at the moment "NCBI" and "SILVA" are supported.                          |
-|drop_tax_classes |'.\*unclassified Bacteria.\*,.\*uncultured.\*bacterium.*'                        |Given a comma-separated list, drops undesired classes either by id, by name or using regex.                                                                                                                                                  |
+|drop_tax_classes |'.\*unclassified Bacteria.\*,.\*uncultured.\*bacterium.\*'                        |Given a comma-separated list, drops undesired classes either by id, by name or using regex.                                                                                                                                                  |
 |db_path          |database/silva/silva.db                                                          |Path to the database file against which the BLAST should be carried out, at the moment only the SILVA and NCBI databases will be automatically downloaded, other databases have to be downloaded and configurated manually.                  |
 |max_target_seqs  |1                                                                                |Number of blast hits that are saved per sequence / OTU.                                                                                                                                                                                      |
 |ident            |90.0                                                                             |Minimal identity overlap between target and query sequence.                                                                                                                                                                                  |
 |evalue           |1e-51                                                                            |Highest accepted evalue.                                                                                                                                                                                                                     |
 |out6             |"6 qseqid qlen length pident mismatch qstart qend sstart send gaps evalue stitle"|Additional BLAST information to be saved.                                                                                                                                                                                                    |
 |classify         |False                                                                            |Boolean to indicate the use of classify.seqs to assign taxonomic information to protist OTUs/ASVs.                                                                                   |
-|db_path          |database/pr2db/pr2.db                                                            |Path to the database file against which classify.seqs should be carried out. 
+|db_path          |database/pr2db/pr2db                                                            |Path to the database file against which classify.seqs should be carried out. 
+|database         |PR2          |Database against which classify.seqs should be carried out, at the moment "PR", "SILVA", "RDP" and "Unite" are supported.
 |dnamol           |18S                                                                              |Marker gene to classify against, nuclear 18S rDNA or plastid 16S rDNA.
+|pr2_version      |4.12.0         |Which version of PR2 to use
+|silva_version    |138            |Which version of SILVA to use
+|method           |wang           |Which method to use with classify.seqs
+|ksize            |8              |Length of k-mer used in the Wang classify method
 |cutoff           |80                                                                               |Cutoff of bootstrap value for taxonomic assignment.
+|probs          |true         |Whether bootstrap values should be included in the taxonomy output of classify
+|search         |kmer     |Which search algorithm to use with the knn method
+|numwanted      |10       |Number of nearest neighbors to determine the consensus taxonomy with the knn method.
+|gapopen        |-5       |Punishment for creating a gap, used in the blast search method within classify.seqs.
+|gapextend      |-1       |Punishment for extending gap, used in the blast search method within classify.seqs.
+|relabund       |false    |Whether the summary files should be relative abundances rather than raw abundances.
+|output         |detail   |Format of the tax.summary file from classify.seqs
+|printlevel     |-1       |Specify how many taxonomic levels to be printed to the tax.summary file. Default -1 means all levels.
 
 ---
 # References
@@ -448,6 +462,7 @@ In: *doi: 10.7287/peerj.preprints.2409v1.*
 * Pruesse, E. et al. (2007). “SILVA: a comprehensive online resource for quality checked and aligned ribosomal RNA sequence data compatible with ARB”. In: *Nucleic Acids Research 35.21*, pp. 7188–7196.
 * Guillou, L. et al. (2013). "The Protist Ribosomal Reference database (PR2): a catalog of unicellular eukaryote small sub-unit rRNA sequences with curated taxonomy." In: *Nucleic Acids Research 41*, pp. D597–604.
 * Schloss, P. D. et al. (2009). "Introducing mothur: open-source, platform-independent, community-supported software for describing and comparing microbial communities." In: *Applied and environmental microbiology 75.23*, pp. 7537-7541.
+* Wang, Q., Garrity, G. M., Tiedje, J. M., and Cole, J. R. (2007). "Naive Bayesian classifier for rapid assignment of rRNA sequences into the new bacterial taxonomy." In: *Appl. Environ. Microbiol. 73, 5261–5267. doi: 10.1128/AEM.00062-07
 
 
 

@@ -50,7 +50,7 @@ merge:
 blast:
         blast : FALSE  # Boolean to indicate the use of the BLAST clustering algorithm to assign taxonomic information to the OTUs.
         database: SILVA # Database against which the BLAST should be carried out, at the moment "NCBI" and "SILVA" are supported.
-        drop_tax_classes: '.*unclassified Bacteria.*,.*uncultured.*bacterium.*' # given a comma-separated list, drops undesired classes either by id, by name or using regex
+        drop_tax_classes: '.*unclassified Bacteria.*,.*uncultured.*bacterium.*' # Given a comma-separated list, drops undesired classes either by id, by name or using regex
         db_path : database/silva/silva.db # Path to the database file against which the BLAST should be carried out, at the moment only the SILVA (database/silva/silva.db) and NCBI (database/ncbi/nt) databases will be automatically downloaded, other databases have to be downloaded and configurated manually.
         max_target_seqs : 10 # Number of NCBI blast hits that are saved per sequence / OTU.
         ident : 90.0 # Minimal identity overlap between target and query sequence.
@@ -58,9 +58,9 @@ blast:
         out6 : '"6 qseqid qlen length pident mismatch qstart qend sstart send gaps evalue staxid sseqid"' # Additional BLAST information to be saved.
 # classify
 classify:
-        classify: FALSE #Boolean to indicate the use of the classify.seqs command in mothur to assign taxonomic information to the OTUs.
+        classify: FALSE #Boolean to indicate whether to use Mothur classify.seqs.
         db_path: database/pr2/pr2db #Path to the database file against which the classify.seqs should be carried out.
-        database: PR2 #Database against which classify.seqs should be carried out, at the moment "PR2", "SILVA", "RDP" and "Unite" are supported.
+        database: PR2 #Database against which the search should be carried out, at the moment "PR2", "SILVA", "RDP" and "Unite" are supported.
         dnamol: 18S #Which PR2 database to use, 18S = protists 18S, 16S = protist plastids 16S.
         pr2_version: 4.12.0 
         silva_version: 138

@@ -416,29 +416,29 @@ Below are the explainations for the configfile (*project*.yaml) entries:
 |swarm            |True                                                                             |Boolean to indicate the use of the SWARM clustering algorithm to create operational taxonomic units (OTUs) from the data.                                                                                                                    |
 |blast            |False                                                                            |Boolean to indicate the use of the BLAST clustering algorithm to assign taxonomic information to the OTUs.                                                                                                                                   |
 |database         |SILVA                                                                            |Database against which the BLAST should be carried out, at the moment "NCBI" and "SILVA" are supported.                          |
-|drop_tax_classes |'.\*unclassified Bacteria.\*,.\*uncultured.\*bacterium.\*'                        |Given a comma-separated list, drops undesired classes either by id, by name or using regex.                                                                                                                                                  |
+|drop_tax_classes |'.\*unclassified Bacteria.\*,.\*uncultured.\*bacterium.\*'                       |Given a comma-separated list, drops undesired classes either by id, by name or using regex.                                                                                                                                                  |
 |db_path          |database/silva/silva.db                                                          |Path to the database file against which the BLAST should be carried out, at the moment only the SILVA and NCBI databases will be automatically downloaded, other databases have to be downloaded and configurated manually.                  |
 |max_target_seqs  |1                                                                                |Number of blast hits that are saved per sequence / OTU.                                                                                                                                                                                      |
 |ident            |90.0                                                                             |Minimal identity overlap between target and query sequence.                                                                                                                                                                                  |
 |evalue           |1e-51                                                                            |Highest accepted evalue.                                                                                                                                                                                                                     |
 |out6             |"6 qseqid qlen length pident mismatch qstart qend sstart send gaps evalue stitle"|Additional BLAST information to be saved.                                                                                                                                                                                                    |
 |classify         |False                                                                            |Boolean to indicate the use of classify.seqs to assign taxonomic information to protist OTUs/ASVs.                                                                                   |
-|db_path          |database/pr2db/pr2db                                                            |Path to the database file against which classify.seqs should be carried out. 
-|database         |PR2          |Database against which classify.seqs should be carried out, at the moment "PR", "SILVA", "RDP" and "Unite" are supported.
-|dnamol           |18S                                                                              |Marker gene to classify against, nuclear 18S rDNA or plastid 16S rDNA.
-|pr2_version      |4.12.0         |Which version of PR2 to use
-|silva_version    |138            |Which version of SILVA to use
-|method           |wang           |Which method to use with classify.seqs
-|ksize            |8              |Length of k-mer used in the Wang classify method
+|db_path          |database/pr2db/pr2db                                                             |Path to the database file against which classify.seqs should be carried out. 
+|database         |PR2                                                                              |Database against which classify.seqs should be carried out, at the moment "PR", "SILVA", "RDP" and "Unite" are supported.
+|dnamol           |18S                                                                              |When using PR2, indicates which marker gene to classify against, nuclear 18S rDNA or plastid 16S rDNA.
+|pr2_version      |4.12.0                                                                           |Which version of PR2 to use
+|silva_version    |138                                                                              |Which version of SILVA to use
+|method           |wang                                                                             |Which method to use with classify.seqs
+|ksize            |8                                                                                |Length of k-mer used in the Wang classify method
 |cutoff           |80                                                                               |Cutoff of bootstrap value for taxonomic assignment.
-|probs          |true         |Whether bootstrap values should be included in the taxonomy output of classify
-|search         |kmer     |Which search algorithm to use with the knn method
-|numwanted      |10       |Number of nearest neighbors to determine the consensus taxonomy with the knn method.
-|gapopen        |-5       |Punishment for creating a gap, used in the blast search method within classify.seqs.
-|gapextend      |-1       |Punishment for extending gap, used in the blast search method within classify.seqs.
-|relabund       |false    |Whether the summary files should be relative abundances rather than raw abundances.
-|output         |detail   |Format of the tax.summary file from classify.seqs
-|printlevel     |-1       |Specify how many taxonomic levels to be printed to the tax.summary file. Default -1 means all levels.
+|probs            |true                                                                             |Whether bootstrap values should be included in the taxonomy output of classify
+|search           |kmer                                                                             |Which search algorithm to use with the knn method
+|numwanted        |10                                                                               |Number of nearest neighbors to determine the consensus taxonomy with the knn method.
+|gapopen          |-5                                                                               |Punishment for creating a gap, used in the blast search method within classify.seqs.
+|gapextend        |-1                                                                               |Punishment for extending gap, used in the blast search method within classify.seqs.
+|relabund         |false                                                                            |Whether the summary files should be relative abundances rather than raw abundances.
+|output           |detail                                                                           |Format of the tax.summary file from classify.seqs
+|printlevel       |-1                                                                               |Specify how many taxonomic levels to be printed to the tax.summary file. Default -1 means all levels.
 
 ---
 # References

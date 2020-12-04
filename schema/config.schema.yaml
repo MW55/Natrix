@@ -52,15 +52,32 @@ classify:
     default: false
     description: "Boolean to indicate the use of the classify.seqs command in mothur to assign taxonomic information to the OTUs."
     type: boolean
+  database:
+    default: PR2
+    description: "Database against which classify.seqs should be carried out, at the moment \"PR2\", \"SILVA\", \"RDP\", \"Unite\"  are supported."
+    oneOf: "PR2, SILVA, RDP, Unite"
+    type: string
   db_path:
-    default: database/pr2/pr2.db
+    default: database/pr2/pr2db
     description: "Path to the database file against which the classify.seqs should be carried out."
     type: string
+  pr2_version:
+    default: 4.12.0
+    description: "Which version of PR2 to use, available: 4.12.0"
   dnamol:
     default: 18S
-    description: "Which pr2 database to use, 18S = protists 18S, 16S = protist plastids 16S."
+    description: "Which PR2 database to use, 18S = protists 18S, 16S = protist plastids 16S."
     oneOf: "18S, 16S"
     type: string
+  silva_version:
+    default: 138
+    description: "Which version of SILVA to use, available: 138, 132, 128, 123, 119"
+  rdp_version:
+    default:
+    description: "Which version of RDP to use, available: "
+  unite_version:
+    default:
+    description: "Which version of Unite to use, available: "
   ksize:
     default: 8
     description: "Size (length) of k-mer used in the Wang classify method."

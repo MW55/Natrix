@@ -58,7 +58,7 @@ blast:
         out6 : '"6 qseqid qlen length pident mismatch qstart qend sstart send gaps evalue staxid sseqid"' # Additional BLAST information to be saved.
 # classify
 classify:
-        classify: TRUE #Boolean to indicate the use of the classify.seqs command in mothur to assign taxonomic information to the OTUs.
+        classify: FALSE #Boolean to indicate the use of the classify.seqs command in mothur to assign taxonomic information to the OTUs.
         db_path: database/pr2/pr2db #Path to the database file against which the classify.seqs should be carried out.
         database: PR2 #Database against which classify.seqs should be carried out, at the moment "PR2", "SILVA", "RDP" and "Unite" are supported.
         dnamol: 18S #Which PR2 database to use, 18S = protists 18S, 16S = protist plastids 16S.

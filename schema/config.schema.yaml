@@ -50,7 +50,7 @@ chim:
 classify:
   classify: 
     default: false
-    description: "Boolean to indicate the use of the classify.seqs command in mothur to assign taxonomic information to the OTUs."
+    description: "Boolean to indicate whether Mothur classify.seqs should be used to assign taxonomic information to the OTUs."
     type: boolean
   database:
     default: PR2
@@ -63,7 +63,7 @@ classify:
     type: string
   pr2_version:
     default: 4.12.0
-    description: "Which version of PR2 to use, available: 4.12.0"
+    description: "Which version of PR2 to use. Only 4.12.0 is available at the moment."
   dnamol:
     default: 18S
     description: "Which PR2 database to use, 18S = protists 18S, 16S = protist plastids 16S."
@@ -74,10 +74,10 @@ classify:
     description: "Which version of SILVA to use, available: 138, 132, 128, 123, 119"
   rdp_version:
     default:
-    description: "Which version of RDP to use, available: "
+    description: "Which version of RDP to use. Only v16_022016 is available at the moment. "
   unite_version:
     default:
-    description: "Which version of Unite to use, available: "
+    description: "Which version of Unite to use. Only v8_04022020 is available at the moment."
   ksize:
     default: 8
     description: "Size (length) of k-mer used in the Wang classify method."

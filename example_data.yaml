@@ -56,7 +56,8 @@ blast:
         ident : 90.0 # Minimal identity overlap between target and query sequence.
         evalue : 1e-51 # Highest accepted evalue.
         out6 : '"6 qseqid qlen length pident mismatch qstart qend sstart send gaps evalue staxid sseqid"' # Additional BLAST information to be saved.
-# classify
+
+# Classify
 classify:
         classify: FALSE #Boolean to indicate whether to use Mothur classify.seqs.
         db_path: database/pr2/pr2db #Path to the database file against which the classify.seqs should be carried out.
@@ -75,4 +76,4 @@ classify:
         gapextend: -1 #Punishment for extending gap, used in blast search method within classify.seqs.
         relabund: false #Boolean to indicate whether the summary files should be relative abundances rather than raw abundances.
         output: detail #Format of the tax.summary file from classify.seqs.
-        printlevel: -1 #Specify how many taxonomic levels you want printed to your tax.summary file. Default -1 means max level.
+        printlevel: -1 #Specify how many taxonomic levels you want printed to your tax.summary file. Default -1 means max level

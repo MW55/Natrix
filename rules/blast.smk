@@ -88,7 +88,7 @@ rule blast:
         max_target_seqs=str(config["blast"]["max_target_seqs"]) if config["blast"]["database"] == "NCBI" else "1",
         ident=str(config["blast"]["ident"]),
         evalue=str(config["blast"]["evalue"]),
-        out6=str(config["blast"]["out6"])
+        out6="6 qseqid qlen length pident mismatch qstart qend sstart send gaps evalue staxid sseqid"
     conda:
         "../envs/blast.yaml"
     shell:
@@ -138,7 +138,8 @@ rule merge_results:
         merged="results/finalData/swarm_table.csv" if config["general"]["seq_rep"] == "OTU" else "results/finalData/filtered_table.csv",
         blast_result="results/finalData/blast_taxonomic_lineage.tsv"
     output:
-        "results/finalData/filtered_blast_table.csv"
+        complete="results/finalData/filtered_blast_table_all.csv"
+        filtered="results/finalData/filtered_blast_table.csv"
     params:
         seq_rep=str(config["general"]["seq_rep"])
     conda:

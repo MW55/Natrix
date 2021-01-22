@@ -9,7 +9,7 @@ if snakemake.params['seq_rep'] == 'ASV':
     merged = pd.read_csv(snakemake.input['merged'], sep=",") #merged = pd.read_csv(snakemake.input['merged'], index_col=0, sep=",")
 else:
     merged = pd.read_csv(snakemake.input['merged'], index_col=0, sep=",")
-    
+
 
 def new_index(table):
     new_index = table["seqid"].tolist()[0:]
@@ -43,5 +43,7 @@ cols = set(result.columns.tolist())
 cols_include = ['sequences', 'qlen', 'length', 'pident', 'mismatch', 'qstart', 'qend', 'sstart', 'send', 'gaps', 'evalue', 'taxonomy']
 cols_all = cols_include + list(cols - set(cols_include))
 
+result.to_csv(snakemake.output["complete"], index_label="seqid")
+# filter out OTUs without taxonomic annotation
 result = result.loc[~nas, cols_all]
-result.to_csv(snakemake.output[0], index_label="seqid")
+result.to_csv(snakemake.output["filtered"], index_label="seqid")

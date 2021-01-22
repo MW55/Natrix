@@ -25,7 +25,7 @@ rule all:
         "results/qc/multiqc_report.html" if config["general"]["multiqc"] else [],
         "results/finalData/figures/AmpliconDuo.RData" if config["merge"]["ampliconduo"] and config["merge"]["filter_method"] == "split_sample" else [],
         "results/finalData/filtered_blast_table.csv" if config["blast"]["blast"] else [],
-        "results/finalData/filtered_blast_table_all.csv" if config["blast"]["blast"] else []
+        "results/finalData/filtered_blast_table_complete.csv" if config["blast"]["blast"] else []
 
 ruleorder: assembly > prinseq
 

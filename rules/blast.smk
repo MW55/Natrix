@@ -138,7 +138,7 @@ rule merge_results:
         merged="results/finalData/swarm_table.csv" if config["general"]["seq_rep"] == "OTU" else "results/finalData/filtered_table.csv",
         blast_result="results/finalData/blast_taxonomic_lineage.tsv"
     output:
-        complete="results/finalData/filtered_blast_table_all.csv",
+        complete="results/finalData/filtered_blast_table_complete.csv",
         filtered="results/finalData/filtered_blast_table.csv"
     params:
         seq_rep=str(config["general"]["seq_rep"])

@@ -43,7 +43,8 @@ cols = set(result.columns.tolist())
 cols_include = ['sequences', 'qlen', 'length', 'pident', 'mismatch', 'qstart', 'qend', 'sstart', 'send', 'gaps', 'evalue', 'taxonomy']
 cols_all = cols_include + list(cols - set(cols_include))
 
+result = result[cols_all]
 result.to_csv(snakemake.output["complete"], index_label="seqid")
 # filter out OTUs without taxonomic annotation
-result = result.loc[~nas, cols_all]
+result = result.loc[~nas, :]
 result.to_csv(snakemake.output["filtered"], index_label="seqid")

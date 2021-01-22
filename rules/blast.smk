@@ -88,7 +88,7 @@ rule blast:
         max_target_seqs=str(config["blast"]["max_target_seqs"]) if config["blast"]["database"] == "NCBI" else "1",
         ident=str(config["blast"]["ident"]),
         evalue=str(config["blast"]["evalue"]),
-        out6="6 qseqid qlen length pident mismatch qstart qend sstart send gaps evalue staxid sseqid"
+        out6='"6 qseqid qlen length pident mismatch qstart qend sstart send gaps evalue staxid sseqid"'
     conda:
         "../envs/blast.yaml"
     shell:

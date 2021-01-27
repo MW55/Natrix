@@ -6,7 +6,6 @@ validate(config, "schema/config.schema.yaml")
 units = pd.read_table(config["general"]["units"], index_col=["sample", "unit"],
     dtype=str)
 units.index = units.index.set_levels([i.astype(str) for i in units.index.levels])
-
 name_ext = config["merge"]["name_ext"][:-1]
 
 def is_single_end(sample, unit):
@@ -21,7 +20,7 @@ rule all:
     input:
         "results/finalData/unfiltered_table.csv",
         "results/finalData/filtered_table.csv",
-        "results/finalData/swarm_table.csv" if config["merge"]["swarm"] and config["general"]["seq_rep"] == "OTU" else [],
+        "results/finalData/swarm_table.csv" if config["general"]["seq_rep"] == "OTU" else [],
         "results/qc/multiqc_report.html" if config["general"]["multiqc"] else [],
         "results/finalData/figures/AmpliconDuo.RData" if config["merge"]["ampliconduo"] and config["merge"]["filter_method"] == "split_sample" else [],
         "results/finalData/filtered_blast_table.csv" if config["blast"]["blast"] else [],
@@ -29,6 +28,7 @@ rule all:
 
 ruleorder: assembly > prinseq
 
+include: "rules/demultiplexing.smk"
 include: "rules/quality_control.smk"
 include: "rules/read_assembly.smk"
 include: "rules/dereplication.smk"

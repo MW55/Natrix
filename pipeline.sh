@@ -7,7 +7,6 @@ env_loc=$(conda info --base)/etc/profile.d/conda.sh
 
 source $env_loc
 conda activate natrix
-#python demultiplexing.py "$varname"
 
 varname+=".yaml"
 cores=$(grep "cores : " $varname | awk '{print $3}')

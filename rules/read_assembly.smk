@@ -4,31 +4,6 @@ def get_fastq(wildcards):
                         group=[1,2], **wildcards)
     return "demultiplexed/{sample}_{unit}_1.fastq".format(**wildcards)
 
-rule demultiplex:
-    #input:
-         #expand(config["general"]["filename"] + "/{sample}_{unit}_R{read}.fastq.gz")
-    output:
-        expand("demultiplexed/{unit.sample}_{unit.unit}_R{read}.fastq.gz", unit=units.reset_index().itertuples(), read=reads)
-    params:
-        filename = config["general"]["filename"],
-        primertable = config["general"]["primertable"],
-        demultiplexing = config["general"]["demultiplexing"],
-        read_sorting = config['general']['read_sorting'],
-        assembled = config['general']['already_assembled'],
-        name_ext = config['merge']['name_ext']
-    conda:
-        "../envs/demultiplexing.yaml"
-    script:
-        "../scripts/demultiplexing.py"
-
-rule unzip:
-    input:
-         "demultiplexed/{sample}_{unit}_R{read}.fastq.gz"
-    output:
-        temp("demultiplexed/{sample}_{unit}_{read}.fastq")
-    shell: 
-         "gunzip -c {input} > {output}"
-
 rule define_primer:
     input:
         primer_table=config["general"]["primertable"]
@@ -82,24 +57,6 @@ rule cutadapt:
         "results/logs/{sample}_{unit}/cutadapt.log"
     script:
         "../scripts/cutadapt.py"
-
-rule DADA2:
-    input:
-        forward = expand(
-            "results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}_1_cut.fastq", unit=units.reset_index().itertuples()),
-        reverse = expand(
-            "results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}_2_cut.fastq", unit=units.reset_index().itertuples()) if config["merge"]["paired_End"] == True else []
-    output:
-        expand("results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}_dada.fasta", unit=units.reset_index().itertuples())
-    params:
-        paired_end=config["merge"]["paired_End"]
-    conda:
-        "../envs/dada2.yaml"
-    log:
-        "results/logs/finalData/DADA2.log"
-    script:
-        "../scripts/dada2.R"
-
 
 rule assembly:
     input:

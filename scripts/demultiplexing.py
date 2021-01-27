@@ -13,18 +13,6 @@ import pathlib
 # demultiplexing samples that were pooled in-lab (instead of at the sequencing company) and
 # to manually sort reads depending on their primersequence.
 
-# Config and p_table has to be adjusted for the corresponding path to the 
-# primertable with config config['general']['filename'] + '.csv'
-
-#with open(sys.argv[1] + '.yaml') as f_:
-#    config = yaml.load(f_, Loader=yaml.FullLoader)
-#p_table = pd.read_csv(config['general']['primertable'], index_col='Probe') #p_table = pd.read_csv(sys.argv[1] + '.csv', index_col='Probe')
-#primertable = p_table.to_dict('index')
-#data_folder = config['general']['filename']
-#file_path_list = sorted(glob.glob(data_folder + "/*.fast*"))
-
-with open(str(snakemake.params.filename) + '.yaml') as f_:
-    config = yaml.load(f_, Loader=yaml.FullLoader)
 p_table = pd.read_csv(snakemake.params.primertable, index_col='Probe')
 primertable = p_table.to_dict('index')
 data_folder = str(snakemake.params.filename)
@@ -101,7 +89,7 @@ def demultiplexer(file_path_list):
         output_filepaths.append('demultiplexed/' + sample + '_R2.fastq.gz')
 
     # Create a dict of writers.
-    writers = {name: dinopy.FastqWriter(path) for name, path in 
+    writers = {name: dinopy.FastqWriter(path) for name, path in
                zip(samples, output_filepaths)}
 
     # Open all writers.
@@ -126,27 +114,21 @@ def demultiplexer(file_path_list):
     for writer in writers.values():
         writer.close()
 
-
-if not os.path.exists('demultiplexed'):
-    os.mkdir('demultiplexed')
-
-if not os.path.exists('demultiplexed/not_sorted'):
-    os.mkdir('demultiplexed/not_sorted')
-
-
 def read_sorter(primertable):
+    if not os.path.exists('demultiplexed/not_sorted'):
+        os.mkdir('demultiplexed/not_sorted')
     samples = []
     output_filepaths = []
     for sample in primertable.keys():
-        samples.append(sample + config['merge']['name_ext'][:-1] + '1')
-        samples.append(sample + config['merge']['name_ext'][:-1] + '2')
+        samples.append(sample + snakemake.params.name_ext[:-1] + '1')
+        samples.append(sample + snakemake.params.name_ext[:-1] + '2')
         samples.append(sample + '_not_sorted')
         output_filepaths.append('demultiplexed/' + sample + '_R1.fastq.gz')
         output_filepaths.append('demultiplexed/' + sample + '_R2.fastq.gz')
         output_filepaths.append('demultiplexed/not_sorted/' + sample + '_not_sorted.fastq.gz')
 
     # Create a dict of writers.
-    writers = {name: dinopy.FastqWriter(path) for name, path in 
+    writers = {name: dinopy.FastqWriter(path) for name, path in
                zip(samples, output_filepaths)}
 
     # Open all writers.
@@ -158,14 +140,14 @@ def read_sorter(primertable):
         fwd = dinopy.FastqReader('../' + data_folder + '/' + sample + str(snakemake.params.name_ext)[:-1] + '1.fastq.gz')
         rev = dinopy.FastqReader('../' + data_folder + '/' + sample + str(snakemake.params.name_ext)[:-1] + '2.fastq.gz')
         for read_f, read_r in zip(fwd.reads(quality_values=True), rev.reads(quality_values=True)):
-            if check_for_match_sort_fwd(read_f.sequence.decode(), 
+            if check_for_match_sort_fwd(read_f.sequence.decode(),
                 sample.split('/')[-1]) and check_for_match_sort_rev(read_r.sequence.decode(),
                     sample.split('/')[-1]):
                 writers[sample + '_R1'].write(read_f.sequence, read_f.name,
                                 read_f.quality)
                 writers[sample + '_R2'].write(read_r.sequence, read_r.name,
                                 read_r.quality)
-            elif check_for_match_sort_rev(read_f.sequence.decode(), 
+            elif check_for_match_sort_rev(read_f.sequence.decode(),
                 sample.split('/')[-1]) and check_for_match_sort_fwd(read_r.sequence.decode(),
                     sample.split('/')[-1]):
                 writers[sample + '_R2'].write(read_f.sequence, read_f.name,
@@ -192,7 +174,7 @@ def already_assembled(primertable, file_path_list):
             pathlib.Path('../results/assembly/' + sample).mkdir(parents=True, exist_ok=True)
             if sample in f_:
                 shutil.copy(f_, '../results/assembly/' + sample + '/' + sample + '_assembled.fastq')
-                shutil.move(f_, '../demultiplexed/')
+                shutil.copy(f_, '../demultiplexed/')
 
 
 # Run the demultiplexing / read sorting script.
@@ -207,8 +189,8 @@ elif snakemake.params.assembled:
     print('3')
 else:
     print('4')
-    # If the files do not need demultiplexing / sorting, just move them to
-    # the demultiplexed folder.
+    # If the files do not need demultiplexing / sorting, just copy them to
+    # the demultiplexed folder. Leave original files in input folder
     for file in file_path_list:
         print(file)
-        shutil.move(file, 'demultiplexed/')
+        shutil.copy(file, 'demultiplexed/')

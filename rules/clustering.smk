@@ -1,3 +1,23 @@
+# dada runs per sample after preprocessing and before chimera removal and AmpliconDuo
+rule DADA2:
+    input:
+        forward = expand(
+            "results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}_1_cut.fastq", unit=units.reset_index().itertuples()),
+        reverse = expand(
+            "results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}_2_cut.fastq", unit=units.reset_index().itertuples()) if config["merge"]["paired_End"] == True else []
+    output:
+        expand("results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}_dada.fasta", unit=units.reset_index().itertuples())
+    params:
+        paired_end=config["merge"]["paired_End"],
+        minoverlap=config["qc"]["minoverlap"]
+    conda:
+        "../envs/dada2.yaml"
+    log:
+        "results/logs/dada2.log"
+    script:
+        "../scripts/dada2.R"
+
+# SWARM clustering runs on all samples after AmpliconDuo
 rule write_fasta:
     input:
         "results/finalData/filtered_table_temp.csv"

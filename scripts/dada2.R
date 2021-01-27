@@ -1,77 +1,56 @@
-library(dada2); packageVersion("dada2")
+library(dada2)
 library(ShortRead)
 
 log <- file(toString(snakemake@log), open="wt")
 sink(log, append = TRUE)
 sink(log, type="message", append =TRUE)
 
+paired_end <- snakemake@params[["paired_end"]]
+min.overlap <- snakemake@params[["minoverlap"]]
 sample.names <- sapply(strsplit(basename(snakemake@input[["forward"]]), "_[12]_cut.fastq"), `[`, 1)
 fnFs <- snakemake@input[["forward"]]
-
 names(fnFs) <- sample.names
+
 set.seed(100)
+# Filtering was done before with prinseq and cutadapt
 # Learn forward error rates
 errF <- learnErrors(fnFs, nbases=1e8, multithread=TRUE, randomize = TRUE, verbose = TRUE)
 
-if(snakemake@params[["paired_end"]] == TRUE){
+if(paired_end == TRUE){
   fnRs <- snakemake@input[["reverse"]]
-  # Learn reverse error rates 
+  # Learn reverse error rates
   names(fnRs) <- sample.names
   errR <- learnErrors(fnRs, nbases=1e8, multithread=TRUE, randomize = TRUE, verbose = TRUE)
 }
 
-derep_count <- 0
-denoised_count <- 0
-# Sample inference and merger of paired-end reads
-mergers <- vector("list", length(sample.names))
-names(mergers) <- sample.names
-for(sam in sample.names) {
+for(i in 1:length(sample.names)) {
+  result <- c()
+  sam <- sample.names[i]
   cat("Processing:", sam, "\n")
-  derepF <- derepFastq(fnFs[[sam]], verbose = TRUE)
-  ddF <- dada(derepF, err=errF, multithread=TRUE, verbose = TRUE)
-  print("Forward After Dereplication:")
-  uniq <- length(derepF$uniques)
-  print(uniq)
-  derep_count <- derep_count + uniq
-  print("Forward After DADA2 denoising:")
-  denois <-length(ddF$denoised) 
-  print(denois)
-  denoised_count <- denoised_count + denois
-  if (snakemake@params[["paired_end"]] == TRUE) {
-    derepR <- derepFastq(fnRs[[sam]], verbose = TRUE)
-    ddR <- dada(derepR, err=errR, multithread=TRUE, verbose = TRUE)
-    print("Reverse After Dereplication:")
-    uniq <- length(derepR$uniques)
-    print(uniq)
-    derep_count <- derep_count + uniq
-    print("Reverse After DADA2 denoising:")
-    denois <-length(ddR$denoised) 
-    print(denois)
-    denoised_count <- denoised_count + denois
-    merger <- mergePairs(ddF, derepF, ddR, derepR, verbose = TRUE)
-    mergers[[sam]] <- merger
+  # dereplication done on the fly since dada 1.12
+  dadaF <- dada(fnFs[sam], err=errF, multithread=TRUE, verbose = TRUE)
+  print("Forward After DADA2 dereplication and denoising:")
+  print(dadaF)
+  if (paired_end == TRUE) {
+    dadaR <- dada(fnRs[sam], err=errR, multithread=TRUE, verbose = TRUE)
+    print("Reverse After DADA2 dereplication and denoising:")
+    print(dadaR)
+    result <- mergePairs(dadaF, fnFs[sam], dadaR, fnRs[sam], verbose = TRUE, minOverlap=min.overlap)
   } else {
-    mergers[[sam]] <- ddF
+    seqtab <- t(makeSequenceTable(dadaF))
+    result <- data.frame(abundance = seqtab[,1], sequence=rownames(seqtab))
+  }
+  print("Sequences left after assembly:")
+  print(nrow(result))
+  if(nrow(result) == 0)
+  {
+    print(paste0("No sequences left for sample ", sam))
+    cat(NULL, file=snakemake@output[[i]])
+  } else {
+    seq_names = paste0(seq(nrow(result)), ";size=", result$abundance, ";")
+    uniquesToFasta(result, fout = snakemake@output[[i]], ids = seq_names)
   }
 }
 
-print("Sum of sequences left after dereplication:")
-print(derep_count)
-print("Sum of sequences left after DADA2 denoising:")
-print(denoised_count)
-
-rm(derepF)
-if (snakemake@params[["paired_end"]] == TRUE) {
-  rm(derepR)
-}
-seqtab <- makeSequenceTable(mergers)
-
-for (i in seq(nrow(seqtab))) {
-  sample_df <- t(as.data.frame(seqtab[i,]))
-  only_present_seqs <- t(as.data.frame(sample_df[,-(which(colSums(sample_df)==0))]))
-  seq_uniq <- getUniques(only_present_seqs)
-  seq_names <- paste0(as.character(seq(length(only_present_seqs))), ";size=", seq_uniq, ";")
-  uniquesToFasta(seq_uniq, fout = snakemake@output[[i]], ids = seq_names)
-}
 sink()
 sink(type="message")

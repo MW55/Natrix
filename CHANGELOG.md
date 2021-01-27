@@ -1,5 +1,10 @@
 # Change Log
 
+## 2021-01-27
+
+### Changed
+- Changed RAM usage of DADA2 by running clustering on single samples, while still estimating errors on all samples.
+
 ## 2020-02-28
 
 ### Changed
@@ -16,4 +21,3 @@
 
 ### Changed
 - Added more logging information
-

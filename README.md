@@ -8,7 +8,8 @@ The need for a scalable, reproducible workflow for the processing of environment
 ![DAG of an example workflow](documentation/images/combined_graph_4.png)
 *DAG of an example workflow: each node represents a rule instance to be executed. The direction of each edge represents the order in which the rules are executed, which dashed lines showing rules that are exclusive to the OTU version and dotted lines rules exclusive to the ASV variant of the workflow. Disjoint paths in the DAG can be executed in parallel. Below is a schematic representation of the main steps of the pipeline, the color coding represents which rules belong to which main step.*
 
-
+If you use Natrix, please cite:
+Welzel, M., Lange, A., Heider, D. et al. Natrix: a Snakemake-based workflow for processing, clustering, and taxonomically assigning amplicon sequencing reads. BMC Bioinformatics 21, 526 (2020). https://doi.org/10.1186/s12859-020-03852-4
 
 ---
 

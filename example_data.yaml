@@ -3,7 +3,7 @@ general:
         filename : example_data # The path / filename of the project folder, primertable (.csv) and configfile (.yaml). If the raw data folder is not in the root directory of Natrix, please add the path relative to the root directory (e.g. input/example_data)
         primertable: example_data.csv # Path to the primertable. If the primertable is not in the root directory of Natrix, please add the path relative to the root directory (e.g. input/example_data.yaml)
         units: units.tsv # Path to the sequencing unit sheet.
-        cores : 8 # Amount of cores available for the workflow.
+        cores : 20 # Amount of cores available for the workflow.
         multiqc : FALSE  # Initial quality check (fastqc & multiqc), currently only works for not yet assembled reads.
         demultiplexing: FALSE # Boolean, run demultiplexing for reads if they were not demultiplexed by the sequencing company (slow).
         read_sorting: FALSE # Boolean, run read sorting for paired end reads if they were not sorted by the sequencing company (slow).
@@ -47,7 +47,7 @@ merge:
 
 # BLAST
 blast:
-        blast : FALSE  # Boolean to indicate the use of the BLAST clustering algorithm to assign taxonomic information to the OTUs.
+        blast : TRUE  # Boolean to indicate the use of the BLAST clustering algorithm to assign taxonomic information to the OTUs.
         database: NCBI # Database against which the BLAST should be carried out, at the moment "NCBI" and "SILVA" are supported.
         drop_tax_classes: '.*unclassified Bacteria.*,.*uncultured.*bacterium.*' # given a comma-separated list, drops undesired classes either by id, by name or using regex
         db_path : database/ncbi/nt # Path to the database file against which the BLAST should be carried out, at the moment only the SILVA (database/silva/silva.db) and NCBI (database/ncbi/nt) databases will be automatically downloaded.

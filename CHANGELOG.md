@@ -1,5 +1,10 @@
 # Change Log
 
+## 2021-02-19
+
+### Changed
+- Updated Snakemake version
+
 ## 2021-01-27
 
 ### Changed

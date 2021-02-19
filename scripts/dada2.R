@@ -7,8 +7,8 @@ sink(log, type="message", append =TRUE)
 
 paired_end <- snakemake@params[["paired_end"]]
 min.overlap <- snakemake@params[["minoverlap"]]
-sample.names <- sapply(strsplit(basename(snakemake@input[["forward"]]), "_[12]_cut.fastq"), `[`, 1)
-fnFs <- snakemake@input[["forward"]]
+sample.names <- sapply(strsplit(basename(snakemake@input[["fwd"]]), "_[12]_cut.fastq"), `[`, 1)
+fnFs <- snakemake@input[["fwd"]]
 names(fnFs) <- sample.names
 
 set.seed(100)
@@ -17,7 +17,7 @@ set.seed(100)
 errF <- learnErrors(fnFs, nbases=1e8, multithread=TRUE, randomize = TRUE, verbose = TRUE)
 
 if(paired_end == TRUE){
-  fnRs <- snakemake@input[["reverse"]]
+  fnRs <- snakemake@input[["rev"]]
   # Learn reverse error rates
   names(fnRs) <- sample.names
   errR <- learnErrors(fnRs, nbases=1e8, multithread=TRUE, randomize = TRUE, verbose = TRUE)

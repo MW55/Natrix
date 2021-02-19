@@ -1,9 +1,9 @@
 # dada runs per sample after preprocessing and before chimera removal and AmpliconDuo
 rule DADA2:
     input:
-        forward = expand(
+        fwd = expand(
             "results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}_1_cut.fastq", unit=units.reset_index().itertuples()),
-        reverse = expand(
+        rev = expand(
             "results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}_2_cut.fastq", unit=units.reset_index().itertuples()) if config["merge"]["paired_End"] == True else []
     output:
         expand("results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}_dada.fasta", unit=units.reset_index().itertuples())

@@ -1,6 +1,0 @@
-seqid	qlen	length	pident	mismatch	qstart	qend	sstart	send	gaps	evalue	taxonomy
-722;size=2061;	329	329	100.0	0	1	329	52	380	0	3.7099999999999984e-170	cellular organisms; Eukaryota; Opisthokonta; Fungi; environmental samples; uncultured fungus
-956;size=2341;	378	378	100.0	0	1	378	190	567	0	0.0	cellular organisms; Eukaryota; Opisthokonta; Fungi; environmental samples; uncultured fungus
-556;size=14;	411	174	100.0	0	1	174	189	362	0	6.919999999999999e-84	cellular organisms; Eukaryota; Opisthokonta; Fungi; Dikarya; Ascomycota; saccharomyceta; Pezizomycotina; leotiomyceta; sordariomyceta; Leotiomycetes; Helotiales; Helotiaceae; environmental samples; uncultured Helotiaceae
-924;size=1626;	367.0	367.0	99.18299999999999	3.0	1.0	367.0	2.0	368.0	0.0	0.0	cellular organisms; Eukaryota; Opisthokonta; Fungi; Fungi incertae sedis; environmental samples; uncultured zygomycete
-747;size=2027;	385	385	100.0	0	1	385	190	574	0	0.0	cellular organisms; Eukaryota; Opisthokonta; Fungi; Dikarya; Basidiomycota; Agaricomycotina; Tremellomycetes; environmental samples; uncultured Cryptococcus

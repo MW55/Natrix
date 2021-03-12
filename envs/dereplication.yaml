@@ -4,6 +4,5 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  - python=3.6.4
-  - dinopy=2.0.0
-  - cd-hit=4.6.8
+  - dinopy=2.2.0
+  - cd-hit=4.8.1

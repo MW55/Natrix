@@ -4,8 +4,7 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  - python=3.6.4
-  - pandas=0.22.0
+  - pandas=1.2.3
   - pytables=3.6.1
   - numpy=1.19.2
-  - hdf5=1.10.6
+  - hdf5=1.10.6 # newer version conflicts with pytables

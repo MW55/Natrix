@@ -3,10 +3,8 @@ channels:
   - bioconda
   - conda-forge
   - defaults
-  - r
 dependencies:
-  - pandas=0.23.3
-  - python=3.6.5
-  - numpy=1.14.2
-  - pytables=3.4.4
-  - hdf5=1.10.1
+  - pandas=1.2.3
+  - numpy=1.19.2
+  - pytables=3.6.1
+  - hdf5=1.10.6 # newer version conflicts with pytables

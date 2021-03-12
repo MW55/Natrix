@@ -4,7 +4,6 @@ channels:
   - bioconda
   - defaults
 dependencies:
-  - cutadapt=2.8
+  - cutadapt=3.2
   - numpy=1.19.2
-  - pandas=1.1.3
-
+  - pandas=1.2.3

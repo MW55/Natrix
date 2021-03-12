@@ -5,4 +5,3 @@ channels:
   - defaults
 dependencies:
   - swarm=2.2.2
-  - python=3.6.5

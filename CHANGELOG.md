@@ -4,6 +4,7 @@
 
 ### Changed
 - Cluster split samples together in DADA2
+- updated all packages except SWARM
 
 ## 2021-02-19
 

@@ -5,8 +5,7 @@ channels:
   - defaults
   - r
 dependencies:
-  - python=3.8.5
   - dinopy=2.2.0
   - blast=2.10.1
-  - pandas=1.1.3
+  - pandas=1.2.3
   - pytables=3.6.1

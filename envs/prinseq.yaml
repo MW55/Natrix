@@ -3,5 +3,5 @@ channels:
   - bioconda
   - defaults
 dependencies:
-  - perl-threaded=5.22.0
+  - perl-threaded=5.26.0
   - prinseq=0.20.4

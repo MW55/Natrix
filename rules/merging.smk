@@ -35,5 +35,7 @@ rule ampliconduo:
         p_corr=config["merge"]["ampli_corr"]
     conda:
         "../envs/ampliconduo.yaml"
+    log:
+        "results/logs/ampliconduo.log"
     script:
         "../scripts/ampliconduo.R"

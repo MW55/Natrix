@@ -8,7 +8,7 @@ general:
         demultiplexing: FALSE # Boolean, run demultiplexing for reads if they were not demultiplexed by the sequencing company (slow).
         read_sorting: FALSE # Boolean, run read sorting for paired end reads if they were not sorted by the sequencing company (slow).
         already_assembled: FALSE # Boolean, skip the quality control and read assembly steps for data if it is already assembled.
-        seq_rep: OTU # Type of sequence representative, possible values are: "ASV", amplicon sequence variants, created with DADA2 or "OTU", operational taxonomic units, created with SWARM
+        seq_rep: ASV # Type of sequence representative, possible values are: "ASV", amplicon sequence variants, created with DADA2 or "OTU", operational taxonomic units, created with SWARM
 
 # Quality check and primer removal
 qc:
@@ -37,7 +37,7 @@ chim:
 # Merging
 merge:
         filter_method : split_sample # If the split sample approach was used (split_sample) or not (not_split).
-        ampliconduo: FALSE # Boolean, whether AmpliconDuo should be used for statistical analysis of the data.
+        ampliconduo: TRUE # Boolean, whether AmpliconDuo should be used for statistical analysis of the data.
         cutoff : 3 # An additional abundance filter if the split sample approach was not used.
         ampli_corr : fdr # Specifies the correction method for Fisher's exact test.
         save_format : png # File format for the frequency-frequency plot.
@@ -47,7 +47,7 @@ merge:
 
 # BLAST
 blast:
-        blast : TRUE  # Boolean to indicate the use of the BLAST clustering algorithm to assign taxonomic information to the OTUs.
+        blast : FALSE  # Boolean to indicate the use of the BLAST clustering algorithm to assign taxonomic information to the OTUs.
         database: NCBI # Database against which the BLAST should be carried out, at the moment "NCBI" and "SILVA" are supported.
         drop_tax_classes: '.*unclassified Bacteria.*,.*uncultured.*bacterium.*' # given a comma-separated list, drops undesired classes either by id, by name or using regex
         db_path : database/ncbi/nt # Path to the database file against which the BLAST should be carried out, at the moment only the SILVA (database/silva/silva.db) and NCBI (database/ncbi/nt) databases will be automatically downloaded.

@@ -1,5 +1,10 @@
 # Change Log
 
+## 2021-03-12
+
+### Changed
+- Cluster split samples together in DADA2
+
 ## 2021-02-19
 
 ### Changed

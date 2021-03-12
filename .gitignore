@@ -38,3 +38,4 @@ scripts/*_backup*
 .idea
 .idea/*
 units.tsv
+tests/

@@ -9,7 +9,8 @@ rule DADA2:
         expand("results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}_dada.fasta", unit=units.reset_index().itertuples())
     params:
         paired_end=config["merge"]["paired_End"],
-        minoverlap=config["qc"]["minoverlap"]
+        minoverlap=config["qc"]["minoverlap"],
+        splitsamples=config["merge"]["filter_method"]
     conda:
         "../envs/dada2.yaml"
     log:

@@ -3,6 +3,10 @@ library(ggplot2)
 library(xtable)
 library(data.table)
 
+log <- file(toString(snakemake@log), open="wt")
+sink(log, append = TRUE)
+sink(log, type="message", append =TRUE)
+
 # Script for statistical analysis of the filtering process (filtered vs unfiltered),
 # it will also use Fisher's exact test to find significantly deviating read numbers
 # between split-samples, which could be used to implement an additional filtering step.
@@ -20,6 +24,14 @@ amp.duo <- function(table, figure.folder, saving.format, file.name, p.corr) {
   names <- sapply(X=names, FUN=function(x){
   unlist(strsplit(x, split="+.A$"))
   })
+  splitsamples <-  lapply(names, function(x) grep(x, colnames(intable), value=T))
+  allzero <- unlist(lapply(splitsamples, function(x) all(rowSums(intable[,x])==0)))
+  if(any(allzero)){
+    print("These splitsamples do not have any OTUS/ASVs in common:")
+    print(splitsamples[allzero])
+    intable <- intable[,unlist(splitsamples[!allzero])]
+    names <- names[!allzero]
+  }
   ampliconduos <- ampliconduo(intable, sample.names=names,
                               correction=p.corr)
   if (snakemake@params[["plot_ampduo"]]) {
@@ -56,3 +68,6 @@ discordance(amp.duo.filtered, figure.folder,
 save(amp.duo.unfiltered, amp.duo.filtered, file=paste(figure.folder,
                                                         "/AmpliconDuo.RData",
                                                         sep=""))
+
+sink()
+sink(type="message")

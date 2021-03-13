@@ -4,7 +4,7 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  - dinopy=2.2.0
+  - dinopy=2.0.3
   - pandas=1.2.3
   - pandaseq=2.11
   - libgcc

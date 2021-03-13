@@ -3,5 +3,5 @@ channels:
   - bioconda
   - defaults
 dependencies:
-  - dinopy=2.2.0
+  - dinopy=2.0.3
   - pandas=1.2.3

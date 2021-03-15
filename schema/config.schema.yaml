@@ -30,10 +30,6 @@ blast:
     default: 1
     description: "Number of blast hits that are saved per sequence / OTU."
     type: int
-  out6:
-    default: "\"6 qseqid qlen length pident mismatch qstart qend sstart send gaps evalue stitle\""
-    description: "Additional BLAST information to be saved."
-    type: string
 chim:
   abskew:
     default: 16

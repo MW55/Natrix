@@ -148,3 +148,25 @@ rule merge_results:
         "results/logs/finalData/BLAST.log"
     script:
         "../scripts/merge_results.py"
+
+rule split_filtered_blast_table:
+    input:
+        "results/finalData/filtered_blast_table.csv"
+    output:
+        expand("results/finalData/{rank}.csv", rank=ranks)
+    run:
+        import pandas as pd
+
+        skip_columns = ['sequences', 'qlen', 'length', 'pident', 'mismatch', 'qstart', 'qend', 'sstart', 'send', 'gaps', 'evalue', 'seqid', 'Unnamed: 0']
+        blast_table = pd.read_csv(input[0],index_col='taxonomy', usecols=lambda x:x not in skip_columns)
+        blast_table = blast_table.astype('int64')
+        #blast_table = blast_table.groupby(blast_table.index).sum() # apparently species should not merge same named entries?
+        blast_table = blast_table.rename(columns=lambda x: x.split('-')[0])
+        blast_table = blast_table.T
+
+        for o in reversed(output):
+            blast_table.to_csv(o)
+
+            max_count = max([len(i.split(';')) for i in blast_table.columns])
+            blast_table = blast_table.rename(columns=lambda x: x.rsplit(';',1)[0] if len(x.split(';')) == max_count else x)
+            blast_table = blast_table.groupby(by=blast_table.columns, axis=1).sum()

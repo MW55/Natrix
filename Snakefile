@@ -16,6 +16,8 @@ if config["merge"]["paired_End"]:
 else:
     reads = 1
 
+ranks = ['Phylum','Class','Order','Family','Genus','Species']
+
 rule all:
     input:
         "results/finalData/unfiltered_table.csv",
@@ -24,7 +26,9 @@ rule all:
         "results/qc/multiqc_report.html" if config["general"]["multiqc"] else [],
         "results/finalData/figures/AmpliconDuo.RData" if config["merge"]["ampliconduo"] and config["merge"]["filter_method"] == "split_sample" else [],
         "results/finalData/filtered_blast_table.csv" if config["blast"]["blast"] else [],
-        "results/finalData/filtered_blast_table_complete.csv" if config["blast"]["blast"] else []
+        "results/finalData/filtered_blast_table_complete.csv" if config["blast"]["blast"] else [],
+        expand("results/finalData/{rank}.csv", rank=ranks) if config["blast"]["blast"] and config["blast"]["split_filtered_blast_table"] else []
+
 
 ruleorder: assembly > prinseq
 

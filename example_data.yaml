@@ -54,3 +54,4 @@ blast:
         max_target_seqs : 10 # Number of NCBI blast hits that are saved per sequence / OTU.
         ident : 90.0 # Minimal identity overlap between target and query sequence. Set to lower threshold to be able to filter later by hand-
         evalue : 1e-51 # Highest accepted evalue. Set to higher threshold to be able to filter later by hand.
+        split_filtered_blast_table : TRUE # Boolean if results of filtered_blast_table should additionally be splitted into files by taxonomic rank.

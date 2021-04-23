@@ -153,7 +153,7 @@ rule split_filtered_blast_table:
     input:
         "results/finalData/filtered_blast_table.csv"
     output:
-        expand("results/finalData/{rank}.csv", rank=ranks)
+        expand("results/finalData/taxonomy_splits/{rank}.csv", rank=ranks)
     run:
         import pandas as pd
 

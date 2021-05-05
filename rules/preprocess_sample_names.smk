@@ -6,8 +6,8 @@ rule preprocess_sample_names:
         sample_config=config['sample'],
         filename_base=config['general']['filename'],
         primertable=config['general']['primertable'],
-        paired=config['merge']['paired_end'],
-        filter_method=config['merge']['paired_end']
+        paired=config['merge']['paired_End'],
+        filter_method=config['merge']['paired_End']
     run:
         import glob
         import os

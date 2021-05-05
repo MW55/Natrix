@@ -1,6 +1,6 @@
 rule unfiltered_table:
     input:
-        expand("results/finalData/{unit.sample}_{unit.unit}.nonchimera.fasta", unit=units.reset_index().itertuples())
+        expand("results/finalData/{sample}_{unit}.nonchimera.fasta",sample=SAMPLES,unit=UNITS),
     output:
         "results/finalData/unfiltered_table.csv",
         temp("results/finalData/unfiltered_dict.hdf5")

@@ -10,6 +10,6 @@ conda activate natrix
 
 varname+=".yaml"
 cores=$(grep "cores : " $varname | awk '{print $3}')
-python create_dataframe.py "$varname"
+#python create_dataframe.py "$varname"
 
 screen -S $varname bash -c "source $env_loc;conda activate natrix;snakemake --use-conda --cores $cores --configfile $varname; exec sh"

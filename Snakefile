@@ -1,20 +1,20 @@
-import pandas as pd
+import glob
+import os
 from snakemake.utils import validate
 
 validate(config, "schema/config.schema.yaml")
 
-units = pd.read_table(config["general"]["units"], index_col=["sample", "unit"],
-    dtype=str)
-units.index = units.index.set_levels([i.astype(str) for i in units.index.levels])
-name_ext = config["merge"]["name_ext"][:-1]
+SAMPLES = sorted(set([os.path.basename(x)[:-len('.fastq.gz')].split(config["sample"]["separator"])[config["sample"]["name_idx"]].replace('_','-') for x in glob.glob(config['general']['filename'] + '/*.fastq.gz')]))
 
-def is_single_end(sample, unit):
-    return pd.isnull(units.loc[(sample,unit), "fq2"])
+if config["merge"]["filter_method"] == 'split_sample':
+    UNITS = ['A','B']
+else:
+    UNITS = ['A']
 
 if config["merge"]["paired_End"]:
-    reads = [1,2]
+    READS = [1,2]
 else:
-    reads = 1
+    READS = 1
 
 rule all:
     input:
@@ -26,8 +26,10 @@ rule all:
         "results/finalData/filtered_blast_table.csv" if config["blast"]["blast"] else [],
         "results/finalData/filtered_blast_table_complete.csv" if config["blast"]["blast"] else []
 
+
 ruleorder: assembly > prinseq
 
+include: "rules/preprocess_sample_names.smk"
 include: "rules/demultiplexing.smk"
 include: "rules/quality_control.smk"
 include: "rules/read_assembly.smk"

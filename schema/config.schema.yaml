@@ -92,10 +92,6 @@ general:
     default: false
     description: "Read sorting for paired end reads that were not sorted by the sequencing company (slow)."
     type: boolean
-  units:
-    default: units.tsv
-    description: "Path to the sequencing unit sheet."
-    type: string
   seq_rep:
     default: OTU
     description: "How the sequences should be represented, possible values are: 'ASV', amplicon sequence variants, created with DADA2 or 'OTU', operational taxonomic units, created with SWARM"
@@ -119,10 +115,6 @@ merge:
     default: not_split
     description: "If the split sample approach was used (split_sample) or not (not_split)."
     oneOf: "not_split, split_sample"
-    type: string
-  name_ext:
-    default: R1
-    description: "The identifier for the forward read (for the reverse read the 1 is switched with 2, if the data is in paired-end format), has to be included at the end of the file name, before the file format identifier (including for single end files)."
     type: string
   paired_End:
     default: true
@@ -186,3 +178,28 @@ qc:
     maximum: 1.0
     minimum: 0.0
     type: float
+sample:
+  separator:
+    default: _
+    description: "separator"
+    type: string
+  name_idx:
+    default: 0
+    description: "name index"
+    type: int
+  unit_idx:
+    default: 1
+    description: "unit index"
+    type: int
+  read_idx:
+    default: 2
+    description: "read index"
+    type: int
+  unit_A_identifier:
+    default: A
+    type: string
+    description: "unit A identifier"
+  read_forward_identifier:
+    default: R1
+    type: string
+    description: "read forward identifier"

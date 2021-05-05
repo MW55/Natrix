@@ -12,8 +12,7 @@ rule fastqc:
 
 rule multiqc:
     input:
-        expand("results/qc/{unit.sample}_{unit.unit}_R{read}_fastqc.zip",
-        unit=units.reset_index().itertuples(), read=reads)
+        expand("results/qc/{{sample}}_{{unit}}_R{read}_fastqc.zip",read=READS)
     output:
         "results/qc/multiqc_report.html"
     conda:

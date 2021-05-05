@@ -1,12 +1,6 @@
-def get_fastq(wildcards):
-    if not is_single_end(wildcards.sample, wildcards.unit):
-        return expand("demultiplexed/{sample}_{unit}_{group}.fastq",
-                        group=[1,2], **wildcards)
-    return "demultiplexed/{sample}_{unit}_1.fastq".format(**wildcards)
-
 rule define_primer:
     input:
-        primer_table=config["general"]["primertable"]
+        primer_table="primertable.csv.tmp"
     output:
         "primer_table.csv"
     params:
@@ -21,13 +15,12 @@ rule define_primer:
 
 rule prinseq:
     input:
-        sample=get_fastq
+        expand("demultiplexed/{{sample}}_{{unit}}_{read}.fastq",read=READS)
     output:
-        expand(
-        "results/assembly/{{sample}}_{{unit}}/{{sample}}_{{unit}}_{read}.fastq",
-        read=reads)
+        expand("results/assembly/{{sample}}_{{unit}}/{{sample}}_{{unit}}_{read}.fastq",read=READS),
     params:
-        config["qc"]["mq"]
+        mq=config["qc"]["mq"],
+        paired=config["merge"]["paired_End"]
     log:
         "results/logs/{sample}_{unit}/prinseq.log"
     conda:
@@ -39,12 +32,12 @@ rule cutadapt:
     input:
         expand(
         "results/assembly/{{sample}}_{{unit}}/{{sample}}_{{unit}}_{read}.fastq",
-        read=reads),
+        read=READS),
         primer_t="primer_table.csv"
     output:
         expand(
         "results/assembly/{{sample}}_{{unit}}/{{sample}}_{{unit}}_{read}_cut.fastq",
-        read=reads)
+        read=READS),
     params:
         paired_end=config["merge"]["paired_End"],
         bar_removed=config["qc"]["barcode_removed"],
@@ -62,7 +55,7 @@ rule assembly:
     input:
         expand(
         "results/assembly/{{sample}}_{{unit}}/{{sample}}_{{unit}}_{read}.fastq",
-        read=reads),
+        read=READS),
         primer_t="primer_table.csv"
     output:
         "results/assembly/{sample}_{unit}/{sample}_{unit}_assembled.fastq"

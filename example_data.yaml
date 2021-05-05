@@ -2,13 +2,21 @@
 general:
         filename : example_data # The path / filename of the project folder, primertable (.csv) and configfile (.yaml). If the raw data folder is not in the root directory of Natrix, please add the path relative to the root directory (e.g. input/example_data)
         primertable: example_data.csv # Path to the primertable. If the primertable is not in the root directory of Natrix, please add the path relative to the root directory (e.g. input/example_data.yaml)
-        units: units.tsv # Path to the sequencing unit sheet.
         cores : 20 # Amount of cores available for the workflow.
         multiqc : FALSE  # Initial quality check (fastqc & multiqc), currently only works for not yet assembled reads.
         demultiplexing: FALSE # Boolean, run demultiplexing for reads if they were not demultiplexed by the sequencing company (slow).
         read_sorting: FALSE # Boolean, run read sorting for paired end reads if they were not sorted by the sequencing company (slow).
         already_assembled: FALSE # Boolean, skip the quality control and read assembly steps for data if it is already assembled.
         seq_rep: OTU # Type of sequence representative, possible values are: "ASV", amplicon sequence variants, created with DADA2 or "OTU", operational taxonomic units, created with SWARM
+
+#options for mapping samples to natrix format "name_unit_read" use script "symlink_config.py" to fill these in interactively
+sample:
+        separator: _
+        name_idx: 0
+        unit_idx: 1
+        unit_A_identifier: A
+        read_idx: 2
+        read_forward_identifier: R1
 
 # Quality check and primer removal
 qc:
@@ -43,7 +51,6 @@ merge:
         save_format : png # File format for the frequency-frequency plot.
         plot_AmpDuo : TRUE # Boolean, whether the frequency-frequency plot should be saved.
         paired_End : TRUE # Boolean. Format of the sequencing data, TRUE if the reads are in paired-end format.
-        name_ext : R1 # The identifier for the forward read (for the reverse read the 1 is switched with 2, if the data is in paired-end format), has to be included at the end of the file name, before the file format identifier (including for single end files).
 
 # BLAST
 blast:

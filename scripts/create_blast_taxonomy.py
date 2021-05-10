@@ -26,11 +26,9 @@ names_df = names_df.join(nodes_df)
 
 
 def ids_to_names_and_ranks(ids):
-    global names_df
-    global nodes_df
     ids = list(map(int, ids.split(" ")))
     names = [names_df.at[id, 'name_txt'] for id in ids]
-    ranks = [nodes_df.at[id, 'rank'] for id in ids]
+    ranks = [names_df.at[id, 'rank'] for id in ids]
     return ";".join(names), ";".join(ranks)
 
 

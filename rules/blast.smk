@@ -51,7 +51,9 @@ elif config["blast"]["database"] == "NCBI":
 
     rule download_taxonomy:
         output:
-            os.path.join(os.path.dirname(config["blast"]["db_path"]), "fullnamelineage.dmp")
+            os.path.join(os.path.dirname(config["blast"]["db_path"]), "taxidlineage.dmp"),
+            os.path.join(os.path.dirname(config["blast"]["db_path"]), "nodes.dmp"),
+            os.path.join(os.path.dirname(config["blast"]["db_path"]), "names.dmp")
         params:
             db_path=config["blast"]["db_path"]
         conda:
@@ -66,7 +68,9 @@ elif config["blast"]["database"] == "NCBI":
 
     rule create_blast_taxonomy:
         input:
-            os.path.join(os.path.dirname(config["blast"]["db_path"]), "fullnamelineage.dmp")
+            os.path.join(os.path.dirname(config["blast"]["db_path"]), "taxidlineage.dmp"),
+            os.path.join(os.path.dirname(config["blast"]["db_path"]), "nodes.dmp"),
+            os.path.join(os.path.dirname(config["blast"]["db_path"]), "names.dmp")
         output:
             os.path.join(os.path.dirname(config["blast"]["db_path"]), "tax_lineage.h5")
         conda:
@@ -141,7 +145,8 @@ rule merge_results:
         complete="results/finalData/filtered_blast_table_complete.csv",
         filtered="results/finalData/filtered_blast_table.csv"
     params:
-        seq_rep=str(config["general"]["seq_rep"])
+        seq_rep=str(config["general"]["seq_rep"]),
+        database=str(config["blast"]["database"])
     conda:
         "../envs/merge_results.yaml"
     log:
@@ -154,17 +159,7 @@ rule split_filtered_blast_table:
         "results/finalData/filtered_blast_table.csv"
     output:
         expand("results/finalData/taxonomy_splits/{rank}.csv", rank=ranks)
-    run:
-        import pandas as pd
-
-        skip_columns = ['sequences', 'qlen', 'length', 'pident', 'mismatch', 'qstart', 'qend', 'sstart', 'send', 'gaps', 'evalue', 'seqid', 'Unnamed: 0']
-        blast_table = pd.read_csv(input[0],index_col='taxonomy', usecols=lambda x:x not in skip_columns)
-        blast_table = blast_table.astype('int64')
-        blast_table = blast_table.rename(columns=lambda x: x.split('-')[0])
-        blast_table = blast_table.T
-
-        for o in reversed(output):
-            blast_table = blast_table.groupby(by=blast_table.columns, axis=1).sum()
-            blast_table.to_csv(o)
-            max_count = max([len(i.split(';')) for i in blast_table.columns])
-            blast_table = blast_table.rename(columns=lambda x: x.rsplit(';',1)[0] if len(x.split(';')) == max_count else x)
+    params:
+        database=str(config["blast"]["database"])
+    script:
+         "../scripts/split_taxonomy.py"

@@ -3,9 +3,6 @@ import numpy as np
 import dinopy
 import os
 import re
-import yaml
-import glob
-import sys
 import shutil
 import subprocess
 import pathlib
@@ -13,10 +10,9 @@ import pathlib
 # demultiplexing samples that were pooled in-lab (instead of at the sequencing company) and
 # to manually sort reads depending on their primersequence.
 
-p_table = pd.read_csv(snakemake.params.primertable, index_col='Probe')
+p_table = pd.read_csv(snakemake.input.primertable, index_col='Probe')
 primertable = p_table.to_dict('index')
-data_folder = str(snakemake.params.filename)
-file_path_list = sorted(glob.glob(data_folder + "/*.fast*"))
+file_path_list = sorted(snakemake.input.samples)
 
 # Regex substitution dict.
 iupac_dict_regex = {'M':'[AC]', 'R':'[AG]', 'W':'[AT]', 'S':'[CG]', 'Y':'[CT]',
@@ -120,8 +116,8 @@ def read_sorter(primertable):
     samples = []
     output_filepaths = []
     for sample in primertable.keys():
-        samples.append(sample + snakemake.params.name_ext[:-1] + '1')
-        samples.append(sample + snakemake.params.name_ext[:-1] + '2')
+        samples.append(sample + 'R1')
+        samples.append(sample + 'R2')
         samples.append(sample + '_not_sorted')
         output_filepaths.append('demultiplexed/' + sample + '_R1.fastq.gz')
         output_filepaths.append('demultiplexed/' + sample + '_R2.fastq.gz')
@@ -137,8 +133,8 @@ def read_sorter(primertable):
 
     # Start writing.
     for sample in primertable.keys():
-        fwd = dinopy.FastqReader('../' + data_folder + '/' + sample + str(snakemake.params.name_ext)[:-1] + '1.fastq.gz')
-        rev = dinopy.FastqReader('../' + data_folder + '/' + sample + str(snakemake.params.name_ext)[:-1] + '2.fastq.gz')
+        fwd = dinopy.FastqReader('../' + data_folder + '/' + sample + 'R1.fastq.gz')
+        rev = dinopy.FastqReader('../' + data_folder + '/' + sample + 'R2.fastq.gz')
         for read_f, read_r in zip(fwd.reads(quality_values=True), rev.reads(quality_values=True)):
             if check_for_match_sort_fwd(read_f.sequence.decode(),
                 sample.split('/')[-1]) and check_for_match_sort_rev(read_r.sequence.decode(),

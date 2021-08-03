@@ -1,13 +1,13 @@
 rule demultiplex:
+    input:
+        samples=expand("input/{sample}_{unit}_R{read}.fastq.gz", sample=SAMPLES,unit=UNITS,read=READS),
+        primertable="primertable.csv.tmp"
     output:
-        temp(expand("demultiplexed/{unit.sample}_{unit.unit}_R{read}.fastq.gz", unit=units.reset_index().itertuples(), read=reads))
+        temp(expand("demultiplexed/{sample}_{unit}_R{read}.fastq.gz",sample=SAMPLES,unit=UNITS,read=READS))
     params:
-        filename = config["general"]["filename"],
-        primertable = config["general"]["primertable"],
         demultiplexing = config["general"]["demultiplexing"],
         read_sorting = config['general']['read_sorting'],
         assembled = config['general']['already_assembled'],
-        name_ext = config['merge']['name_ext']
     conda:
         "../envs/demultiplexing.yaml"
     script:

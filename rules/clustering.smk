@@ -2,11 +2,11 @@
 rule DADA2:
     input:
         fwd = expand(
-            "results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}_1_cut.fastq", unit=units.reset_index().itertuples()),
+            "results/assembly/{sample}_{unit}/{sample}_{unit}_1_cut.fastq", sample=SAMPLES,unit=UNITS),
         rev = expand(
-            "results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}_2_cut.fastq", unit=units.reset_index().itertuples()) if config["merge"]["paired_End"] == True else []
+            "results/assembly/{sample}_{unit}/{sample}_{unit}_2_cut.fastq", sample=SAMPLES,unit=UNITS) if config["merge"]["paired_End"] == True else []
     output:
-        expand("results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}_dada.fasta", unit=units.reset_index().itertuples())
+        expand("results/assembly/{sample}_{unit}/{sample}_{unit}_dada.fasta", sample=SAMPLES,unit=UNITS)
     params:
         paired_end=config["merge"]["paired_End"],
         minoverlap=config["qc"]["minoverlap"],

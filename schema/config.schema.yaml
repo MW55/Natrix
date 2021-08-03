@@ -30,6 +30,10 @@ blast:
     default: 1
     description: "Number of blast hits that are saved per sequence / OTU."
     type: int
+  split_filtered_blast_table:
+    default: False
+    description: "Boolean if results of filtered_blast_table should additionally be splitted into files by taxonomic rank."
+    type: boolean
 chim:
   abskew:
     default: 16

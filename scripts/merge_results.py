@@ -41,6 +41,7 @@ logging.info(no_blast_hit)
 
 cols = set(result.columns.tolist())
 cols_include = ['sequences', 'qlen', 'length', 'pident', 'mismatch', 'qstart', 'qend', 'sstart', 'send', 'gaps', 'evalue', 'taxonomy']
+cols_include.append('tax_key') if snakemake.params['database'] == 'NCBI' else None
 cols_all = cols_include + list(cols - set(cols_include))
 
 result = result[cols_all]

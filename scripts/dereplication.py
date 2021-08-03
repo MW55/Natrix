@@ -1,5 +1,4 @@
 import dinopy
-from glob import glob
 
 fasta = snakemake.input[0]
 clstr = snakemake.input[1]

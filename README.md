@@ -417,6 +417,7 @@ Below are the explainations for the configfile (*project*.yaml) entries:
 |max_target_seqs  |1                                                                                |Number of blast hits that are saved per sequence / OTU.                                                                                                                                                                                      |
 |ident            |90.0                                                                             |Minimal identity overlap between target and query sequence.                                                                                                                                                                                  |
 |evalue           |1e-51                                                                            |Highest accepted evalue.                                                                                                                                                                                                                     |
+|split_filtered_blast_table| False                                                                  |Boolean if results of filtered_blast_table should additionally be splitted into files by taxonomic rank.
 
 
 ---

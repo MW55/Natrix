@@ -72,16 +72,16 @@ elif config["blast"]["database"] == "NCBI":
         conda:
             "../envs/blast.yaml"
         log:
-            "results/logs/finalData/BLAST.log"
+            os.path.join(config["general"]["output_dir"],"logs/finalData/BLAST.log")
         script:
             "../scripts/create_blast_taxonomy.py"
 
 rule blast:
     input:
-        "results/finalData/representatives.fasta" if config["general"]["seq_rep"] == "OTU" else "results/finalData/filtered.fasta",
+        os.path.join(config["general"]["output_dir"],"results/finalData/representatives.fasta") if config["general"]["seq_rep"] == "OTU" else os.path.join(config["general"]["output_dir"],"results/finalData/filtered.fasta"),
         expand(config["blast"]["db_path"] + "{file_extension}", file_extension=[".ndb", ".nhr", ".nin", ".nog", ".nos", ".not", ".nsq", ".ntf", ".nto"] if config["blast"]["database"] == "SILVA" else "")
     output:
-        "results/finalData/blast_taxonomy.tsv" #temp
+        os.path.join(config["general"]["output_dir"],"results/finalData/blast_taxonomy.tsv") #temp
     threads: config["general"]["cores"]
     params:
         db_path=config["blast"]["db_path"],
@@ -101,18 +101,18 @@ if config["blast"]["database"] == "NCBI":
 
     rule ncbi_taxonomy:
         input:
-            blast_result = "results/finalData/blast_taxonomy.tsv",
+            blast_result = os.path.join(config["general"]["output_dir"],"results/finalData/blast_taxonomy.tsv"),
             lineage = os.path.join(os.path.dirname(config["blast"]["db_path"]), "tax_lineage.h5")
         output:
-            tax_lineage = temp("results/finalData/blast_taxonomic_lineage.tsv"),
-            all_tax = "results/finalData/blast_taxonomy_all.tsv"
+            tax_lineage = temp(os.path.join(config["general"]["output_dir"],"results/finalData/blast_taxonomic_lineage.tsv")),
+            all_tax = os.path.join(config["general"]["output_dir"],"results/finalData/blast_taxonomy_all.tsv")
         params:
             max_target_seqs=config["blast"]["max_target_seqs"],
             drop_tax_classes=str(config["blast"]["drop_tax_classes"])
         conda:
             "../envs/blast.yaml"
         log:
-            "results/logs/finalData/BLAST.log"
+            os.path.join(config["general"]["output_dir"],"logs/finalData/BLAST.log")
         script:
             "../scripts/ncbi_taxonomy.py"
 
@@ -120,31 +120,31 @@ elif config["blast"]["database"] == "SILVA":
 
     rule silva_taxonomy:
         input:
-            blast_result = "results/finalData/blast_taxonomy.tsv",
+            blast_result = os.path.join(config["general"]["output_dir"],"results/finalData/blast_taxonomy.tsv"),
             lineage = os.path.join(os.path.dirname(config["blast"]["db_path"]), "tax_lineage.h5")
         output:
-            temp("results/finalData/blast_taxonomic_lineage.tsv")
+            temp(os.path.join(config["general"]["output_dir"],"results/finalData/blast_taxonomic_lineage.tsv"))
         params:
             drop_tax_classes=str(config["blast"]["drop_tax_classes"])
         conda:
             "../envs/blast.yaml"
         log:
-            "results/logs/finalData/BLAST.log"
+            os.path.join(config["general"]["output_dir"],"logs/finalData/BLAST.log")
         script:
             "../scripts/silva_taxonomy.py"
 
 rule merge_results:
     input:
-        merged="results/finalData/swarm_table.csv" if config["general"]["seq_rep"] == "OTU" else "results/finalData/filtered_table.csv",
-        blast_result="results/finalData/blast_taxonomic_lineage.tsv"
+        merged=os.path.join(config["general"]["output_dir"],"results/finalData/swarm_table.csv") if config["general"]["seq_rep"] == "OTU" else os.path.join(config["general"]["output_dir"],"results/finalData/filtered_table.csv"),
+        blast_result=os.path.join(config["general"]["output_dir"],"results/finalData/blast_taxonomic_lineage.tsv")
     output:
-        complete="results/finalData/filtered_blast_table_complete.csv",
-        filtered="results/finalData/filtered_blast_table.csv"
+        complete=os.path.join(config["general"]["output_dir"],"results/finalData/filtered_blast_table_complete.csv"),
+        filtered=os.path.join(config["general"]["output_dir"],"results/finalData/filtered_blast_table.csv")
     params:
         seq_rep=str(config["general"]["seq_rep"])
     conda:
         "../envs/merge_results.yaml"
     log:
-        "results/logs/finalData/BLAST.log"
+        os.path.join(config["general"]["output_dir"],"logs/finalData/BLAST.log")
     script:
         "../scripts/merge_results.py"

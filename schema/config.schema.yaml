@@ -101,6 +101,10 @@ general:
     description: "How the sequences should be represented, possible values are: 'ASV', amplicon sequence variants, created with DADA2 or 'OTU', operational taxonomic units, created with SWARM"
     oneOf: "OTU, ASV"
     type: string
+  output_dir:
+    default: output
+    description: "path to custom output directory / relative to the root directory  of natrix"
+    type: string
 merge:
   ampli_corr:
     default: fdr

@@ -1,9 +1,11 @@
+import os
+
 rule unfiltered_table:
     input:
-        expand("results/finalData/{unit.sample}_{unit.unit}.nonchimera.fasta", unit=units.reset_index().itertuples())
+        expand(os.path.join(config["general"]["output_dir"],"results/finalData/{unit.sample}_{unit.unit}.nonchimera.fasta"), unit=units.reset_index().itertuples())
     output:
-        "results/finalData/unfiltered_table.csv",
-        temp("results/finalData/unfiltered_dict.hdf5")
+        os.path.join(config["general"]["output_dir"],"results/finalData/unfiltered_table.csv"),
+        temp(os.path.join(config["general"]["output_dir"],"results/finalData/unfiltered_dict.hdf5"))
     conda:
         "../envs/unfiltered_table.yaml"
     script:
@@ -11,10 +13,10 @@ rule unfiltered_table:
 
 rule filtering:
     input:
-        "results/finalData/unfiltered_dict.hdf5"
+        os.path.join(config["general"]["output_dir"],"results/finalData/unfiltered_dict.hdf5")
     output:
-          temp("results/finalData/filtered_table_temp.csv"),
-          "results/finalData/filtered_out_table.csv"
+          temp(os.path.join(config["general"]["output_dir"],"results/finalData/filtered_table_temp.csv")),
+          os.path.join(config["general"]["output_dir"],"results/finalData/filtered_out_table.csv")
     params:
         filter_method=config["merge"]["filter_method"],
         cutoff=config["merge"]["cutoff"]
@@ -25,10 +27,10 @@ rule filtering:
 
 rule ampliconduo:
     input:
-        filtered_table="results/finalData/filtered_table_temp.csv",
-        unfiltered_table="results/finalData/unfiltered_table.csv"
+        filtered_table=os.path.join(config["general"]["output_dir"],"results/finalData/filtered_table_temp.csv"),
+        unfiltered_table=os.path.join(config["general"]["output_dir"],"results/finalData/unfiltered_table.csv")
     output:
-        "results/finalData/figures/AmpliconDuo.RData"
+        os.path.join(config["general"]["output_dir"],"results/finalData/figures/AmpliconDuo.RData")
     params:
         plot_ampduo=config["merge"]["plot_AmpDuo"],
         saving_format=config["merge"]["save_format"],
@@ -36,6 +38,6 @@ rule ampliconduo:
     conda:
         "../envs/ampliconduo.yaml"
     log:
-        "results/logs/ampliconduo.log"
+        os.path.join(config["general"]["output_dir"],"logs/ampliconduo.log")
     script:
         "../scripts/ampliconduo.R"

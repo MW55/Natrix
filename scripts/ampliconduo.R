@@ -3,6 +3,11 @@ library(ggplot2)
 library(xtable)
 library(data.table)
 
+# apparently ggplot opens a device to get for example hight and width for plots if not specified
+# which in turn does produce an additional Rplots.pdf in the working dir. 
+# The following line should suppress this.
+pdf(NULL)
+
 log <- file(toString(snakemake@log), open="wt")
 sink(log, append = TRUE)
 sink(log, type="message", append =TRUE)

@@ -12,6 +12,10 @@ sample.names <- sapply(strsplit(basename(snakemake@input[["fwd"]]), "_[12]_cut.f
 fnFs <- snakemake@input[["fwd"]]
 names(fnFs) <- sample.names
 
+print(paired.end)
+print(split.samples)
+print(sample.names)
+
 set.seed(100)
 # Filtering was done before with prinseq and cutadapt
 # Learn forward error rates
@@ -25,8 +29,8 @@ if(paired.end){
 }
 
 if(split.samples){
-  samples <- unlist(unique(strsplit(sample.names, "_[AB]$")))
-  sample.names2 <- lapply(samples, function(x) grep(paste("^",x,sep=""), sample.names, value=TRUE))
+  samples <- unlist(unique(strsplit(sample.names, "_[AB]")))
+  sample.names2 <- lapply(samples, function(x) grep(x, sample.names, value=TRUE))
   names(sample.names2) <- samples
 } else {
   sample.names2 <- sample.names

@@ -23,8 +23,14 @@ rule all:
         "results/finalData/swarm_table.csv" if config["general"]["seq_rep"] == "OTU" else [],
         "results/qc/multiqc_report.html" if config["general"]["multiqc"] else [],
         "results/finalData/figures/AmpliconDuo.RData" if config["merge"]["ampliconduo"] and config["merge"]["filter_method"] == "split_sample" else [],
-        "results/finalData/filtered_blast_table.csv" if config["blast"]["blast"] else [],
-        "results/finalData/filtered_blast_table_complete.csv" if config["blast"]["blast"] else []
+        #"results/finalData/filtered_blast_table.csv" if config["blast"]["blast"] else [],
+        #"results/finalData/filtered_blast_table_complete.csv" if config["blast"]["blast"] else []
+	"database/pr2db.4.14.0.fasta", "database/pr2db.4.14.0.tax",
+	"database/silva_db.138.1.fasta", "database/silva_db.138.1.tax",
+	"database/unite_v8.3.fasta", "database/unite_v8.3.tax", 
+	"results/finalData/representatives.1.wang.taxonomy", 
+	"results/finalData/swarm_mothur.csv",
+	"results/finalData/OTU_table_mumu.csv", "results/finalData/FINAL_OUTPUT_OTU.txt"
 
 ruleorder: assembly > prinseq
 
@@ -35,4 +41,7 @@ include: "rules/dereplication.smk"
 include: "rules/chim_rm.smk"
 include: "rules/merging.smk"
 include: "rules/clustering.smk"
-include: "rules/blast.smk"
+#include: "rules/blast.smk"
+include: "rules/pr2_unite_silva.smk" 
+include: "rules/classify.smk"
+include: "rules/mumu.smk"

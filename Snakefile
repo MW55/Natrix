@@ -1,9 +1,10 @@
 import pandas as pd
+import os
 from snakemake.utils import validate
 
 validate(config, "schema/config.schema.yaml")
 
-units = pd.read_table(config["general"]["units"], index_col=["sample", "unit"],
+units = pd.read_table(os.path.join(config["general"]["output_dir"],config["general"]["units"]), index_col=["sample", "unit"],
     dtype=str)
 units.index = units.index.set_levels([i.astype(str) for i in units.index.levels])
 name_ext = config["merge"]["name_ext"][:-1]
@@ -18,13 +19,13 @@ else:
 
 rule all:
     input:
-        "results/finalData/unfiltered_table.csv",
-        "results/finalData/filtered_table.csv",
-        "results/finalData/swarm_table.csv" if config["general"]["seq_rep"] == "OTU" else [],
-        "results/qc/multiqc_report.html" if config["general"]["multiqc"] else [],
-        "results/finalData/figures/AmpliconDuo.RData" if config["merge"]["ampliconduo"] and config["merge"]["filter_method"] == "split_sample" else [],
-        "results/finalData/filtered_blast_table.csv" if config["blast"]["blast"] else [],
-        "results/finalData/filtered_blast_table_complete.csv" if config["blast"]["blast"] else []
+        os.path.join(config["general"]["output_dir"],"results/finalData/unfiltered_table.csv"),
+        os.path.join(config["general"]["output_dir"],"results/finalData/filtered_table.csv"),
+        os.path.join(config["general"]["output_dir"],"results/finalData/swarm_table.csv") if config["general"]["seq_rep"] == "OTU" else [],
+        os.path.join(config["general"]["output_dir"],"results/qc/multiqc_report.html") if config["general"]["multiqc"] else [],
+        os.path.join(config["general"]["output_dir"],"results/finalData/figures/AmpliconDuo.RData") if config["merge"]["ampliconduo"] and config["merge"]["filter_method"] == "split_sample" else [],
+        os.path.join(config["general"]["output_dir"],"results/finalData/filtered_blast_table.csv") if config["blast"]["blast"] else [],
+        os.path.join(config["general"]["output_dir"],"results/finalData/filtered_blast_table_complete.csv") if config["blast"]["blast"] else []
 
 ruleorder: assembly > prinseq
 

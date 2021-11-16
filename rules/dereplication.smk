@@ -1,9 +1,11 @@
+import os
+
 rule cdhit:
     input:
-        "results/assembly/{sample}_{unit}/{sample}_{unit}.fasta"
+        os.path.join(config["general"]["output_dir"],"results/assembly/{sample}_{unit}/{sample}_{unit}.fasta")
     output:
-        "results/assembly/{sample}_{unit}/{sample}_{unit}_cdhit.fasta",
-        temp("results/assembly/{sample}_{unit}/{sample}_{unit}_cdhit.fasta.clstr")
+        os.path.join(config["general"]["output_dir"],"results/assembly/{sample}_{unit}/{sample}_{unit}_cdhit.fasta"),
+        temp(os.path.join(config["general"]["output_dir"],"results/assembly/{sample}_{unit}/{sample}_{unit}_cdhit.fasta.clstr"))
     conda:
         "../envs/dereplication.yaml"
     threads: config["general"]["cores"]
@@ -16,11 +18,11 @@ rule cdhit:
 
 rule cluster_sorting:
     input:
-        "results/assembly/{sample}_{unit}/{sample}_{unit}_cdhit.fasta",
-        "results/assembly/{sample}_{unit}/{sample}_{unit}_cdhit.fasta.clstr",
-        "results/assembly/{sample}_{unit}/{sample}_{unit}.fasta"
+        os.path.join(config["general"]["output_dir"],"results/assembly/{sample}_{unit}/{sample}_{unit}_cdhit.fasta"),
+        os.path.join(config["general"]["output_dir"],"results/assembly/{sample}_{unit}/{sample}_{unit}_cdhit.fasta.clstr"),
+        os.path.join(config["general"]["output_dir"],"results/assembly/{sample}_{unit}/{sample}_{unit}.fasta")
     output:
-        "results/assembly/{sample}_{unit}/{sample}_{unit}.dereplicated.fasta"
+        os.path.join(config["general"]["output_dir"],"results/assembly/{sample}_{unit}/{sample}_{unit}.dereplicated.fasta")
     conda:
         "../envs/dereplication.yaml"
     params:

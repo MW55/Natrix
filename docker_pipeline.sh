@@ -16,13 +16,12 @@ do
   echo File "$varname".yaml does not exists. Waiting 5 seconds
   sleep 5
 done
-#python demultiplexing.py "$varname"
 
 varname+=".yaml"
 cores=$(grep "cores : " $varname | awk '{print $3}')
 python create_dataframe.py "$varname"
 
 source $env_loc
-conda activate snakemake
+conda activate natrix
 snakemake --use-conda --cores $cores --configfile $varname
 exec sh

@@ -113,6 +113,8 @@ When the workflow has finished, you can press **Ctrl+a, k** (*first press Ctrl+a
 #### Pulling the image from Dockerhub
 Natrix can be run inside a Docker-container. Therefore, Docker has to be installed. Please have a look at the [Docker website](https://docs.docker.com/) to find out how to install Docker and set up an environment if you have not used it before.
 
+Warning: Do not change the output_dir in <your-project>.yaml from the default "output" if you use docker!
+
 The easiest way to run the docker container is to download the pre-build container from [dockerhub](https://hub.docker.com/r/mw55/natrix).
 ```shell
 $ docker pull mw55/natrix
@@ -120,17 +122,14 @@ $ docker pull mw55/natrix
 The docker container has all environments pre-installed, eliminating the need for downloading the environments during first-time initialization of the workflow.
 To connect to the shell inside the docker container, input the following command:
 ```shell
-docker run -it --label natrix_container -v </host/database>:/app/database -v </host/results>:/app/results -v </host/input_folder>:/app/input -v </host/demultiplexed>:/app/demultiplexed mw55/natrix bash
+docker run -it --label natrix_container -v </host/database>:/app/database -v </host/output>:/app/output -v </host/input_folder>:/app/input mw55/natrix bash
 ```
 */host/database* is the full path to a local folder, in which you wish to install the database (SILVA or NCBI). This part is optional and only needed if 
 you want to use BLAST for taxonomic assignment.
 
-*/host/results* is the full path to a local folder in which the results of the workflow should be stored for the container to use.
+*/host/output* is the full path to a local folder in which the output of the workflow (results folder, units.tsv, primertable, and demultiplxed folder) should be stored for the container to use.
 
 */host/input_folder* is the full path to a local folder in which the input (the *project* folder, the *project*.yaml and the *project*.csv) should be saved.
-
-*/host/demultiplexed* is the full path to a local folder in which the demultiplexed data, or, if demultiplexing is turned off, the input data will be saved.
-
 
 After you connected to the container shell, you can follow the [running Natrix manually](#running-natrix-manually) tutorial.
 
@@ -155,7 +154,7 @@ If you prefer to build the docker container yourself from the repository (for ex
 
 ```shell
 docker build . --tag natrix
-docker run -it --label natrix_container -v </host/database>:/app/database -v </host/results>:/app/results -v </host/input_folder>:/app/input -v </host/demultiplexed>:/app/demultiplexed natrix bash # -v /host/database:/app/database is optional
+docker run -it --label natrix_container -v </host/database>:/app/database -v </host/output>:/app/output -v </host/input_folder>:/app/input natrix bash # -v /host/database:/app/database is optional
 ```
 
 You will then be at the command prompt inside the docker container, from there you can follow the tutorial for [running Natrix manually](#running-natrix-manually).
@@ -226,7 +225,7 @@ cluster systems.
 
 ## Output
 
-After the workflow is finished, the original data can be found under *Natrix-Pipeline/demultiplexed/*, while files created during the workflow can be found under *Natrix-Pipeline/results/*.
+After the workflow is finishedall output files can be found under *Natrix-Pipeline/output/*.
 <p align="center"> 
 <img src="documentation/images/output_files.png" alt="ouput" width="700"/>
 </p>
@@ -379,6 +378,7 @@ Below are the explainations for the configfile (*project*.yaml) entries:
 |Option           |Default                                                                          |Description                                                                                                                                                                                                                                  |
 |-----------------|---------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 |filename         |project                                                                          |The path / filename of the project folder, primertable (.csv) and configfile (.yaml). If the raw data folder is not in the root directory of Natrix, please add the path relative to the root directory (e.g. input/example_data)            |
+|output_dir       |output                                                                           |# path to custom output directory / relative to the root directory of natrix (DO NOT change this value if you are using docker! Leave it as output)                                                                                                            |
 |primertable      |project.csv                                                                      |Path to the primertable. If the primertable is not in the root directory of Natrix, please add the path relative to the root directory (e.g. input/example_data.yaml)                                                                        |
 |units            |units.tsv                                                                        |Path to the sequencing unit sheet.                                                                                                                                                                                                           |
 |cores            |4                                                                                |Amount of cores available for the workflow.                                                                                                                                                                                                  |

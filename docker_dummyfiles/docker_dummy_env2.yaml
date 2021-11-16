@@ -1,6 +1,7 @@
 # General options
 general:
         filename : docker_dummy_env2 # The path / filename of the project folder, primertable (.csv) and configfile (.yaml). If the raw data folder is not in the root directory of Natrix, please add the path relative to the root directory (e.g. input/example_data)
+        output_dir: output # path to custom output directory / relative to the root directory  of natrix
         primertable: docker_dummy_env2.csv # Path to the primertable. If the primertable is not in the root directory of Natrix, please add the path relative to the root directory (e.g. input/example_data.yaml)
         units: docker_dummy.tsv # Path to the sequencing unit sheet.
         cores : 8 # Amount of cores available for the workflow.

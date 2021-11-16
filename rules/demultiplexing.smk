@@ -1,6 +1,8 @@
 rule demultiplex:
     output:
-        temp(expand("demultiplexed/{unit.sample}_{unit.unit}_R{read}.fastq.gz", unit=units.reset_index().itertuples(), read=reads))
+        (expand("results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}_assembled.fastq", unit=units.reset_index().itertuples()) 
+        if config["general"]["already_assembled"] 
+        else temp(expand("demultiplexed/{unit.sample}_{unit.unit}_R{read}.fastq.gz", unit=units.reset_index().itertuples(), read=reads)) )
     params:
         filename = config["general"]["filename"],
         primertable = config["general"]["primertable"],

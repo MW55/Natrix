@@ -137,8 +137,8 @@ def read_sorter(primertable):
 
     # Start writing.
     for sample in primertable.keys():
-        fwd = dinopy.FastqReader('../' + data_folder + '/' + sample + str(snakemake.params.name_ext)[:-1] + '1.fastq.gz')
-        rev = dinopy.FastqReader('../' + data_folder + '/' + sample + str(snakemake.params.name_ext)[:-1] + '2.fastq.gz')
+        fwd = dinopy.FastqReader(data_folder + '/' + sample + str(snakemake.params.name_ext)[:-1] + '1.fastq.gz')
+        rev = dinopy.FastqReader(data_folder + '/' + sample + str(snakemake.params.name_ext)[:-1] + '2.fastq.gz')
         for read_f, read_r in zip(fwd.reads(quality_values=True), rev.reads(quality_values=True)):
             if check_for_match_sort_fwd(read_f.sequence.decode(),
                 sample.split('/')[-1]) and check_for_match_sort_rev(read_r.sequence.decode(),
@@ -167,14 +167,17 @@ def read_sorter(primertable):
 
 def already_assembled(primertable, file_path_list):
     for f_ in file_path_list:
+        rm_unzipped = False
         if '.gz' in f_:
-            subprocess.run(['gunzip', f_])
+            subprocess.run(['gunzip', '-k', f_])
             f_ = f_.split('.gz')[0]
+            rm_unzipped = True
         for sample in primertable.keys():
-            pathlib.Path('../results/assembly/' + sample).mkdir(parents=True, exist_ok=True)
+            pathlib.Path('results/assembly/' + sample).mkdir(parents=True, exist_ok=True)
             if sample in f_:
-                shutil.copy(f_, '../results/assembly/' + sample + '/' + sample + '_assembled.fastq')
-                shutil.copy(f_, '../demultiplexed/')
+                shutil.copy(f_, 'results/assembly/' + sample + '/' + sample + '_assembled.fastq')
+        if rm_unzipped:
+            os.remove(f_)
 
 
 # Run the demultiplexing / read sorting script.

@@ -1,9 +1,11 @@
+import os
+
 rule fastqc:
     input:
-        "demultiplexed/{sample}_{unit}_R{read}.fastq.gz"
+        os.path.join(config["general"]["output_dir"],"demultiplexed/{sample}_{unit}_R{read}.fastq.gz")
     output:
-        "results/qc/{sample}_{unit}_R{read}_fastqc.html",
-        "results/qc/{sample}_{unit}_R{read}_fastqc.zip"
+        os.path.join(config["general"]["output_dir"],"results/qc/{sample}_{unit}_R{read}_fastqc.html"),
+        os.path.join(config["general"]["output_dir"],"results/qc/{sample}_{unit}_R{read}_fastqc.zip")
     threads: 20
     conda:
         "../envs/quality_control.yaml"
@@ -12,11 +14,13 @@ rule fastqc:
 
 rule multiqc:
     input:
-        expand("results/qc/{unit.sample}_{unit.unit}_R{read}_fastqc.zip",
+        expand(os.path.join(config["general"]["output_dir"],"results/qc/{unit.sample}_{unit.unit}_R{read}_fastqc.zip"),
         unit=units.reset_index().itertuples(), read=reads)
     output:
-        "results/qc/multiqc_report.html"
+        os.path.join(config["general"]["output_dir"],"results/qc/multiqc_report.html")
+    params:
+        config["general"]["output_dir"]
     conda:
         "../envs/quality_control.yaml"
     shell:
-        "multiqc results/qc/ -o results/qc/"
+        "multiqc {params}/results/qc/ -o {params}/results/qc/"

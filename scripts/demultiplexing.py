@@ -85,8 +85,8 @@ def demultiplexer(file_path_list):
     for sample in primertable.keys():
         samples.append(sample + '_R1')
         samples.append(sample + '_R2')
-        output_filepaths.append('demultiplexed/' + sample + '_R1.fastq.gz')
-        output_filepaths.append('demultiplexed/' + sample + '_R2.fastq.gz')
+        output_filepaths.append(snakemake.params.output_dir+'/demultiplexed/' + sample + '_R1.fastq.gz')
+        output_filepaths.append(snakemake.params.output_dir+'/demultiplexed/' + sample + '_R2.fastq.gz')
 
     # Create a dict of writers.
     writers = {name: dinopy.FastqWriter(path) for name, path in
@@ -115,17 +115,17 @@ def demultiplexer(file_path_list):
         writer.close()
 
 def read_sorter(primertable):
-    if not os.path.exists('demultiplexed/not_sorted'):
-        os.mkdir('demultiplexed/not_sorted')
+    if not os.path.exists(snakemake.params.output_dir+'/demultiplexed/not_sorted'):
+        os.mkdir(snakemake.params.output_dir+'/demultiplexed/not_sorted')
     samples = []
     output_filepaths = []
     for sample in primertable.keys():
         samples.append(sample + snakemake.params.name_ext[:-1] + '1')
         samples.append(sample + snakemake.params.name_ext[:-1] + '2')
         samples.append(sample + '_not_sorted')
-        output_filepaths.append('demultiplexed/' + sample + '_R1.fastq.gz')
-        output_filepaths.append('demultiplexed/' + sample + '_R2.fastq.gz')
-        output_filepaths.append('demultiplexed/not_sorted/' + sample + '_not_sorted.fastq.gz')
+        output_filepaths.append(snakemake.params.output_dir+'/demultiplexed/' + sample + '_R1.fastq.gz')
+        output_filepaths.append(snakemake.params.output_dir+'/demultiplexed/' + sample + '_R2.fastq.gz')
+        output_filepaths.append(snakemake.params.output_dir+'/demultiplexed/not_sorted/' + sample + '_not_sorted.fastq.gz')
 
     # Create a dict of writers.
     writers = {name: dinopy.FastqWriter(path) for name, path in
@@ -171,10 +171,10 @@ def already_assembled(primertable, file_path_list):
             subprocess.run(['gunzip', f_])
             f_ = f_.split('.gz')[0]
         for sample in primertable.keys():
-            pathlib.Path('../results/assembly/' + sample).mkdir(parents=True, exist_ok=True)
+            pathlib.Path(snakemake.params.output_dir+'/results/assembly/' + sample).mkdir(parents=True, exist_ok=True)
             if sample in f_:
-                shutil.copy(f_, '../results/assembly/' + sample + '/' + sample + '_assembled.fastq')
-                shutil.copy(f_, '../demultiplexed/')
+                shutil.copy(f_, snakemake.params.output_dir+'/results/assembly/' + sample + '/' + sample + '_assembled.fastq')
+                shutil.copy(f_, snakemake.params.output_dir+'/demultiplexed/')
 
 
 # Run the demultiplexing / read sorting script.
@@ -193,4 +193,4 @@ else:
     # the demultiplexed folder. Leave original files in input folder
     for file in file_path_list:
         print(file)
-        shutil.copy(file, 'demultiplexed/')
+        shutil.copy(file, os.path.join(snakemake.params.output_dir,'demultiplexed/'))

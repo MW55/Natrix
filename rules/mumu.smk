@@ -1,17 +1,19 @@
+import os
+
 rule generate_otu_fasta:
     input:
-        expand("results/finalData/swarm_mothur.csv")
+        expand(os.path.join(config["general"]["output_dir"], "results/finalData/swarm_mothur.csv"))
     output:
-        expand("results/finalData/OTU_fasta.txt")
+        expand(os.path.join(config["general"]["output_dir"],"results/finalData/OTU_fasta.txt"))
     script:
         "../scripts/generate_fasta.py"
 
 
 rule vsearch_otu:
     input:
-        expand("results/finalData/OTU_fasta.txt")
+        expand(os.path.join(config["general"]["output_dir"],"results/finalData/OTU_fasta.txt"))
     output:
-        expand("results/finalData/match_scores.txt")
+        expand(os.path.join(config["general"]["output_dir"],"results/finalData/match_scores.txt"))
     conda:
         "../envs/vsearch.yaml"
     shell:
@@ -21,12 +23,12 @@ rule vsearch_otu:
 
 rule run_mumu:
     input:
-        expand("results/finalData/swarm_mothur.csv"),
-        expand("results/finalData/match_scores.txt")
+        expand(os.path.join(config["general"]["output_dir"],"results/finalData/swarm_mothur.csv")),
+        expand(os.path.join(config["general"]["output_dir"],"results/finalData/match_scores.txt"))
     output:
-        expand("results/finalData/OTU_table_mumu.csv")
+        expand(os.path.join(config["general"]["output_dir"],"results/finalData/OTU_table_mumu.csv"))
     log:
-        "results/logs/finalData/otu_mumu.log"
+        os.path.join(config["general"]["output_dir"],"results/logs/finalData/otu_mumu.log")
     conda:
         "../envs/mumu.yaml"
     shell:
@@ -34,9 +36,9 @@ rule run_mumu:
 
 rule edit_output:
      input:
-           expand("results/finalData/OTU_table_mumu.csv")
+           expand(os.path.join(config["general"]["output_dir"],"results/finalData/OTU_table_mumu.csv"))
      output:
-           expand("results/finalData/FINAL_OUTPUT_OTU.txt")
+           expand(os.path.join(config["general"]["output_dir"],"results/finalData/FINAL_OUTPUT_OTU.txt"))
      script:
             "../scripts/edit_mumu_output.py"
 

@@ -31,7 +31,8 @@ rule all:
         "database/unite_v8.3.fasta", "database/unite_v8.3.tax",
         os.path.join(config["general"]["output_dir"],"results/finalData/representatives.1.wang.taxonomy"),
         os.path.join(config["general"]["output_dir"],"results/finalData/swarm_mothur.csv"),
-        os.path.join(config["general"]["output_dir"],"results/finalData/OTU_table_mumu.csv", "results/finalData/FINAL_OUTPUT_OTU.txt")
+        os.path.join(config["general"]["output_dir"],"results/finalData/OTU_table_mumu.csv"),
+        os.path.join(config["general"]["output_dir"],"results/finalData/FINAL_OUTPUT_OTU.txt")
 
 
 ruleorder: assembly > prinseq

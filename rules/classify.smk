@@ -1,9 +1,12 @@
+import os
+
 if config["classify"]["database"] == "PR2":
         rule mothur_classify:
             output:
-                    expand("results/finalData/representatives.0.wang.tax.summary"), expand("results/finalData/representatives.1.wang.taxonomy")
+                    expand(os.path.join(config["general"]["output_dir"], "results/finalData/representatives.0.wang.tax.summary")),
+                    expand(os.path.join(config["general"]["output_dir"],"results/finalData/representatives.1.wang.taxonomy"))
             input:
-                    expand("results/finalData/representatives.fasta")
+                    expand(os.path.join(config["general"]["output_dir"],"results/finalData/representatives.fasta"))
             params:
                     template=config['database_path']['pr2_ref'],
                     taxonomy=config['database_path']['pr2_tax'],
@@ -21,10 +24,10 @@ if config["classify"]["database"] == "PR2":
 
         rule mothur_swarm_merge:
             input:
-                    swarm_abundance="results/finalData/swarm_table.csv",
-                    mothur_tax="results/finalData/representatives.1.wang.taxonomy"
+                    swarm_abundance=os.path.join(config["general"]["output_dir"],"results/finalData/swarm_table.csv"),
+                    mothur_tax=os.path.join(config["general"]["output_dir"],"results/finalData/representatives.1.wang.taxonomy")
             output:
-                    "results/finalData/swarm_mothur.csv"
+                    os.path.join(config["general"]["output_dir"],"results/finalData/swarm_mothur.csv")
             params:
                     scripts=config['scripts']['mothur_merge']
             shell:
@@ -33,7 +36,8 @@ if config["classify"]["database"] == "PR2":
 elif config["classify"]["database"] == "UNITE":
     rule mothur_classify:
         output:
-            expand("results/finalData/representatives.0.wang.tax.summary"),expand("results/finalData/representatives.1.wang.taxonomy")
+            expand(os.path.join(config["general"]["output_dir"],"results/finalData/representatives.0.wang.tax.summary")),
+            expand(os.path.join(config["general"]["output_dir"],"results/finalData/representatives.1.wang.taxonomy"))
         input:
             expand("results/finalData/representatives.fasta")
         params:
@@ -53,8 +57,8 @@ elif config["classify"]["database"] == "UNITE":
 
     rule mothur_swarm_merge:
         input:
-            swarm_abundance="results/finalData/swarm_table.csv",
-            mothur_tax="results/finalData/representatives.1.wang.taxonomy"
+            swarm_abundance=os.path.join(config["general"]["output_dir"],"results/finalData/swarm_table.csv"),
+            mothur_tax=os.path.join(config["general"]["output_dir"],"results/finalData/representatives.1.wang.taxonomy")
         output:
             "results/finalData/swarm_mothur.csv"
         params:
@@ -65,9 +69,10 @@ elif config["classify"]["database"] == "UNITE":
 elif config["classify"]["database"] == "SILVA":
     rule mothur_classify:
         output:
-            expand("results/finalData/representatives.0.wang.tax.summary"),expand("results/finalData/representatives.1.wang.taxonomy")
+            expand(os.path.join(config["general"]["output_dir"],"results/finalData/representatives.0.wang.tax.summary")),
+            expand(os.path.join(config["general"]["output_dir"],"results/finalData/representatives.1.wang.taxonomy"))
         input:
-            expand("results/finalData/representatives.fasta")
+            expand(os.path.join(config["general"]["output_dir"],"results/finalData/representatives.fasta"))
         params:
             template=config['database_path']['silva_ref'],
             taxonomy=config['database_path']['silva_tax'],
@@ -77,7 +82,7 @@ elif config["classify"]["database"] == "SILVA":
         conda:
             "../envs/mothur.yaml"
         log:
-            "results/logs/finalData/mothur_classify.log"
+            os.path.join(config["general"]["output_dir"],"results/logs/finalData/mothur_classify.log")
         shell:
             """
             mothur "#classify.seqs(fasta={input[0]}, reference={params.template}, taxonomy={params.taxonomy}, method={params.method}, processors={params.threads}, output=simple, search={params.search})"; 
@@ -85,10 +90,10 @@ elif config["classify"]["database"] == "SILVA":
 
     rule mothur_swarm_merge:
         input:
-            swarm_abundance="results/finalData/swarm_table.csv",
-            mothur_tax="results/finalData/representatives.1.wang.taxonomy"
+            swarm_abundance=os.path.join(config["general"]["output_dir"],"results/finalData/swarm_table.csv"),
+            mothur_tax=os.path.join(config["general"]["output_dir"],"results/finalData/representatives.1.wang.taxonomy")
         output:
-            "results/finalData/swarm_mothur.csv"
+            os.path.join(config["general"]["output_dir"],"results/finalData/swarm_mothur.csv")
         params:
             scripts=config['scripts']['mothur_merge']
         shell:

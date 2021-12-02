@@ -1,3 +1,5 @@
+import os
+
 # dada runs per sample after preprocessing and before chimera removal and AmpliconDuo
 rule DADA2:
     input:

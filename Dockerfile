@@ -3,7 +3,7 @@ SHELL ["/bin/bash", "-c"]
 
 COPY . /app
 WORKDIR /app
-RUN apt update && apt-get install -y libltdl7 && apt upgrade -y && apt-get purge -y && apt-get clean
+RUN apt-get --allow-releaseinfo-change update && apt-get install -y libltdl7 && apt upgrade -y && apt-get purge -y && apt-get clean
 
 # Create the environment:
 RUN conda env create -f natrix.yaml

@@ -3,10 +3,11 @@ import os
 if config["classify"]["database"] == "PR2":
         rule mothur_classify:
             output:
-                    expand(os.path.join(config["general"]["output_dir"], "results/finalData/representatives.0.wang.tax.summary")),
+                    expand(os.path.join(config["general"]["output_dir"], "results/finalData/representatives.1.wang.tax.summary")),
                     expand(os.path.join(config["general"]["output_dir"],"results/finalData/representatives.1.wang.taxonomy"))
             input:
-                    expand(os.path.join(config["general"]["output_dir"],"results/finalData/representatives.fasta"))
+                    expand(os.path.join(config["general"]["output_dir"],"results/finalData/representatives.fasta")),
+                    "database/pr2db.4.14.0.fasta"
             params:
                     template=config['database_path']['pr2_ref'],
                     taxonomy=config['database_path']['pr2_tax'],
@@ -36,10 +37,11 @@ if config["classify"]["database"] == "PR2":
 elif config["classify"]["database"] == "UNITE":
     rule mothur_classify:
         output:
-            expand(os.path.join(config["general"]["output_dir"],"results/finalData/representatives.0.wang.tax.summary")),
+            expand(os.path.join(config["general"]["output_dir"],"results/finalData/representatives.1.wang.tax.summary")),
             expand(os.path.join(config["general"]["output_dir"],"results/finalData/representatives.1.wang.taxonomy"))
         input:
-            expand("results/finalData/representatives.fasta")
+            expand("results/finalData/representatives.fasta"),
+            "database/unite_v8.3.fasta"
         params:
             template=config['database_path']['unite_ref'],
             taxonomy=config['database_path']['unite_tax'],
@@ -69,10 +71,11 @@ elif config["classify"]["database"] == "UNITE":
 elif config["classify"]["database"] == "SILVA":
     rule mothur_classify:
         output:
-            expand(os.path.join(config["general"]["output_dir"],"results/finalData/representatives.0.wang.tax.summary")),
+            expand(os.path.join(config["general"]["output_dir"],"results/finalData/representatives.1.wang.tax.summary")),
             expand(os.path.join(config["general"]["output_dir"],"results/finalData/representatives.1.wang.taxonomy"))
         input:
-            expand(os.path.join(config["general"]["output_dir"],"results/finalData/representatives.fasta"))
+            expand(os.path.join(config["general"]["output_dir"],"results/finalData/representatives.fasta")),
+	    "database/silva_db.138.1.fasta"
         params:
             template=config['database_path']['silva_ref'],
             taxonomy=config['database_path']['silva_tax'],

@@ -4,4 +4,4 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  - swarm=3.1.0
+  - swarm=3.0.0=hc9558a2_0

@@ -116,6 +116,23 @@ if config["blast"]["database"] == "NCBI":
         script:
             "../scripts/ncbi_taxonomy.py"
 
+    rule merge_results:
+        input:
+            merged=os.path.join(config["general"]["output_dir"],"results/finalData/swarm_table.csv") if config["general"]["seq_rep"] == "OTU" else os.path.join(config["general"]["output_dir"],"results/finalData/filtered_table.csv"),
+            blast_result=os.path.join(config["general"]["output_dir"],"results/finalData/blast_taxonomic_lineage.tsv")
+        output:
+            complete=os.path.join(config["general"]["output_dir"],"results/finalData/blast_ncbi/filtered_blast_table_complete.csv"),
+            filtered=os.path.join(config["general"]["output_dir"],"results/finalData/blast_ncbi/filtered_blast_table.csv")
+        params:
+            seq_rep=str(config["general"]["seq_rep"]),
+        conda:
+            "../envs/merge_results.yaml"
+        log:
+            os.path.join(config["general"]["output_dir"],"logs/finalData/BLAST.log")
+        script:
+            "../scripts/merge_results.py"        
+
+
 elif config["blast"]["database"] == "SILVA":
 
     rule silva_taxonomy:
@@ -133,18 +150,20 @@ elif config["blast"]["database"] == "SILVA":
         script:
             "../scripts/silva_taxonomy.py"
 
-rule merge_results:
-    input:
-        merged=os.path.join(config["general"]["output_dir"],"results/finalData/swarm_table.csv") if config["general"]["seq_rep"] == "OTU" else os.path.join(config["general"]["output_dir"],"results/finalData/filtered_table.csv"),
-        blast_result=os.path.join(config["general"]["output_dir"],"results/finalData/blast_taxonomic_lineage.tsv")
-    output:
-        complete=os.path.join(config["general"]["output_dir"],"results/finalData/filtered_blast_table_complete.csv"),
-        filtered=os.path.join(config["general"]["output_dir"],"results/finalData/filtered_blast_table.csv")
-    params:
-        seq_rep=str(config["general"]["seq_rep"])
-    conda:
-        "../envs/merge_results.yaml"
-    log:
-        os.path.join(config["general"]["output_dir"],"logs/finalData/BLAST.log")
-    script:
-        "../scripts/merge_results.py"
+    rule merge_results:
+        input:
+            merged=os.path.join(config["general"]["output_dir"],"results/finalData/swarm_table.csv") if config["general"]["seq_rep"] == "OTU" else os.path.join(config["general"]["output_dir"],"results/finalData/filtered_table.csv"),
+            blast_result=os.path.join(config["general"]["output_dir"],"results/finalData/blast_taxonomic_lineage.tsv")
+        output:
+            complete=os.path.join(config["general"]["output_dir"],"results/finalData/blast_silva/filtered_blast_table_complete.csv"),
+            filtered=os.path.join(config["general"]["output_dir"],"results/finalData/blast_silva/filtered_blast_table.csv")
+        params:
+            seq_rep=str(config["general"]["seq_rep"]),
+        conda:
+            "../envs/merge_results.yaml"
+        log:
+            os.path.join(config["general"]["output_dir"],"logs/finalData/BLAST.log")
+        script:
+            "../scripts/merge_results.py"        
+
+

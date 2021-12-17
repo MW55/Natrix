@@ -1,7 +1,7 @@
 # General options
 general:
         filename : example_data # The path / filename of the project folder, primertable (.csv) and configfile (.yaml). If the raw data folder is not in the root directory of Natrix, please add the path relative to the root directory (e.g. input/example_data)
-        output_dir: output # path to custom output directory / relative to the root directory  of natrix
+        output_dir: output_lisa # path to custom output directory / relative to the root directory  of natrix
         primertable: example_data.csv # Path to the primertable. If the primertable is not in the root directory of Natrix, please add the path relative to the root directory (e.g. input/example_data.yaml)
         units: units.tsv # Path to the sequencing unit sheet. (name will be concatenated with output_dir)
         cores : 20 # Amount of cores available for the workflow.
@@ -57,10 +57,8 @@ database_version:
 classify:
        search: kmer # allows you to specify the method to find most similar template.  Your options are: suffix, kmer, blast, align and distance. The default is kmer
        method: wang # allows you to specify classification method to use.  Your options are: wang, knn and zap. The default is wang.
-#       template: database/silva_db.138.1.fasta
-#       taxonomy: database/silva_db.138.1.tax
-       database: SILVA # Database against which MOTHUR should be carried out, at the moment "PR2" , "UNITE" and "SILVA" are supported
-
+       database: pr2 # Database against which MOTHUR should be carried out, at the moment "pr2" , "unite" and "silva" are supported
+       mothur: TRUE   # boolean for the use of mothur
 database_path:
        silva_tax: database/silva_db.138.1.tax # PATH for Silva taxonomy database 
        silva_ref: database/silva_db.138.1.fasta # PATH for Silva reference database 
@@ -83,5 +81,5 @@ blast:
         max_target_seqs : 10 # Number of NCBI blast hits that are saved per sequence / OTU.
         ident : 90.0 # Minimal identity overlap between target and query sequence. Set to lower threshold to be able to filter later by hand-
         evalue : 1e-51 # Highest accepted evalue. Set to higher threshold to be able to filter later by hand.
-
-METHOD: MOTHUR # method that should be used, for now it is "MOTHUR" or "BLAST"
+        output: blast_ncbi # output folder : blast_ncbi or blast_silva
+METHOD: BLAST # method that should be used, for now it is "MOTHUR" or "BLAST"

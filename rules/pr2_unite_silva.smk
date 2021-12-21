@@ -1,5 +1,5 @@
 
-if config["classify"]["database"] == "PR2":
+if config["classify"]["database"] == "pr2":
         rule download_pr2:
             input:
                 expand(os.path.join(config["general"]["output_dir"],"results/finalData/representatives.fasta"))
@@ -15,7 +15,7 @@ if config["classify"]["database"] == "PR2":
                 gunzip -c ./pr2_version_{params.db_version}_SSU_mothur.tax.gz > database/pr2db.{params.db_version}.tax;
                 rm ./pr2_version_{params.db_version}_SSU_mothur.tax.gz ./pr2_version_{params.db_version}_SSU_mothur.fasta.gz;
                 """
-elif config["classify"]["database"] == "UNITE":
+elif config["classify"]["database"] == "unite":
         rule download_unite:
             input:
                 expand(os.path.join(config["general"]["output_dir"],"results/finalData/representatives.fasta"))
@@ -30,24 +30,30 @@ elif config["classify"]["database"] == "UNITE":
                 rm -rf UNITE_public_mothur_10.05.2021;
                 """
 
-elif config["classify"]["database"] == "SILVA":
+elif config["classify"]["database"] == "silva":
+
         rule download_silva:
             input:
                 expand(os.path.join(config["general"]["output_dir"],"results/finalData/representatives.fasta"))
             output:
-                expand(["database/silva_db.{silva_db_version}.fasta", "database/silva_db.{silva_db_version}.tax"], silva_db_version=config["database_version"]["silva"])
+                expand(["database/silva_db.{silva_db_version}.fasta", "database/silva_db.{silva_db_version}.tax.temp"], silva_db_version=config["database_version"]["silva"])
             params:
                 db_version=config["database_version"]["silva"],
-                scripts=config["scripts"]["silva"] #to access scripts in scripts directory
+                scripts=config["scripts"]["silva"] #to access scripts  directory
             shell:
                 """
-                wget -P ./ --progress=bar -O silva_{params.db_version}.fasta.gz https://www.arb-silva.de/fileadmin/silva_databases/current/Exports/SILVA_{params.db_version}_SSURef_tax_silva.fasta.gz;
-                gunzip -c silva_{params.db_version}.fasta.gz > database/silva_db.{params.db_version}.fasta;
-                wget -P ./ --progress=bar -O silva_{params.db_version}.tax.gz https://www.arb-silva.de/fileadmin/silva_databases/current/Exports/taxonomy/taxmap_slv_ssu_ref_{params.db_version}.txt.gz
-                gunzip -c silva_{params.db_version}.tax.gz > database/silva_db.{params.db_version}.tax;
-                bash {params.scripts}/silva_db_edit.sh database/silva_db.{params.db_version}.tax > database/silva.tax.tmp; #to convert silva taxonomy file to mothur format
-                rm database/silva_db.{params.db_version}.tax;
-                mv database/silva.tax.tmp database/silva_db.{params.db_version}.tax;
-                sed 1d -i database/silva_db.{params.db_version}.tax #to remove header in taxonomy file
+                wget -P ./ --progress=bar -O database/silva_{params.db_version}.fasta.gz https://www.arb-silva.de/fileadmin/silva_databases/current/Exports/SILVA_{params.db_version}_SSURef_tax_silva.fasta.gz;
+                gunzip -c database/silva_{params.db_version}.fasta.gz > database/silva_db.{params.db_version}.fasta;
+                wget -P ./ --progress=bar -O database/silva_{params.db_version}.tax.gz https://www.arb-silva.de/fileadmin/silva_databases/current/Exports/taxonomy/taxmap_slv_ssu_ref_{params.db_version}.txt.gz
+                gunzip -c database/silva_{params.db_version}.tax.gz > database/silva_db.{params.db_version}.tax.temp;
                 """
 
+        rule edit_silva:
+           input:
+              expand("database/silva_db.{silva_db_version}.tax.temp", silva_db_version=config["database_version"]["silva"])
+           output:
+              expand("database/silva_db.{silva_db_version}.tax", silva_db_version=config["database_version"]["silva"])   
+           conda:
+              "../envs/blast.yaml"
+           script:
+              "../scripts/edit_silva_mothur.py"

@@ -81,7 +81,7 @@ elif config["classify"]["database"] == "silva":
             expand(os.path.join(config["general"]["output_dir"],"results/finalData/silva/mothur_out.taxonomy"))
         input:
             expand(os.path.join(config["general"]["output_dir"],"results/finalData/representatives.fasta")),
-	    "database/silva_db.138.1.fasta"
+	    "database/silva_db.138.1.fasta", "database/silva_db.138.1.tax"
         params:
             template=config['database_path']['silva_ref'],
             taxonomy=config['database_path']['silva_tax'],

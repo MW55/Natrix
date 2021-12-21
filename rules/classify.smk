@@ -32,10 +32,9 @@ if config["classify"]["database"] == "pr2":
                     mothur_tax=os.path.join(config["general"]["output_dir"],"results/finalData/pr2/mothur_out.taxonomy")
             output:
                     os.path.join(config["general"]["output_dir"],"results/finalData/pr2/swarm_mothur.csv")
-            params:
-                    scripts=config['scripts']['mothur_merge']
-            shell:
-                    "python {params.scripts} {input[0]} {input[1]} {output[0]}"
+            script:
+                   "../scripts/merge_mothur_with_swarm.py"
+
 
 elif config["classify"]["database"] == "unite":
     rule mothur_classify:
@@ -69,10 +68,8 @@ elif config["classify"]["database"] == "unite":
             mothur_tax=os.path.join(config["general"]["output_dir"],"results/finalData/unite/mothur_out.taxonomy")
         output:
             os.path.join(config["general"]["output_dir"],"results/finalData/unite/swarm_mothur.csv")
-        params:
-            scripts=config['scripts']['mothur_merge']
-        shell:
-            "python {params.scripts} {input[0]} {input[1]} {output[0]}"
+        script:
+            "../scripts/merge_mothur_with_swarm.py"
 
 elif config["classify"]["database"] == "silva":
     rule mothur_classify:
@@ -106,8 +103,6 @@ elif config["classify"]["database"] == "silva":
             mothur_tax=os.path.join(config["general"]["output_dir"],"results/finalData/silva/mothur_out.taxonomy")
         output:
             os.path.join(config["general"]["output_dir"],"results/finalData/silva/swarm_mothur.csv")
-        params:
-            scripts=config['scripts']['mothur_merge']
-        shell:
-            "python {params.scripts} {input[0]} {input[1]} {output[0]}"
+        script:
+            "../scripts/merge_mothur_with_swarm.py"
 

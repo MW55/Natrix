@@ -38,8 +38,7 @@ elif config["classify"]["database"] == "silva":
             output:
                 expand(["database/silva_db.{silva_db_version}.fasta", "database/silva_db.{silva_db_version}.tax.temp"], silva_db_version=config["database_version"]["silva"])
             params:
-                db_version=config["database_version"]["silva"],
-                scripts=config["scripts"]["silva"] #to access scripts  directory
+                db_version=config["database_version"]["silva"]
             shell:
                 """
                 wget -P ./ --progress=bar -O database/silva_{params.db_version}.fasta.gz https://www.arb-silva.de/fileadmin/silva_databases/current/Exports/SILVA_{params.db_version}_SSURef_tax_silva.fasta.gz;

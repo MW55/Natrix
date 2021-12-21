@@ -66,8 +66,7 @@ database_path:
        pr2_tax: database/pr2db.4.14.0.tax # PATH for PR2 taxonomy database 
        unite_ref: database/unite_v8.3.fasta # PATH for UNITE reference database 
        unite_tax: database/unite_v8.3.tax # PATH for UNITE taxonomy database 
-scripts:
-       mothur_merge: scripts/merge_mothur_with_swarm.py
+
 # mumu parameter
 mumu:
        mumu: TRUE # boolean for the use of MUMU

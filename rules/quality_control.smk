@@ -6,11 +6,13 @@ rule fastqc:
     output:
         os.path.join(config["general"]["output_dir"],"results/qc/{sample}_{unit}_R{read}_fastqc.html"),
         os.path.join(config["general"]["output_dir"],"results/qc/{sample}_{unit}_R{read}_fastqc.zip")
+    params:
+        config["general"]["output_dir"]
     threads: 20
     conda:
         "../envs/quality_control.yaml"
     shell:
-        "fastqc -o results/qc/ {input} -t {threads}"
+        "fastqc -o {params}/results/qc/ {input} -t {threads}"
 
 rule multiqc:
     input:

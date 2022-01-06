@@ -47,13 +47,12 @@ merge:
         name_ext : R1 # The identifier for the forward read (for the reverse read the 1 is switched with 2, if the data is in paired-end format), has to be included at the end of the file name, before the file format identifier (including for single end files).
 
 
-# mothur_classify
+# mothur parameter
 database_version:
        pr2: 4.14.0
        silva: 138.1
        database: database
 
-# mothur parameter
 classify:
        mothur: TRUE   # boolean for the use of mothur
        search: kmer # allows you to specify the method to find most similar template.  Your options are: suffix, kmer, blast, align and distance. The default is kmer

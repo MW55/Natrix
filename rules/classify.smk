@@ -21,7 +21,7 @@ if config["classify"]["database"] == "pr2":
                     "results/logs/finalData/mothur_classify.log"
             shell:
                     """
-                    mothur "#classify.seqs(fasta={input[0]}, reference={params.template}, taxonomy={params.taxonomy}, method={params.method}, processors={params.threads}, output=simple, search={params.search})"; 
+                    mothur "#classify.seqs(fasta={input[0]}, cutoff=0, reference={params.template}, taxonomy={params.taxonomy}, method={params.method}, processors={params.threads}, output=simple, search={params.search})"; 
                     mv {params.output}/results/finalData/*.taxonomy {params.output}/results/finalData/pr2/mothur_out.taxonomy;
                     mv {params.output}/results/finalData/*.summary {params.output}/results/finalData/pr2/mothur_out.summary;
                     """
@@ -57,7 +57,7 @@ elif config["classify"]["database"] == "unite":
             "results/logs/finalData/mothur_classify.log"
         shell:
             """
-            mothur "#classify.seqs(fasta={input[0]}, reference={params.template}, taxonomy={params.taxonomy}, method={params.method}, processors={params.threads}, output=simple, search={params.search})"; 
+            mothur "#classify.seqs(fasta={input[0]}, cutoff=0, reference={params.template}, taxonomy={params.taxonomy}, method={params.method}, processors={params.threads}, output=simple, search={params.search})"; 
             mv {params.output}/results/finalData/*.taxonomy {params.output}/results/finalData/unite/mothur_out.taxonomy;
             mv {params.output}/results/finalData/*.summary {params.output}/results/finalData/unite/mothur_out.summary;
             """
@@ -92,7 +92,7 @@ elif config["classify"]["database"] == "silva":
             os.path.join(config["general"]["output_dir"],"results/logs/finalData/mothur_classify.log")
         shell:
             """
-            mothur "#classify.seqs(fasta={input[0]}, reference={params.template}, taxonomy={params.taxonomy}, method={params.method}, processors={params.threads}, output=simple, search={params.search})"; 
+            mothur "#classify.seqs(fasta={input[0]}, cutoff=0, reference={params.template}, taxonomy={params.taxonomy}, method={params.method}, processors={params.threads}, output=simple, search={params.search})"; 
             mv {params.output}/results/finalData/*.taxonomy {params.output}/results/finalData/silva/mothur_out.taxonomy;
             mv {params.output}/results/finalData/*.summary {params.output}/results/finalData/silva/mothur_out.summary;
             """

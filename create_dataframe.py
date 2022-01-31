@@ -48,7 +48,7 @@ if __name__ == '__main__':
                     in file_path_list])
         slice = -3 # Remove the .gz extension from the file paths.
     else:
-        file_path_list = sorted(glob(os.path.join(config["general"]["output_dir"],'results/assembly/*/*.fastq')))
+        file_path_list = sorted(glob(os.path.join(config["general"]["output_dir"],'assembly/*/*.fastq')))
         file_list = sorted([file_.split('/')[-1] for file_ 
                     in file_path_list])
         slice = None

@@ -2,11 +2,11 @@ import os
 
 rule vsearch:
     input:
-        os.path.join(config["general"]["output_dir"],"results/assembly/{sample}_{unit}/{sample}_{unit}.dereplicated.fasta") if config["general"]["seq_rep"] == "OTU" else os.path.join(config["general"]["output_dir"],"results/assembly/{sample}_{unit}/{sample}_{unit}_dada.fasta")
+        os.path.join(config["general"]["output_dir"],"assembly/{sample}_{unit}/{sample}_{unit}.dereplicated.fasta") if config["general"]["seq_rep"] == "OTU" else os.path.join(config["general"]["output_dir"],"assembly/{sample}_{unit}/{sample}_{unit}_dada.fasta")
     output:
-        uchime_out=temp(os.path.join(config["general"]["output_dir"],"results/assembly/{sample}_{unit}/{sample}_{unit}.vsearch.txt")),
-        chim=os.path.join(config["general"]["output_dir"],"results/assembly/{sample}_{unit}/{sample}_{unit}.chimera.fasta"),
-        nonchim=os.path.join(config["general"]["output_dir"],"results/finalData/{sample}_{unit}.nonchimera.fasta")
+        uchime_out=temp(os.path.join(config["general"]["output_dir"],"assembly/{sample}_{unit}/{sample}_{unit}.vsearch.txt")),
+        chim=os.path.join(config["general"]["output_dir"],"assembly/{sample}_{unit}/{sample}_{unit}.chimera.fasta"),
+        nonchim=os.path.join(config["general"]["output_dir"],"finalData/{sample}_{unit}.nonchimera.fasta")
     params:
         beta=config["chim"]["beta"],
         pseudo_c=config["chim"]["pseudo_count"],

@@ -2,7 +2,7 @@
 if config["classify"]["database"] == "pr2":
         rule download_pr2:
             input:
-                expand(os.path.join(config["general"]["output_dir"],"results/finalData/representatives.fasta"))
+                expand(os.path.join(config["general"]["output_dir"],"finalData/representatives.fasta"))
             output:
                 expand(["database/pr2db.{pr2_db_version}.fasta", "database/pr2db.{pr2_db_version}.tax"], pr2_db_version=config["database_version"]["pr2"])
             params:
@@ -18,7 +18,7 @@ if config["classify"]["database"] == "pr2":
 elif config["classify"]["database"] == "unite":
         rule download_unite:
             input:
-                expand(os.path.join(config["general"]["output_dir"],"results/finalData/representatives.fasta"))
+                expand(os.path.join(config["general"]["output_dir"],"finalData/representatives.fasta"))
             output:
                 expand("database/unite_v8.3.fasta"), expand("database/unite_v8.3.tax")
             shell:
@@ -34,7 +34,7 @@ elif config["classify"]["database"] == "silva":
 
         rule download_silva:
             input:
-                expand(os.path.join(config["general"]["output_dir"],"results/finalData/representatives.fasta"))
+                expand(os.path.join(config["general"]["output_dir"],"finalData/representatives.fasta"))
             output:
                 expand(["database/silva_db.{silva_db_version}.fasta", "database/silva_db.{silva_db_version}.tax.temp"], silva_db_version=config["database_version"]["silva"])
             params:

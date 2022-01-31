@@ -19,28 +19,28 @@ else:
 
 rule all:
     input:
-        os.path.join(config["general"]["output_dir"],"results/finalData/unfiltered_table.csv"),
-        os.path.join(config["general"]["output_dir"],"results/finalData/filtered_table.csv"),
-        os.path.join(config["general"]["output_dir"],"results/finalData/swarm_table.csv") if config["general"]["seq_rep"] == "OTU" else [],
-        os.path.join(config["general"]["output_dir"],"results/qc/multiqc_report.html") if config["general"]["multiqc"] else [],
-        os.path.join(config["general"]["output_dir"],"results/finalData/figures/AmpliconDuo.RData") if config["merge"]["ampliconduo"] and config["merge"]["filter_method"] == "split_sample" else [],
+        os.path.join(config["general"]["output_dir"],"finalData/unfiltered_table.csv"),
+        os.path.join(config["general"]["output_dir"],"finalData/filtered_table.csv"),
+        os.path.join(config["general"]["output_dir"],"finalData/swarm_table.csv") if config["general"]["seq_rep"] == "OTU" else [],
+        os.path.join(config["general"]["output_dir"],"qc/multiqc_report.html") if config["general"]["multiqc"] else [],
+        os.path.join(config["general"]["output_dir"],"finalData/figures/AmpliconDuo.RData") if config["merge"]["ampliconduo"] and config["merge"]["filter_method"] == "split_sample" else [],
         #mothur
-        expand(os.path.join(config["general"]["output_dir"],"results/finalData/{database}/mothur_out.taxonomy"), database=config['classify']['database']) if config['classify']['mothur'] else [],
-        expand(os.path.join(config["general"]["output_dir"],"results/finalData/{database}/swarm_mothur.csv"), database=config['classify']['database']) if config['classify']['mothur'] else [],
-        expand(os.path.join(config["general"]["output_dir"],"results/finalData/{database}/OTU_table_mumu.csv"), database=config['classify']['database']) if config['mumu']['mumu'] else [],
-        expand(os.path.join(config["general"]["output_dir"],"results/finalData/{database}/FINAL_OUTPUT_OTU.txt"), database=config['classify']['database']) if config['mumu']['mumu'] else [],
+        expand(os.path.join(config["general"]["output_dir"],"finalData/{database}/mothur_out.taxonomy"), database=config['classify']['database']) if config['classify']['mothur'] else [],
+        expand(os.path.join(config["general"]["output_dir"],"finalData/{database}/swarm_mothur.csv"), database=config['classify']['database']) if config['classify']['mothur'] else [],
+        expand(os.path.join(config["general"]["output_dir"],"finalData/{database}/OTU_table_mumu.csv"), database=config['classify']['database']) if config['mumu']['mumu'] else [],
+        expand(os.path.join(config["general"]["output_dir"],"finalData/{database}/FINAL_OUTPUT_OTU.csv"), database=config['classify']['database']) if config['mumu']['mumu'] else [],
         "database/silva_db.138.1.fasta" if config["classify"]["database"] == "silva" else [], 
         "database/silva_db.138.1.tax.temp" if config["classify"]["database"] == "silva" else [],
 #       expand("database/silva_db.{silva_db_version}.tax", silva_db_version=config["database_version"]["silva"]) if config["classify"]["database"] == "silva" else [],
         "database/pr2db.4.14.0.fasta" if config["classify"]["database"] == "pr2" else [],
         "database/unite_v8.3.fasta" if config["classify"]["database"] == "unite" else [], 
         # blast
-#       expand(os.path.join(config["general"]["output_dir"],"results/finalData/{database}/filtered_blast_table.csv"), database=config['blast']['output']) if config["blast"]["blast"] else [],
-#       expand(os.path.join(config["general"]["output_dir"],"results/finalData/{database}/filtered_blast_table_complete.csv"), database=config['blast']['output']) if config["blast"]["blast"] else []
-        os.path.join(config["general"]["output_dir"],"results/finalData/blast_silva/filtered_blast_table.csv") if config["blast"]["blast"] else [],
-        os.path.join(config["general"]["output_dir"],"results/finalData/blast_silva/filtered_blast_table_complete.csv") if config["blast"]["blast"] else [],
-        os.path.join(config["general"]["output_dir"],"results/finalData/blast_ncbi/filtered_blast_table_complete.csv") if config["blast"]["blast"] else [],
-        os.path.join(config["general"]["output_dir"],"results/finalData/blast_ncbi/filtered_blast_table.csv") if config["blast"]["blast"] else []
+#       expand(os.path.join(config["general"]["output_dir"],"finalData/{database}/filtered_blast_table.csv"), database=config['blast']['output']) if config["blast"]["blast"] else [],
+#       expand(os.path.join(config["general"]["output_dir"],"finalData/{database}/filtered_blast_table_complete.csv"), database=config['blast']['output']) if config["blast"]["blast"] else []
+        os.path.join(config["general"]["output_dir"],"finalData/blast_silva/filtered_blast_table.csv") if config["blast"]["blast"] else [],
+        os.path.join(config["general"]["output_dir"],"finalData/blast_silva/filtered_blast_table_complete.csv") if config["blast"]["blast"] else [],
+        os.path.join(config["general"]["output_dir"],"finalData/blast_ncbi/filtered_blast_table_complete.csv") if config["blast"]["blast"] else [],
+        os.path.join(config["general"]["output_dir"],"finalData/blast_ncbi/filtered_blast_table.csv") if config["blast"]["blast"] else []
 
 ruleorder: assembly > prinseq
 

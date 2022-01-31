@@ -26,7 +26,7 @@ rule prinseq:
         sample=get_fastq
     output:
         expand(
-        os.path.join(config["general"]["output_dir"],"results/assembly/{{sample}}_{{unit}}/{{sample}}_{{unit}}_{read}.fastq"),
+        os.path.join(config["general"]["output_dir"],"assembly/{{sample}}_{{unit}}/{{sample}}_{{unit}}_{read}.fastq"),
         read=reads)
     params:
         config["qc"]["mq"]
@@ -40,12 +40,12 @@ rule prinseq:
 rule cutadapt:
     input:
         expand(
-        os.path.join(config["general"]["output_dir"],"results/assembly/{{sample}}_{{unit}}/{{sample}}_{{unit}}_{read}.fastq"),
+        os.path.join(config["general"]["output_dir"],"assembly/{{sample}}_{{unit}}/{{sample}}_{{unit}}_{read}.fastq"),
         read=reads),
         primer_t=os.path.join(config["general"]["output_dir"],"primer_table.csv")
     output:
         expand(
-        os.path.join(config["general"]["output_dir"],"results/assembly/{{sample}}_{{unit}}/{{sample}}_{{unit}}_{read}_cut.fastq"),
+        os.path.join(config["general"]["output_dir"],"assembly/{{sample}}_{{unit}}/{{sample}}_{{unit}}_{read}_cut.fastq"),
         read=reads)
     params:
         paired_end=config["merge"]["paired_End"],
@@ -63,11 +63,11 @@ rule cutadapt:
 rule assembly:
     input:
         expand(
-        os.path.join(config["general"]["output_dir"],"results/assembly/{{sample}}_{{unit}}/{{sample}}_{{unit}}_{read}.fastq"),
+        os.path.join(config["general"]["output_dir"],"assembly/{{sample}}_{{unit}}/{{sample}}_{{unit}}_{read}.fastq"),
         read=reads),
         primer_t=os.path.join(config["general"]["output_dir"],"primer_table.csv")
     output:
-        os.path.join(config["general"]["output_dir"],"results/assembly/{sample}_{unit}/{sample}_{unit}_assembled.fastq")
+        os.path.join(config["general"]["output_dir"],"assembly/{sample}_{unit}/{sample}_{unit}_assembled.fastq")
     threads: 20
     params:
         paired_end=config["merge"]["paired_End"],
@@ -86,9 +86,9 @@ rule assembly:
 
 rule copy_to_fasta:
     input:
-        os.path.join(config["general"]["output_dir"],"results/assembly/{sample}_{unit}/{sample}_{unit}_assembled.fastq")
+        os.path.join(config["general"]["output_dir"],"assembly/{sample}_{unit}/{sample}_{unit}_assembled.fastq")
     output:
-        os.path.join(config["general"]["output_dir"],"results/assembly/{sample}_{unit}/{sample}_{unit}.fasta")
+        os.path.join(config["general"]["output_dir"],"assembly/{sample}_{unit}/{sample}_{unit}.fasta")
     conda:
         "../envs/seqtk.yaml"
     shell:

@@ -137,8 +137,8 @@ def read_sorter(primertable):
 
     # Start writing.
     for sample in primertable.keys():
-        fwd = dinopy.FastqReader('../' + data_folder + '/' + sample + str(snakemake.params.name_ext)[:-1] + '1.fastq.gz')
-        rev = dinopy.FastqReader('../' + data_folder + '/' + sample + str(snakemake.params.name_ext)[:-1] + '2.fastq.gz')
+        fwd = dinopy.FastqReader('../' + data_folder + '/' + sample + '_' + str(snakemake.params.name_ext)[:-1] + '1.fastq.gz')
+        rev = dinopy.FastqReader('../' + data_folder + '/' + sample + '_' + str(snakemake.params.name_ext)[:-1] + '2.fastq.gz')
         for read_f, read_r in zip(fwd.reads(quality_values=True), rev.reads(quality_values=True)):
             if check_for_match_sort_fwd(read_f.sequence.decode(),
                 sample.split('/')[-1]) and check_for_match_sort_rev(read_r.sequence.decode(),
@@ -171,9 +171,9 @@ def already_assembled(primertable, file_path_list):
             subprocess.run(['gunzip', f_])
             f_ = f_.split('.gz')[0]
         for sample in primertable.keys():
-            pathlib.Path(snakemake.params.output_dir+'/results/assembly/' + sample).mkdir(parents=True, exist_ok=True)
+            pathlib.Path(snakemake.params.output_dir+'/assembly/' + sample).mkdir(parents=True, exist_ok=True)
             if sample in f_:
-                shutil.copy(f_, snakemake.params.output_dir+'/results/assembly/' + sample + '/' + sample + '_assembled.fastq')
+                shutil.copy(f_, snakemake.params.output_dir+'/assembly/' + sample + '/' + sample + '_assembled.fastq')
                 shutil.copy(f_, snakemake.params.output_dir+'/demultiplexed/')
 
 
@@ -190,7 +190,9 @@ elif snakemake.params.assembled:
 else:
     print('4')
     # If the files do not need demultiplexing / sorting, just copy them to
-    # the demultiplexed folder. Leave original files in input folder
+    # the demultiplexed folder. Leave original files in input folder but change to _R1 _R2
     for file in file_path_list:
         print(file)
-        shutil.copy(file, os.path.join(snakemake.params.output_dir,'demultiplexed/'))
+        file2 = os.path.basename(file)
+        outfile = re.sub(r'_'+snakemake.params.name_ext[:-1]+'([12]\.f)', r'_R\1', file2)
+        shutil.copy(file, os.path.join(snakemake.params.output_dir,'demultiplexed/', outfile))

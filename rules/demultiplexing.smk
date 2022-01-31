@@ -20,6 +20,21 @@ rule unzip:
     input:
          os.path.join(config["general"]["output_dir"],"demultiplexed/{sample}_{unit}_R{read}.fastq.gz")
     output:
-        temp(os.path.join(config["general"]["output_dir"],"demultiplexed/{sample}_{unit}_{read}.fastq"))
+        temp(os.path.join(config["general"]["output_dir"],"demultiplexed/{sample}_{unit}_{read}.tmp"))
     shell:
          "gunzip -c {input} > {output}"
+
+rule check_format:
+    input:
+        os.path.join(config["general"]["output_dir"],"demultiplexed/{sample}_{unit}_{read}.tmp")
+    output:
+        temp(os.path.join(config["general"]["output_dir"],"demultiplexed/{sample}_{unit}_{read}.fastq"))
+    shell:
+        """
+            if find {input} -not -type d -exec file '{{}}' ';' | grep CRLF
+            then
+                sed 's/\r$//' {input} > {output}
+            else
+                mv {input} {output}
+            fi
+        """

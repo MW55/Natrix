@@ -4,11 +4,11 @@ import os
 rule DADA2:
     input:
         fwd = expand(
-            os.path.join(config["general"]["output_dir"],"results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}_1_cut.fastq"), unit=units.reset_index().itertuples()),
+            os.path.join(config["general"]["output_dir"],"assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}_1_cut.fastq"), unit=units.reset_index().itertuples()),
         rev = expand(
-            os.path.join(config["general"]["output_dir"],"results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}_2_cut.fastq"), unit=units.reset_index().itertuples()) if config["merge"]["paired_End"] == True else []
+            os.path.join(config["general"]["output_dir"],"assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}_2_cut.fastq"), unit=units.reset_index().itertuples()) if config["merge"]["paired_End"] == True else []
     output:
-        expand(os.path.join(config["general"]["output_dir"],"results/assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}_dada.fasta"), unit=units.reset_index().itertuples())
+        expand(os.path.join(config["general"]["output_dir"],"assembly/{unit.sample}_{unit.unit}/{unit.sample}_{unit.unit}_dada.fasta"), unit=units.reset_index().itertuples())
     params:
         paired_end=config["merge"]["paired_End"],
         minoverlap=config["qc"]["minoverlap"],
@@ -23,10 +23,10 @@ rule DADA2:
 # SWARM clustering runs on all samples after AmpliconDuo
 rule write_fasta:
     input:
-        os.path.join(config["general"]["output_dir"],"results/finalData/filtered_table_temp.csv")
+        os.path.join(config["general"]["output_dir"],"finalData/filtered_table_temp.csv")
     output:
-        os.path.join(config["general"]["output_dir"],"results/finalData/filtered.fasta"),
-        os.path.join(config["general"]["output_dir"],"results/finalData/filtered_table.csv")
+        os.path.join(config["general"]["output_dir"],"finalData/filtered.fasta"),
+        os.path.join(config["general"]["output_dir"],"finalData/filtered_table.csv")
     run:
         import csv
         with open(input[0], "r") as csv_in, open(
@@ -45,10 +45,10 @@ rule write_fasta:
 
 rule swarm:
     input:
-        os.path.join(config["general"]["output_dir"],"results/finalData/filtered.fasta")
+        os.path.join(config["general"]["output_dir"],"finalData/filtered.fasta")
     output:
-        os.path.join(config["general"]["output_dir"],"results/finalData/representatives.fasta"),
-        temp(os.path.join(config["general"]["output_dir"],"results/finalData/merged.swarms"))
+        os.path.join(config["general"]["output_dir"],"finalData/representatives.fasta"),
+        temp(os.path.join(config["general"]["output_dir"],"finalData/merged.swarms"))
     threads: config["general"]["cores"]
     conda:
         "../envs/swarm.yaml"
@@ -57,10 +57,10 @@ rule swarm:
 
 rule swarm_results:
     input:
-        merged=os.path.join(config["general"]["output_dir"],"results/finalData/merged.swarms"),
-        final_table_path2=os.path.join(config["general"]["output_dir"],"results/finalData/filtered_table.csv")
+        merged=os.path.join(config["general"]["output_dir"],"finalData/merged.swarms"),
+        final_table_path2=os.path.join(config["general"]["output_dir"],"finalData/filtered_table.csv")
     output:
-        os.path.join(config["general"]["output_dir"],"results/finalData/swarm_table.csv")
+        os.path.join(config["general"]["output_dir"],"finalData/swarm_table.csv")
     conda:
         "../envs/merge_results.yaml"
     script:

@@ -7,13 +7,6 @@ database
 README.md
 .gitignore
 dag.svg
-results
 documentation
 tests
 output
-logs
-qc
-assembly
-finalData
-figures
-results/*

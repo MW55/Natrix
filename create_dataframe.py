@@ -28,7 +28,7 @@ def create_dataframe(fl, fpl, config, slice):
             j += 2
             i += 1
     else:
-        df = pd.DataFrame(columns=['sample', 'unit', 'fq1', 'fq2'], 
+        df = pd.DataFrame(columns=['sample', 'unit', 'fq1', 'fq2'],
             index = range(int(len(fl))), dtype=str)
         i = 0
         while i < len(fl):
@@ -41,15 +41,17 @@ def create_dataframe(fl, fpl, config, slice):
 
 
 if __name__ == '__main__':
+    if "-" in config["general"]["output_dir"]:
+    	sys.exit("Please rename output folder, do not use a dash in the folder name")
     if not config['general']['already_assembled']:
         file_path_list = [os.path.join(config["general"]["output_dir"],'demultiplexed/' + name.split('/')[-1]) for name in
-                          sorted(glob(config['general']['filename'] + '/*.gz'))]
+                          sorted(glob(config['general']['filename'].rstrip("/") + '/*.gz'))]
         file_list = sorted([file_.split('/')[-1] for file_
                     in file_path_list])
         slice = -3 # Remove the .gz extension from the file paths.
     else:
         file_path_list = sorted(glob(os.path.join(config["general"]["output_dir"],'assembly/*/*.fastq')))
-        file_list = sorted([file_.split('/')[-1] for file_ 
+        file_list = sorted([file_.split('/')[-1] for file_
                     in file_path_list])
         slice = None
     df = create_dataframe(file_list, file_path_list, config, slice)

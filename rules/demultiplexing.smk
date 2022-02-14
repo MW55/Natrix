@@ -4,7 +4,7 @@ rule demultiplex:
     output:
         temp(expand(os.path.join(config["general"]["output_dir"],"demultiplexed/{unit.sample}_{unit.unit}_R{read}.fastq.gz"), unit=units.reset_index().itertuples(), read=reads))
     params:
-        filename = config["general"]["filename"],
+        filename = config["general"]["filename"].rstrip("/"),
         primertable = config["general"]["primertable"],
         demultiplexing = config["general"]["demultiplexing"],
         read_sorting = config['general']['read_sorting'],

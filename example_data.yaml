@@ -1,7 +1,7 @@
 # General options
 general:
         filename : example_data # The path / filename of the project folder, primertable (.csv) and configfile (.yaml). If the raw data folder is not in the root directory of Natrix, please add the path relative to the root directory (e.g. input/example_data)
-        output_dir: output1 # path to custom output directory / relative to the root directory  of natrix
+        output_dir: output1_1 # path to custom output directory / relative to the root directory  of natrix. Do not use a dash in the folder name.
         primertable: example_data.csv # Path to the primertable. If the primertable is not in the root directory of Natrix, please add the path relative to the root directory (e.g. input/example_data.yaml)
         units: units.tsv # Path to the sequencing unit sheet. (name will be concatenated with output_dir)
         cores : 20 # Amount of cores available for the workflow.
@@ -59,12 +59,12 @@ classify:
        method: wang # allows you to specify classification method to use.  Your options are: wang, knn and zap. The default is wang.
        database: pr2 # Database against which MOTHUR should be carried out, at the moment "pr2" , "unite" and "silva" are supported
 database_path:
-       silva_tax: database/silva_db.138.1.tax # PATH for Silva taxonomy database 
-       silva_ref: database/silva_db.138.1.fasta # PATH for Silva reference database 
-       pr2_ref: database/pr2db.4.14.0.fasta # PATH for PR2 reference database 
-       pr2_tax: database/pr2db.4.14.0.tax # PATH for PR2 taxonomy database 
-       unite_ref: database/unite_v8.3.fasta # PATH for UNITE reference database 
-       unite_tax: database/unite_v8.3.tax # PATH for UNITE taxonomy database 
+       silva_tax: database/silva_db.138.1.tax # PATH for Silva taxonomy database
+       silva_ref: database/silva_db.138.1.fasta # PATH for Silva reference database
+       pr2_ref: database/pr2db.4.14.0.fasta # PATH for PR2 reference database
+       pr2_tax: database/pr2db.4.14.0.tax # PATH for PR2 taxonomy database
+       unite_ref: database/unite_v8.3.fasta # PATH for UNITE reference database
+       unite_tax: database/unite_v8.3.tax # PATH for UNITE taxonomy database
 
 # mumu parameter
 mumu:

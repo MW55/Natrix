@@ -25,9 +25,9 @@ rule prinseq:
     input:
         sample=get_fastq
     output:
-        expand(
+        temp(expand(
         os.path.join(config["general"]["output_dir"],"assembly/{{sample}}_{{unit}}/{{sample}}_{{unit}}_{read}.fastq"),
-        read=reads)
+        read=reads))
     params:
         config["qc"]["mq"]
     log:
@@ -44,9 +44,9 @@ rule cutadapt:
         read=reads),
         primer_t=os.path.join(config["general"]["output_dir"],"primer_table.csv")
     output:
-        expand(
+        temp(expand(
         os.path.join(config["general"]["output_dir"],"assembly/{{sample}}_{{unit}}/{{sample}}_{{unit}}_{read}_cut.fastq"),
-        read=reads)
+        read=reads))
     params:
         paired_end=config["merge"]["paired_End"],
         bar_removed=config["qc"]["barcode_removed"],
@@ -88,7 +88,7 @@ rule copy_to_fasta:
     input:
         os.path.join(config["general"]["output_dir"],"assembly/{sample}_{unit}/{sample}_{unit}_assembled.fastq")
     output:
-        os.path.join(config["general"]["output_dir"],"assembly/{sample}_{unit}/{sample}_{unit}.fasta")
+        temp(os.path.join(config["general"]["output_dir"],"assembly/{sample}_{unit}/{sample}_{unit}.fasta"))
     conda:
         "../envs/seqtk.yaml"
     shell:

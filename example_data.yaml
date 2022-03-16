@@ -1,7 +1,7 @@
 # General options
 general:
         filename : example_data # The path / filename of the project folder, primertable (.csv) and configfile (.yaml). If the raw data folder is not in the root directory of Natrix, please add the path relative to the root directory (e.g. input/example_data)
-        output_dir: output1_1 # path to custom output directory / relative to the root directory  of natrix. Do not use a dash in the folder name.
+        output_dir: output1 # path to custom output directory / relative to the root directory  of natrix. Do not use a dash in the folder name.
         primertable: example_data.csv # Path to the primertable. If the primertable is not in the root directory of Natrix, please add the path relative to the root directory (e.g. input/example_data.yaml)
         units: units.tsv # Path to the sequencing unit sheet. (name will be concatenated with output_dir)
         cores : 20 # Amount of cores available for the workflow.
@@ -21,7 +21,7 @@ qc:
         primer_offset : FALSE # Using PANDAseq to remove primer sequences by length offset instead of sequence identity, only for OTU variant.
         mq : 25 # Minimum quality sequence check (prinseq), filtering of sequences according to the PHRED quality score before the assembly.
         barcode_removed: TRUE # Boolean that indicates if the sequence is free of barcodes.
-        all_primer : FALSE # Boolean that indicates if the sequence is free of any kind of additional subsequences (primer, barcodes etc.).
+        all_primer : TRUE # Boolean that indicates if the sequence is free of any kind of additional subsequences (primer, barcodes etc.).
 
 # Dereplication
 derep:
@@ -39,7 +39,7 @@ chim:
 merge:
         filter_method : split_sample # If the split sample approach was used (split_sample) or not (not_split).
         ampliconduo: TRUE # Boolean, whether AmpliconDuo should be used for statistical analysis of the data.
-        cutoff : 3 # An additional abundance filter if the split sample approach was not used.
+        cutoff : 2 # An additional abundance filter if the split sample approach was not used. For a read to be kept, the sum of abundances over all samples needs to be above the cutoff.
         ampli_corr : fdr # Specifies the correction method for Fisher's exact test.
         save_format : png # File format for the frequency-frequency plot.
         plot_AmpDuo : TRUE # Boolean, whether the frequency-frequency plot should be saved.

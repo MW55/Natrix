@@ -1,4 +1,4 @@
-<p align="center"> 
+<p align="center">
 <img src="documentation/images/logo.png" alt="logo" width="500"/>
 </p>
 
@@ -17,7 +17,7 @@ Welzel, M., Lange, A., Heider, D. et al. Natrix: a Snakemake-based workflow for 
 * [Conda](https://conda.io/en/latest/index.html)
 * [GNU screen](https://www.gnu.org/software/screen/) (optional)
 
-Conda can be downloaded as part of the [Anaconda](https://www.anaconda.com/) or the [Miniconda](https://conda.io/en/latest/miniconda.html) plattforms (Python 3.7). We recommend to install miniconda3. 
+Conda can be downloaded as part of the [Anaconda](https://www.anaconda.com/) or the [Miniconda](https://conda.io/en/latest/miniconda.html) plattforms (Python 3.7). We recommend to install miniconda3.
 Using Linux you can get it with:
 
 ```shell
@@ -43,7 +43,7 @@ After cloning this repository to a folder of your choice, it is recommended to c
 ```shell
 $ conda env create -f natrix.yaml
 ```
-This will create a conda environment containing all dependencies for Snakemake itself. 
+This will create a conda environment containing all dependencies for Snakemake itself.
 
 With Natrix comes an example [primertable](#Example-primertable) *example_data.csv*, [configfile](#Configfile) *example_data.yaml* and an example amplicon dataset in the folder *example_data*.
 
@@ -68,7 +68,7 @@ When the workflow has finished, you can press **Ctrl+a, k** (*first press Ctrl+a
 
 ### Prerequisites: dataset, primertable and configuration file
 The FASTQ files need to follow a specific naming convention:
-<p align="center"> 
+<p align="center">
 <img src="documentation/images/filename.png" alt="naming" width="400"/>
 </p>
 
@@ -77,8 +77,8 @@ samplename_unit_direction.fastq.gz
 ```
 with:
 * *samplename* as the name of the sample, without special characters.
-* *unit*, identifier for [split-samples](#AmpliconDuo-/-Split-sample-approach) (*A*, *B*). If the split-sample approach is not used, the unit identifier is simply *A*.
-* *direction*, identifier for forward (*R1*) and reverse (*R2*) reads of the same sample. If the reads are single-end, the direction identifier is *R1*.
+* *unit*, identifier for [split-samples](#AmpliconDuo-/-Split-sample-approach) (*A*, *B*). If the split-sample approach is not used, the unit identifier is simply *A*, but needs to be present.
+* *direction*, identifier for forward (*R1*) and reverse (*R2*) reads of the same sample. If the reads are single-end, the direction identifier is *R1*, it needs to be present.
 
 A dataset should look like this (two samples, paired-end, no split-sample approach):
 ```
@@ -124,7 +124,7 @@ To connect to the shell inside the docker container, input the following command
 ```shell
 docker run -it --label natrix_container -v </host/database>:/app/database -v </host/output>:/app/output -v </host/input_folder>:/app/input mw55/natrix bash
 ```
-*/host/database* is the full path to a local folder, in which you wish to install the database (SILVA or NCBI). This part is optional and only needed if 
+*/host/database* is the full path to a local folder, in which you wish to install the database (SILVA or NCBI). This part is optional and only needed if
 you want to use BLAST for taxonomic assignment.
 
 */host/output* is the full path to a local folder in which the output of the workflow (results folder, units.tsv, primertable, and demultiplxed folder) should be stored for the container to use.
@@ -187,7 +187,7 @@ Should the pipeline prematurely terminate (either because of an error or by deli
 
 ## Cluster execution
 Natrix can be run easily on a cluster system using either conda or the docker container.
-Adding --cluster to the start command of Natrix, together with a command to submit jobs (e. g. qsub) is enough for most 
+Adding --cluster to the start command of Natrix, together with a command to submit jobs (e. g. qsub) is enough for most
 cluster computing environments. An example command would be:
 
 ```shell
@@ -195,7 +195,7 @@ $ snakemake -s <path/to/Snakefile> --use-conda --configfile <path/to/configfile.
 ```
 
 Further qsub arguments including brief explanations can be found under [qsub arguments](http://bioinformatics.mdc-berlin.de/intro2UnixandSGE/sun_grid_engine_for_beginners/how_to_submit_a_job_using_qsub.html).
-For additional commands that should be executed for each job the argument --jobscript *path/to/jobscript.sh* can be used. 
+For additional commands that should be executed for each job the argument --jobscript *path/to/jobscript.sh* can be used.
 A simple jobscript that sources before the execution of each job the bashrc and activates the snakemake environment looks like this:
 
 ```shell
@@ -208,7 +208,7 @@ conda activate natrix
 ```
 
 Instead of directly passing the cluster submission arguments to the snakemake command it is also possible to
-write a profile that contains cluster commands and arguments. The use of profiles allows the assignment 
+write a profile that contains cluster commands and arguments. The use of profiles allows the assignment
 of rule-specific hardware requirements. For example, the BLAST rule benefits from a large amount of CPU cores, while other
 rules, like AmpliconDuo, do not. With profiles, rules could be assigned a low amount of CPU cores as default, with rules
 like BLAST being assigned a larger amount of cores. This allows optimal usage of cluster resources and shorter waiting times.
@@ -216,17 +216,17 @@ The creation of profiles is largely dependant on the software and hardware avail
 With a profile Natrix can simply be run with
 
 ```shell
-$ snakemake -s <path/to/Snakefile> --profile myprofile 
+$ snakemake -s <path/to/Snakefile> --profile myprofile
 ```
 
-The Snakemake documentation contains a tutorial for [profile creation](https://snakemake.readthedocs.io/en/stable/executing/cli.html#profiles) 
+The Snakemake documentation contains a tutorial for [profile creation](https://snakemake.readthedocs.io/en/stable/executing/cli.html#profiles)
 and the [Snakemake profiles GitHub page](https://github.com/snakemake-profiles/doc) contains example profiles for different
 cluster systems.
 
 ## Output
 
 After the workflow is finishedall output files can be found under *Natrix-Pipeline/output/*.
-<p align="center"> 
+<p align="center">
 <img src="documentation/images/output_files.png" alt="ouput" width="700"/>
 </p>
 
@@ -263,14 +263,14 @@ The sorting of reads according to their barcode is known as demultiplexing.
 For quality control the pipeline uses the programs FastQC (Andrews 2010), MultiQC (Ewels
 et al. 2016) and PRINSEQ (Schmieder and Edwards 2011).
 
-### FastQC 
+### FastQC
 FastQC generates a quality report for each FASTQ file, containing information such
 as the per base and average sequence quality (using the Phred quality score), overrepresented
 sequences, GC content, adapter and the k-mer content of the FASTQ file.
 
-### MultiQC 
+### MultiQC
 MultiQC aggregates the FastQC reports for a given set of FASTQ files into a
-single report, allowing reviews of all FASTQ files at once. 
+single report, allowing reviews of all FASTQ files at once.
 
 ### PRINSEQ
 PRINSEQ is used to filter out sequences with an average quality score below
@@ -302,7 +302,7 @@ sequence as required by the UCHIME chimera detection algorithm.
 VSEARCH is a open-source alternative to the USEARCH toolkit, which aims to functionally replicate the algorithms used by USEARCH for which the source code is not openly available and which are often only rudimentarily described (Rognes et al. 2016). Natrix uses as an alternative to UCHIME the VSEARCH uchime3_denovo algorithm to detect chimeric sequences (further referred to as VSEARCH3). The VSEARCH3 algorithm is a replication of the UCHIME2 algorithm with optimized standard parameters. The UCHIME2 algorithm is described by R. Edgar 2016 as follows:
 
 "Given a query sequence *Q*, UCHIME2 uses the UCHIME algorithm to construct a model
-(*M*), then makes a multiple alignment of *Q* with the model and top hit (*T*, the most similar reference sequence). The following metrics are calculated from the alignment: number of differences d<sub>QT</sub> between Q and T and d<sub>QM</sub> between *Q* and *M*, the alignment score (*H*) using eq. 2 in R. C. Edgar et al. 2011. The fractional divergence with respect to the top hit is calculated as div<sub>T</sub> = (d<sub>QT</sub> − d<sub>QM</sub>)/|Q|. If divT is large, the model is a much better match than the top hit and the query is more likely to be chimeric, and conversely if div<sub>T</sub> is small, the model is more likely to be a fake." 
+(*M*), then makes a multiple alignment of *Q* with the model and top hit (*T*, the most similar reference sequence). The following metrics are calculated from the alignment: number of differences d<sub>QT</sub> between Q and T and d<sub>QM</sub> between *Q* and *M*, the alignment score (*H*) using eq. 2 in R. C. Edgar et al. 2011. The fractional divergence with respect to the top hit is calculated as div<sub>T</sub> = (d<sub>QT</sub> − d<sub>QM</sub>)/|Q|. If divT is large, the model is a much better match than the top hit and the query is more likely to be chimeric, and conversely if div<sub>T</sub> is small, the model is more likely to be a fake."
 
 The difference between the UCHIME2 and UCHIME3 algorithm is that to be selected as a potential parent, a sequence needs to have at least 16 times the abundance of the query sequence in the UCHIME3 algorithm, while it only needs double the abundance of the query sequence to be selected as a potential parent in the UCHIME2 algorithm.
 
@@ -317,7 +317,7 @@ As the swarm rule needs FASTA files as input, the resulting table of the filteri
 ## AmpliconDuo / Split-sample approach
 The pipeline supports both single-sample and split-sample FASTQ amplicon data. The split-sample protocol (Lange et al. 2015) aims to reduce the amount of sequences that are the result of PCR or sequencing errors without the usage of stringent abundance cutoffs, which often lead to the loss of rare but naturally occurring sequences. To achieve this, extracted DNA from a single sample is divided into two split-samples, which are then separately amplified and sequenced. All sequences that do not occur in both split-samples are seen as erroneous sequences and filtered out. The method is therefore based on the idea that a sequence that was created by PCR or sequencing errors does not occur in both samples. A schematic representation of the split-sample method is shown below:
 
-<p align="center"> 
+<p align="center">
 <img src="documentation/images/splitsample.png" alt="split_sample" width="300"/>
 </p>
 
@@ -331,7 +331,7 @@ the read numbers for each sequence in sample S are within the error margin set b
 OTUs are generated using the Swarm clustering algorithm (Mahé et al. 2015) in the identically named rule. Swarm clusters sequences into OTUs using an iterative approach with a local threshold: It creates a pool of amplicons from the input file and a empty OTU. Subsequently, it will remove the first amplicon from the pool, which will become the OTU seed. All amplicons left in the pool that differ in their nucleotide composition from the initial seed by a user given threshold (the default threshold used is 1 nucleotide) are removed from the pool and added to the OTU as subseeds. In the next iteration, each amplicon having at most a difference as high as the threshold to any of the subseeds is then removed from the
 pool and added to the OTU. This iterative process will continue until there are no amplicons left in the pool with a nucleotide difference of at most the threshold to any of the subseeds added in the previous iteration to the OTU, leading to the closure of the OTU and the opening of a new one. This approach to OTU generation circumvents two sources of OTU variability that are inherent to greedy clustering algorithms: the input order dependency, in which the first amplicon in a FASTA file will become the centroid of an OTU and the use of a global threshold, recruiting all amplicons that have less differences to the centroid than a user defined threshold. The iterative approach of Swarm produces a star-shaped minimum
 spanning tree, with an (usually highly abundant) amplicon as the center, regardless of the chosen first amplicon of the OTU, as visualized in Figure 12. The sequence of the amplicon at the center of each OTU tree is used in subsequent analysis steps as the representative sequence of the corresponding OTU.
-<p align="center"> 
+<p align="center">
 <img src="documentation/images/swarm.jpg" alt="split_sample" width="500"/>
 </p>
 
@@ -439,13 +439,3 @@ In: *doi: 10.7287/peerj.preprints.2409v1.*
 * Lange, Anja et al. (2015). “AmpliconDuo: A Split-Sample Filtering Protocol for High-Throughput Amplicon Sequencing of Microbial Communities”. In: *Plos One 10.11.*
 * Altschul, Stephen F. et al. (1990). “Basic local alignment search tool”. In: *Journal of Molecular Biology 215.3*, pp. 403–410.
 * Pruesse, E. et al. (2007). “SILVA: a comprehensive online resource for quality checked and aligned ribosomal RNA sequence data compatible with ARB”. In: *Nucleic Acids Research 35.21*, pp. 7188–7196.
-
-
-
-
-
-
-
-
-
-

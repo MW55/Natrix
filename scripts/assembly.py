@@ -54,6 +54,8 @@ else:
 
     # Function to remove the primer, barcode & polyN from the sequences
     # and compare the sequence length to the cutoffs defined in the config.
+    # If defined primer/barcode is not found, it will filter out the sequence.
+    # If allready removed all_primers has to be set to TRUE.
     def primer_len_filter(path, sample):
         sequence = dinopy.FastqReader(path)
         assembled = dinopy.FastqWriter(path.rsplit("_", 1)[0]
@@ -62,6 +64,7 @@ else:
                 + "_filtered_out.fastq")
         assembled_counter = 0
         filt_out_counter = 0
+        prim_counter = 0
         assembled.open()
         filt_out.open()
         for read in sequence.reads(quality_values=True):
@@ -71,11 +74,15 @@ else:
                 assembled.write(seq[1].encode(), name.split(" ")[0].encode(), read.quality)
                 assembled_counter += 1
             else:
+                if not seq[0]:
+                    prim_counter +=1
                 filt_out.write(read.sequence, name.split(" ")[0].encode(), read.quality)
                 filt_out_counter += 1
         logging.info("{}: {} sequences were kept, \
-                {} sequences were filtered out".format(sample,
-                    assembled_counter, filt_out_counter))
+                {} sequences were filtered out. \
+                {} sequences without primer or barcode matches were detected. \
+                If too many, check primer table or set all_primers to TRUE".format(sample,
+                    assembled_counter, filt_out_counter, prim_counter))
         assembled.close()
         filt_out.close()
 

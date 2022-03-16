@@ -21,8 +21,15 @@ def create_dataframe(fl, fpl, config, slice):
             index =range(int(len(fl)/2)), dtype=str)
         i, j = (0, 0)
         while i < len(fl)/2:
-            df.loc[i]['sample'] = fl[j].split('_')[0]
-            df.loc[i]['unit'] = fl[j].split('_')[1]
+            # last split needs to be fwd or rev read
+            # second last can be unit
+            unit = fl[j].split('_')[-2]
+            if unit in ['A', 'B']:
+            	df.loc[i]['unit'] = unit
+            	df.loc[i]['sample'] = '_'.join(fl[j].split('_')[:-2])
+            else:
+            	df.loc[i]['unit'] = ''
+            	df.loc[i]['sample'] = '_'.join(fl[j].split('_')[:-1])            	
             df.loc[i]['fq1'] = fpl[j][:slice]
             df.loc[i]['fq2'] = fpl[j+1][:slice]
             j += 2
@@ -32,8 +39,15 @@ def create_dataframe(fl, fpl, config, slice):
             index = range(int(len(fl))), dtype=str)
         i = 0
         while i < len(fl):
-            df.loc[i]['sample'] = fl[i].split('_')[0]
-            df.loc[i]['unit'] = fl[i].split('_')[1]
+            # last split needs to be fwd or rev read
+            # second last can be unit
+            unit = fl[i].split('_')[-2]
+            if unit in ['A', 'B']:
+            	df.loc[i]['unit'] = unit
+            	df.loc[i]['sample'] = '_'.join(fl[i].split('_')[:-2])
+            else:
+            	df.loc[i]['unit'] = ''
+            	df.loc[i]['sample'] = '_'.join(fl[i].split('_')[:-1])   
             df.loc[i]['fq1'] = fpl[i][:slice]
             df.loc[i]['fq2'] = np.nan
             i += 1
@@ -57,4 +71,4 @@ if __name__ == '__main__':
     df = create_dataframe(file_list, file_path_list, config, slice)
 
     pathlib.Path(config["general"]["output_dir"]).mkdir(parents=True, exist_ok=True)
-    df.to_csv(os.path.join(config["general"]["output_dir"],'units.tsv'), sep='\t')
+    df.to_csv(os.path.join(config["general"]["output_dir"],config["general"]['units']), sep='\t')

@@ -5,6 +5,7 @@ import logging
 import subprocess
 import numpy as np
 import pandas as pd
+import shutil
 from glob import glob
 
 # Script to assemble paired end reads using PandaSeq.
@@ -108,5 +109,8 @@ else:
                 else:
                     return (False, sequence)
 
-    primer_len_filter(snakemake.input[0],
-            snakemake.input[0].split("/")[-1].rsplit("_", 1)[0])
+    if snakemake.params.sequencing == "Nanopore":
+        shutil.copy(snakemake.input[0], snakemake.input[0].rsplit("_", 1)[0] + "_assembled.fastq")
+    else:
+        primer_len_filter(snakemake.input[0],
+                snakemake.input[0].split("/")[-1].rsplit("_", 1)[0])

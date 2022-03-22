@@ -1,0 +1,27 @@
+name: porechop
+channels:
+  - bioconda
+  - salilab
+  - defaults
+dependencies:
+  - _libgcc_mutex=0.1=main
+  - _openmp_mutex=4.5=1_gnu
+  - ca-certificates=2022.2.1=h06a4308_0
+  - certifi=2021.5.30=py36h06a4308_0
+  - ld_impl_linux-64=2.35.1=h7274673_9
+  - libffi=3.3=he6710b0_2
+  - libgcc-ng=9.3.0=h5101ec6_17
+  - libgomp=9.3.0=h5101ec6_17
+  - libstdcxx-ng=9.3.0=hd4cf53a_17
+  - ncurses=6.3=h7f8727e_2
+  - openssl=1.1.1n=h7f8727e_0
+  - pip=21.2.2=py36h06a4308_0
+  - porechop=0.2.3_seqan2.1.1=py36h2d50403_3
+  - python=3.6.13=h12debd9_1
+  - readline=8.1.2=h7f8727e_1
+  - setuptools=58.0.4=py36h06a4308_0
+  - sqlite=3.38.0=hc218d9a_0
+  - tk=8.6.11=h1ccaba5_0
+  - wheel=0.37.1=pyhd3eb1b0_0
+  - xz=5.2.5=h7b6447c_0
+  - zlib=1.2.11=h7f8727e_4

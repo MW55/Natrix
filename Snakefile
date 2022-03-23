@@ -37,10 +37,10 @@ rule all:
         # blast
 #       expand(os.path.join(config["general"]["output_dir"],"finalData/{database}/filtered_blast_table.csv"), database=config['blast']['output']) if config["blast"]["blast"] else [],
 #       expand(os.path.join(config["general"]["output_dir"],"finalData/{database}/filtered_blast_table_complete.csv"), database=config['blast']['output']) if config["blast"]["blast"] else []
-        os.path.join(config["general"]["output_dir"],"finalData/blast_silva/filtered_blast_table.csv") if config["blast"]["blast"] else [],
-        os.path.join(config["general"]["output_dir"],"finalData/blast_silva/filtered_blast_table_complete.csv") if config["blast"]["blast"] else [],
-        os.path.join(config["general"]["output_dir"],"finalData/blast_ncbi/filtered_blast_table_complete.csv") if config["blast"]["blast"] else [],
-        os.path.join(config["general"]["output_dir"],"finalData/blast_ncbi/filtered_blast_table.csv") if config["blast"]["blast"] else []
+        os.path.join(config["general"]["output_dir"],"finalData/blast_silva/filtered_blast_table.csv") if config["blast"]["database"] == "SILVA"else [],
+        os.path.join(config["general"]["output_dir"],"finalData/blast_silva/filtered_blast_table_complete.csv") if config["blast"]["database"] == "SILVA"else [],
+        os.path.join(config["general"]["output_dir"],"finalData/blast_ncbi/filtered_blast_table_complete.csv") if config["blast"]["database"] = "NCBI" else [],
+        os.path.join(config["general"]["output_dir"],"finalData/blast_ncbi/filtered_blast_table.csv") if config["blast"]["database"] =="NCBI" else []
 
 ruleorder: assembly > prinseq
 

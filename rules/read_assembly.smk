@@ -40,19 +40,22 @@ if config["general"]["sequencing"] == "Nanopore":
         input:
             expand(
                 "results/assembly/{{sample}}_{{unit}}/{{sample}}_{{unit}}_{read}.fastq",
-                read=reads)
+                read=reads),
+            primer_t="primer_table.csv"
         output:
             expand(
                 "results/assembly/{{sample}}_{{unit}}/{{sample}}_{{unit}}_{read}_cut.fastq",
                 read=reads)
-        threads: config["general"]["cores"]
         params:
-            minlen = config["qc"]["minlen"],
-            maxlen = config["qc"]["maxlen"]
+            min_length=config["qc"]["minlen"],
+            max_length=config["qc"]["maxlen"],
+            tail_crop=config["qc"]["tail_crop"],
+            head_crop=config["qc"]["head_crop"]
+        threads: config["general"]["cores"]
         conda:
             "../envs/porechop.yaml"
-        shell:
-            "porechop -i {input} -o {output} -t {threads} "
+        script:
+            "../scripts/porechop.py"
 
 else:
     rule cutadapt:
@@ -78,30 +81,41 @@ else:
         script:
             "../scripts/cutadapt.py"
 
-rule assembly:
-    input:
-        expand(
-        "results/assembly/{{sample}}_{{unit}}/{{sample}}_{{unit}}_{read}.fastq",
-        read=reads),
-        primer_t="primer_table.csv"
-    output:
-        "results/assembly/{sample}_{unit}/{sample}_{unit}_assembled.fastq"
-    threads: 20
-    params:
-        paired_end=config["merge"]["paired_End"],
-        threshold=config["qc"]["threshold"],
-        minoverlap=config["qc"]["minoverlap"],
-        minlen=config["qc"]["minlen"],
-        maxlen=config["qc"]["maxlen"],
-        minqual=config["qc"]["minqual"],
-        prim_rm=config["qc"]["all_primer"],
-        sequencing=config["general"]["sequencing"]
-    conda:
-        "../envs/assembly.yaml"
-    log:
-        "results/logs/{sample}_{unit}/read_assembly.log"
-    script:
-        "../scripts/assembly.py"
+if config["general"]["sequencing"] == "Nanopore":
+    rule assembly:
+        input:
+            expand(
+                "results/assembly/{{sample}}_{{unit}}/{{sample}}_{{unit}}_{read}_cut.fastq",
+                read=reads)
+        output:
+            "results/assembly/{sample}_{unit}/{sample}_{unit}_assembled.fastq"
+        shell:
+            "cp {input} {output}"
+else:
+    rule assembly:
+        input:
+            expand(
+            "results/assembly/{{sample}}_{{unit}}/{{sample}}_{{unit}}_{read}.fastq",
+            read=reads),
+            primer_t="primer_table.csv"
+        output:
+            "results/assembly/{sample}_{unit}/{sample}_{unit}_assembled.fastq"
+        threads: 20
+        params:
+            paired_end=config["merge"]["paired_End"],
+            threshold=config["qc"]["threshold"],
+            minoverlap=config["qc"]["minoverlap"],
+            minlen=config["qc"]["minlen"],
+            maxlen=config["qc"]["maxlen"],
+            minqual=config["qc"]["minqual"],
+            prim_rm=config["qc"]["all_primer"],
+            sequencing=config["general"]["sequencing"]
+        conda:
+            "../envs/assembly.yaml"
+        log:
+            "results/logs/{sample}_{unit}/read_assembly.log"
+        script:
+            "../scripts/assembly.py"
 
 rule copy_to_fasta:
     input:

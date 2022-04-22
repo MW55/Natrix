@@ -41,25 +41,58 @@ rule write_fasta:
                 else:
                     filtered_table_seqid.writerow(["seqid"] + row[1])
 
-rule swarm:
-    input:
-        "results/finalData/filtered.fasta"
-    output:
-        "results/finalData/representatives.fasta",
-        temp("results/finalData/merged.swarms")
-    threads: config["general"]["cores"]
-    conda:
-        "../envs/swarm.yaml"
-    shell:
-        "swarm -t {threads} -f -z -w {output[0]} < {input} > {output[1]}"
+if config["general"]["sequencing"] == "Nanopore":
+    rule vsearch_otu:
+        input:
+            "results/finalData/filtered.fasta"
+        output:
+            "results/finalData/representatives.fasta",
+            "results/finalData/merged.uc"
+        params:
+            cutoff=config["merge"]["vsearch_clust_id"]
+        threads: config["general"]["cores"]
+        conda:
+            "../envs/vsearch.yaml"
+        shell:
+            "vsearch --cluster_fast {input} --consout {output[0]} --id {params.cutoff} --uc {output[1]} --sizein --clusterout_id --threads {threads}"
+    
+    rule vsearch_otu_results:
+        input:
+            merged="results/finalData/merged.uc",
+            consensus="results/finalData/representatives.fasta",
+            final_table_path2="results/finalData/filtered_table.csv"
+        output:
+            swarm_table="results/finalData/swarm_table.csv",
+            all_out="results/finalData/swarm_table_all.csv",
+            consensus_filtered="results/finalData/representatives_filtered.fasta"
+        params:
+            min_sequences=config["merge"]["vsearch_clust_min"]
+        conda:
+            "../envs/merge_results.yaml"
+        script:
+            "../scripts/merge_cluster_results.py"
+        
 
-rule swarm_results:
-    input:
-        merged="results/finalData/merged.swarms",
-        final_table_path2="results/finalData/filtered_table.csv"
-    output:
-        "results/finalData/swarm_table.csv"
-    conda:
-        "../envs/merge_results.yaml"
-    script:
-        "../scripts/merge_swarm_results.py"
+else:
+    rule swarm:
+        input:
+            "results/finalData/filtered.fasta"
+        output:
+            "results/finalData/representatives.fasta",
+            temp("results/finalData/merged.swarms")
+        threads: config["general"]["cores"]
+        conda:
+            "../envs/swarm.yaml"
+        shell:
+            "swarm -t {threads} -d 1 -f -z -w {output[0]} < {input} > {output[1]}"
+
+    rule swarm_results:
+        input:
+            merged="results/finalData/merged.swarms",
+            final_table_path2="results/finalData/filtered_table.csv"
+        output:
+            "results/finalData/swarm_table.csv"
+        conda:
+            "../envs/merge_results.yaml"
+        script:
+            "../scripts/merge_swarm_results.py"

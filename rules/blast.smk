@@ -78,7 +78,7 @@ elif config["blast"]["database"] == "NCBI":
 
 rule blast:
     input:
-        "results/finalData/representatives.fasta" if config["general"]["seq_rep"] == "OTU" else "results/finalData/filtered.fasta",
+        "results/finalData/representatives.fasta" if (config["general"]["seq_rep"] == "OTU" and config["general"]["sequencing"] == "Illumina") else "results/finalData/representatives_filtered.fasta" if (config["general"]["seq_rep"] == "OTU" and config["general"]["sequencing"] == "Nanopore") else "results/finalData/filtered.fasta",
         expand(config["blast"]["db_path"] + "{file_extension}", file_extension=[".ndb", ".nhr", ".nin", ".nog", ".nos", ".not", ".nsq", ".ntf", ".nto"] if config["blast"]["database"] == "SILVA" else "")
     output:
         "results/finalData/blast_taxonomy.tsv" #temp
@@ -141,7 +141,8 @@ rule merge_results:
         complete="results/finalData/filtered_blast_table_complete.csv",
         filtered="results/finalData/filtered_blast_table.csv"
     params:
-        seq_rep=str(config["general"]["seq_rep"])
+        seq_rep=str(config["general"]["seq_rep"]),
+        platform=config["general"]["sequencing"]
     conda:
         "../envs/merge_results.yaml"
     log:

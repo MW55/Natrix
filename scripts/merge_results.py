@@ -13,8 +13,11 @@ else:
 
 def new_index(table):
     new_index = table["seqid"].tolist()[0:]
-    splitted = [i.lstrip(">").replace("size=", "").split(";")[0:2] for i in new_index]
-    new_index = ["N{}_{}".format(i[0], i[1]) for i in splitted]
+    if snakemake.params["platform"] == "Illumina":
+        splitted = [i.lstrip(">").replace("size=", "").split(";")[0:2] for i in new_index]
+        new_index = ["N{}_{}".format(i[0], i[1]) for i in splitted]
+    else:
+        new_index = [i.lstrip(">") for i in new_index]
     df = pd.DataFrame(new_index)
     table["seqid"] = df[0]
     table = table.set_index('seqid')

@@ -141,6 +141,16 @@ merge:
     default: true
     description: "Boolean to indicate the use of the SWARM clustering algorithm to create operational taxonomic units (OTUs) from the data."
     type: boolean
+  vsearch_clust_min:
+    default: 3
+    description: "minimum sequences in each cluster"
+    type: int
+  vsearch_clust_id:
+    default: 0.9
+    description: "vsearch clustering id"
+    minimum: 0.0
+    maximum: 1.0
+    type: float
 qc:
   all_primer:
     default: true
@@ -159,6 +169,16 @@ qc:
     default: 100
     description: "The minimal length of a sequence after primer removal to be accepted by PANDAseq."
     minimum: 10
+    type: int
+  head_crop:
+    default: 0
+    description: "length to cut from front of sequence in porechop"
+    minimum: 0
+    type: int
+  tail_crop:
+    default: 0
+    description: "length to cut from end of sequence in porechop"
+    minimum: 0
     type: int
   minoverlap:
     default: 15

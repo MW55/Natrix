@@ -51,7 +51,9 @@ elif config["blast"]["database"] == "NCBI":
 
     rule download_taxonomy:
         output:
-            os.path.join(os.path.dirname(config["blast"]["db_path"]), "fullnamelineage.dmp")
+            os.path.join(os.path.dirname(config["blast"]["db_path"]), "taxidlineage.dmp"),
+            os.path.join(os.path.dirname(config["blast"]["db_path"]), "nodes.dmp"),
+            os.path.join(os.path.dirname(config["blast"]["db_path"]), "names.dmp")
         params:
             db_path=config["blast"]["db_path"]
         conda:
@@ -66,7 +68,9 @@ elif config["blast"]["database"] == "NCBI":
 
     rule create_blast_taxonomy:
         input:
-            os.path.join(os.path.dirname(config["blast"]["db_path"]), "fullnamelineage.dmp")
+            os.path.join(os.path.dirname(config["blast"]["db_path"]), "taxidlineage.dmp"),
+            os.path.join(os.path.dirname(config["blast"]["db_path"]), "nodes.dmp"),
+            os.path.join(os.path.dirname(config["blast"]["db_path"]), "names.dmp")
         output:
             os.path.join(os.path.dirname(config["blast"]["db_path"]), "tax_lineage.h5")
         conda:
@@ -142,10 +146,21 @@ rule merge_results:
         filtered="results/finalData/filtered_blast_table.csv"
     params:
         seq_rep=str(config["general"]["seq_rep"]),
-        platform=config["general"]["sequencing"]
+        platform=config["general"]["sequencing"],
+        database=str(config["blast"]["database"])
     conda:
         "../envs/merge_results.yaml"
     log:
         "results/logs/finalData/BLAST.log"
     script:
         "../scripts/merge_results.py"
+
+rule split_filtered_blast_table:
+    input:
+        "results/finalData/filtered_blast_table.csv"
+    output:
+        expand("results/finalData/taxonomy_splits/{rank}.csv", rank=ranks)
+    params:
+        database=str(config["blast"]["database"])
+    script:
+        "../scripts/split_taxonomy.py" 

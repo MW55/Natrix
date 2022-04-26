@@ -33,6 +33,7 @@ rule all:
         expand(os.path.join(config["general"]["output_dir"],"finalData/blast_{database}/filtered_blast_table.csv"), database=config['blast']['database'].lower()) if config["blast"]["blast"] else [],
         expand(os.path.join(config["general"]["output_dir"],"finalData/blast_{database}/filtered_blast_table_complete.csv"), database=config['blast']['database'].lower()) if config["blast"]["blast"] else []
 
+
 ruleorder: assembly > prinseq
 
 include: "rules/demultiplexing.smk"

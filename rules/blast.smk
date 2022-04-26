@@ -72,7 +72,7 @@ elif config["blast"]["database"] == "NCBI":
         conda:
             "../envs/blast.yaml"
         log:
-            os.path.join(config["general"]["output_dir"],"logs/finalData/BLAST.log")
+            os.path.join(config["general"]["output_dir"],"logs/BLAST.log")
         script:
             "../scripts/create_blast_taxonomy.py"
 
@@ -112,7 +112,7 @@ if config["blast"]["database"] == "NCBI":
         conda:
             "../envs/blast.yaml"
         log:
-            os.path.join(config["general"]["output_dir"],"logs/finalData/BLAST.log")
+            os.path.join(config["general"]["output_dir"],"logs/BLAST.log")
         script:
             "../scripts/ncbi_taxonomy.py"
 
@@ -128,7 +128,7 @@ if config["blast"]["database"] == "NCBI":
         conda:
             "../envs/merge_results.yaml"
         log:
-            os.path.join(config["general"]["output_dir"],"logs/finalData/BLAST.log")
+            os.path.join(config["general"]["output_dir"],"logs/BLAST.log")
         script:
             "../scripts/merge_results.py"        
 
@@ -146,7 +146,7 @@ elif config["blast"]["database"] == "SILVA":
         conda:
             "../envs/blast.yaml"
         log:
-            os.path.join(config["general"]["output_dir"],"logs/finalData/BLAST.log")
+            os.path.join(config["general"]["output_dir"],"logs/BLAST.log")
         script:
             "../scripts/silva_taxonomy.py"
 
@@ -162,7 +162,7 @@ elif config["blast"]["database"] == "SILVA":
         conda:
             "../envs/merge_results.yaml"
         log:
-            os.path.join(config["general"]["output_dir"],"logs/finalData/BLAST.log")
+            os.path.join(config["general"]["output_dir"],"logs/BLAST.log")
         script:
             "../scripts/merge_results.py"        
 

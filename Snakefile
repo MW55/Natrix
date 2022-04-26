@@ -29,18 +29,9 @@ rule all:
         expand(os.path.join(config["general"]["output_dir"],"finalData/{database}/swarm_mothur.csv"), database=config['classify']['database']) if config['classify']['mothur'] else [],
         expand(os.path.join(config["general"]["output_dir"],"finalData/{database}/OTU_table_mumu.csv"), database=config['classify']['database']) if config['mumu']['mumu'] else [],
         expand(os.path.join(config["general"]["output_dir"],"finalData/{database}/FINAL_OUTPUT_OTU.csv"), database=config['classify']['database']) if config['mumu']['mumu'] else [],
-        "database/silva_db.138.1.fasta" if config["classify"]["database"] == "silva" else [], 
-        "database/silva_db.138.1.tax.temp" if config["classify"]["database"] == "silva" else [],
-#       expand("database/silva_db.{silva_db_version}.tax", silva_db_version=config["database_version"]["silva"]) if config["classify"]["database"] == "silva" else [],
-        "database/pr2db.4.14.0.fasta" if config["classify"]["database"] == "pr2" else [],
-        "database/unite_v8.3.fasta" if config["classify"]["database"] == "unite" else [], 
         # blast
-#       expand(os.path.join(config["general"]["output_dir"],"finalData/{database}/filtered_blast_table.csv"), database=config['blast']['output']) if config["blast"]["blast"] else [],
-#       expand(os.path.join(config["general"]["output_dir"],"finalData/{database}/filtered_blast_table_complete.csv"), database=config['blast']['output']) if config["blast"]["blast"] else []
-        os.path.join(config["general"]["output_dir"],"finalData/blast_silva/filtered_blast_table.csv") if config["blast"]["blast"] else [],
-        os.path.join(config["general"]["output_dir"],"finalData/blast_silva/filtered_blast_table_complete.csv") if config["blast"]["blast"] else [],
-        os.path.join(config["general"]["output_dir"],"finalData/blast_ncbi/filtered_blast_table_complete.csv") if config["blast"]["blast"] else [],
-        os.path.join(config["general"]["output_dir"],"finalData/blast_ncbi/filtered_blast_table.csv") if config["blast"]["blast"] else []
+        expand(os.path.join(config["general"]["output_dir"],"finalData/blast_{database}/filtered_blast_table.csv"), database=config['blast']['database'].lower()) if config["blast"]["blast"] else [],
+        expand(os.path.join(config["general"]["output_dir"],"finalData/blast_{database}/filtered_blast_table_complete.csv"), database=config['blast']['database'].lower()) if config["blast"]["blast"] else []
 
 ruleorder: assembly > prinseq
 
@@ -51,7 +42,7 @@ include: "rules/dereplication.smk"
 include: "rules/chim_rm.smk"
 include: "rules/merging.smk"
 include: "rules/clustering.smk"
-include: "rules/blast.smk" 
-include: "rules/pr2_unite_silva.smk" 
-include: "rules/classify.smk" 
+include: "rules/blast.smk"
+include: "rules/pr2_unite_silva.smk"
+include: "rules/classify.smk"
 include: "rules/mumu.smk"

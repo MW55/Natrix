@@ -1,5 +1,10 @@
 # Change Log
 
+## 2022-04-22
+
+### Changed
+- When downloading newest NCBI BLAST database, new BLAST+ version is required -> changed to 2.12.0
+
 ## 2021-03-12
 
 ### Changed

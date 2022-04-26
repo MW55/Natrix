@@ -7,7 +7,7 @@ if config["classify"]["database"] == "pr2":
                     expand(os.path.join(config["general"]["output_dir"],"finalData/pr2/mothur_out.taxonomy"))
             input:
                     expand(os.path.join(config["general"]["output_dir"],"finalData/representatives.fasta")),
-                    "database/pr2db.4.14.0.fasta"
+                    expand("database/pr2db.{pr2_db_version}.fasta", pr2_db_version=config["database_version"]["pr2"])
             params:
                     template=config['database_path']['pr2_ref'],
                     taxonomy=config['database_path']['pr2_tax'],
@@ -78,7 +78,7 @@ elif config["classify"]["database"] == "silva":
             expand(os.path.join(config["general"]["output_dir"],"finalData/silva/mothur_out.taxonomy"))
         input:
             expand(os.path.join(config["general"]["output_dir"],"finalData/representatives.fasta")),
-	    "database/silva_db.138.1.fasta", "database/silva_db.138.1.tax"
+	    expand(["database/silva_db.{silva_db_version}.fasta", "database/silva_db.{silva_db_version}.tax"], silva_db_version=config["database_version"]["silva"])
         params:
             template=config['database_path']['silva_ref'],
             taxonomy=config['database_path']['silva_tax'],

@@ -20,7 +20,7 @@ elif config["classify"]["database"] == "unite":
             input:
                 expand(os.path.join(config["general"]["output_dir"],"finalData/representatives.fasta"))
             output:
-                expand("database/unite_v8.3.fasta"), expand("database/unite_v8.3.tax")
+                expand("database/unite_v8.3.fasta"), expand("database/unite_v8.3.tax") # no version for download available, needs to be changed here not in config
             shell:
                 """
                 wget -P ./ --progress=bar  -O UNITE_public_mothur_10.05.2021.tgz --progress=bar https://files.plutof.ut.ee/public/orig/38/6A/386A46113D04602A78FB02497D9B0E1A8FE2145B23C2A6314A62B419F0D08E73.tgz;

@@ -22,15 +22,18 @@ r_adapter_rev_complement = str(Seq(r_adapter).reverse_complement())
 
 
 process = subprocess.run(["porechop",
-    "-i",snakemake.input[0], "-o", snakemake.output[0],
+    "-i", snakemake.input[0], "-o", snakemake.output[0],
     "--adapter_forward", "-".join([f_adapter, r_adapter]),
     "--adapter_reverse", "-".join([f_adapter_rev_complement, r_adapter_rev_complement]),
     "-t", str(snakemake.threads),
     "--trimmed_only", "true",
-    "--tail_crop", snakemake.params["tail_crop"],
-    "--head_crop", snakemake.params["head_crop"],
-    "--min_length", snakemake.params["min_length"],
-    "--max_length", snakemake.params["max_length"]
+    "--tail_crop", str(snakemake.params["tail_crop"]),
+    "--head_crop", str(snakemake.params["head_crop"]),
+    "--min_length", str(snakemake.params["min_length"]),
+    "--max_length", str(snakemake.params["max_length"]),
+    "--custom_adapter_names", "-".join(["forward","reverse"]),
+    "--discard_middle",
+    "--correct_read_direction"
     ])
 
 

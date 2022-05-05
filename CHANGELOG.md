@@ -1,5 +1,12 @@
 # Change Log
 
+## 2022-05-05
+
+### Changed
+- Standardized output for all options
+- Added mothur for ASVs and mumu for Blast output
+- Added config checks
+
 ## 2022-04-22
 
 ### Changed

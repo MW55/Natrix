@@ -6,7 +6,7 @@ rule vsearch:
     output:
         uchime_out=temp(os.path.join(config["general"]["output_dir"],"assembly/{sample}_{unit}/{sample}_{unit}.vsearch.txt")),
         chim=os.path.join(config["general"]["output_dir"],"assembly/{sample}_{unit}/{sample}_{unit}.chimera.fasta"),
-        nonchim=os.path.join(config["general"]["output_dir"],"finalData/{sample}_{unit}.nonchimera.fasta")
+        nonchim=os.path.join(config["general"]["output_dir"],"assembly/{sample}_{unit}.nonchimera.fasta")
     params:
         beta=config["chim"]["beta"],
         pseudo_c=config["chim"]["pseudo_count"],

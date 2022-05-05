@@ -1,11 +1,12 @@
 import pandas as pd
 import re
 
+mumu_file=open(snakemake.input[0], "r")
+otu_file=open(snakemake.input[1], "r")
+
 output_all=open(snakemake.output[0], "w")
 output_table=open(snakemake.output[1], "w")
 output_meta=open(snakemake.output[2], "w")
-mumu_file=open(snakemake.input[0], "r")
-otu_file=open(snakemake.input[1], "r")
 
 data=pd.read_csv(otu_file, index_col=0)
 mumu=pd.read_csv(mumu_file, sep='\t', index_col=0)

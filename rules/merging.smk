@@ -2,10 +2,10 @@ import os
 
 rule unfiltered_table:
     input:
-        expand(os.path.join(config["general"]["output_dir"],"finalData/{unit.sample}_{unit.unit}.nonchimera.fasta"), unit=units.reset_index().itertuples())
+        expand(os.path.join(config["general"]["output_dir"],"assembly/{unit.sample}_{unit.unit}.nonchimera.fasta"), unit=units.reset_index().itertuples())
     output:
-        os.path.join(config["general"]["output_dir"],"finalData/unfiltered_table.csv"),
-        temp(os.path.join(config["general"]["output_dir"],"finalData/unfiltered_dict.hdf5"))
+        os.path.join(config["general"]["output_dir"],"filtering/unfiltered_table.csv"),
+        temp(os.path.join(config["general"]["output_dir"],"filtering/unfiltered_dict.hdf5"))
     conda:
         "../envs/unfiltered_table.yaml"
     script:
@@ -13,10 +13,10 @@ rule unfiltered_table:
 
 rule filtering:
     input:
-        os.path.join(config["general"]["output_dir"],"finalData/unfiltered_dict.hdf5")
+        os.path.join(config["general"]["output_dir"],"filtering/unfiltered_dict.hdf5")
     output:
-          temp(os.path.join(config["general"]["output_dir"],"finalData/filtered_table_temp.csv")),
-          os.path.join(config["general"]["output_dir"],"finalData/filtered_out_table.csv")
+          temp(os.path.join(config["general"]["output_dir"],"filtering/filtered_table_temp.csv")),
+          os.path.join(config["general"]["output_dir"],"filtering/filtered_out_table.csv")
     params:
         filter_method=config["merge"]["filter_method"],
         cutoff=config["merge"]["cutoff"]
@@ -27,10 +27,10 @@ rule filtering:
 
 rule ampliconduo:
     input:
-        filtered_table=os.path.join(config["general"]["output_dir"],"finalData/filtered_table_temp.csv"),
-        unfiltered_table=os.path.join(config["general"]["output_dir"],"finalData/unfiltered_table.csv")
+        filtered_table=os.path.join(config["general"]["output_dir"],"filtering/filtered_table_temp.csv"),
+        unfiltered_table=os.path.join(config["general"]["output_dir"],"filtering/unfiltered_table.csv")
     output:
-        os.path.join(config["general"]["output_dir"],"finalData/figures/AmpliconDuo.RData")
+        os.path.join(config["general"]["output_dir"],"filtering/figures/AmpliconDuo.RData")
     params:
         plot_ampduo=config["merge"]["plot_AmpDuo"],
         saving_format=config["merge"]["save_format"],

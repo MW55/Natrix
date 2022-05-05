@@ -23,10 +23,10 @@ rule DADA2:
 # SWARM clustering runs on all samples after AmpliconDuo
 rule write_fasta:
     input:
-        os.path.join(config["general"]["output_dir"],"finalData/filtered_table_temp.csv")
+        os.path.join(config["general"]["output_dir"],"filtering/filtered_table_temp.csv")
     output:
-        os.path.join(config["general"]["output_dir"],"finalData/filtered.fasta"),
-        os.path.join(config["general"]["output_dir"],"finalData/filtered_table.csv")
+        os.path.join(config["general"]["output_dir"],"filtering/filtered.fasta"),
+        os.path.join(config["general"]["output_dir"],"filtering/filtered_table.csv")
     run:
         import csv
         with open(input[0], "r") as csv_in, open(
@@ -45,10 +45,10 @@ rule write_fasta:
 
 rule swarm:
     input:
-        os.path.join(config["general"]["output_dir"],"finalData/filtered.fasta")
+        os.path.join(config["general"]["output_dir"],"filtering/filtered.fasta")
     output:
-        os.path.join(config["general"]["output_dir"],"finalData/representatives.fasta"),
-        temp(os.path.join(config["general"]["output_dir"],"finalData/merged.swarms"))
+        os.path.join(config["general"]["output_dir"],"clustering/representatives.fasta"),
+        temp(os.path.join(config["general"]["output_dir"],"clustering/merged.swarms"))
     threads: config["general"]["cores"]
     conda:
         "../envs/swarm.yaml"
@@ -57,10 +57,10 @@ rule swarm:
 
 rule swarm_results:
     input:
-        merged=os.path.join(config["general"]["output_dir"],"finalData/merged.swarms"),
-        final_table_path2=os.path.join(config["general"]["output_dir"],"finalData/filtered_table.csv")
+        merged=os.path.join(config["general"]["output_dir"],"clustering/merged.swarms"),
+        final_table_path2=os.path.join(config["general"]["output_dir"],"filtering/filtered_table.csv")
     output:
-        os.path.join(config["general"]["output_dir"],"finalData/swarm_table.csv")
+        os.path.join(config["general"]["output_dir"],"clustering/swarm_table.csv")
     conda:
         "../envs/merge_results.yaml"
     script:

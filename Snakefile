@@ -4,6 +4,9 @@ from snakemake.utils import validate
 
 validate(config, "schema/config.schema.yaml")
 
+#if config["general"]["seq_rep"] == "ASV" and config["postcluster"]["mumu"]:
+#    config["postcluster"]["mumu"] = False
+
 units = pd.read_table(os.path.join(config["general"]["output_dir"],config["general"]["units"]), index_col=["sample", "unit"],
     dtype=str)
 units.index = units.index.set_levels([i.astype(str) for i in units.index.levels])
@@ -17,21 +20,20 @@ if config["merge"]["paired_End"]:
 else:
     reads = 1
 
+# rules
 rule all:
     input:
-        os.path.join(config["general"]["output_dir"],"finalData/unfiltered_table.csv"),
-        os.path.join(config["general"]["output_dir"],"finalData/filtered_table.csv"),
-        os.path.join(config["general"]["output_dir"],"finalData/swarm_table.csv") if config["general"]["seq_rep"] == "OTU" else [],
         os.path.join(config["general"]["output_dir"],"qc/multiqc_report.html") if config["general"]["multiqc"] else [],
-        os.path.join(config["general"]["output_dir"],"finalData/figures/AmpliconDuo.RData") if config["merge"]["ampliconduo"] and config["merge"]["filter_method"] == "split_sample" else [],
+        os.path.join(config["general"]["output_dir"],"filtering/unfiltered_table.csv"),
+        os.path.join(config["general"]["output_dir"],"filtering/filtered_table.csv"),
+        os.path.join(config["general"]["output_dir"],"filtering/figures/AmpliconDuo.RData") if config["merge"]["ampliconduo"] and config["merge"]["filter_method"] == "split_sample" else [],
+        os.path.join(config["general"]["output_dir"],"clustering/swarm_table.csv") if config["general"]["seq_rep"] == "OTU" else [],
         #mothur
-        expand(os.path.join(config["general"]["output_dir"],"finalData/{database}/mothur_out.taxonomy"), database=config['classify']['database']) if config['classify']['mothur'] else [],
-        expand(os.path.join(config["general"]["output_dir"],"finalData/{database}/swarm_mothur.csv"), database=config['classify']['database']) if config['classify']['mothur'] else [],
-        expand(os.path.join(config["general"]["output_dir"],"finalData/{database}/OTU_table_mumu.csv"), database=config['classify']['database']) if config['mumu']['mumu'] else [],
-        expand(os.path.join(config["general"]["output_dir"],"finalData/{database}/FINAL_OUTPUT_OTU.csv"), database=config['classify']['database']) if config['mumu']['mumu'] else [],
+        expand(os.path.join(config["general"]["output_dir"],"finalData/{database}/OTU_table.csv"), database=config['classify']['database']) if config['classify']['mothur'] else [],
+        expand(os.path.join(config["general"]["output_dir"],"finalData/{database}/OTU_table_mumu.csv"), database=config['classify']['database']) if config["general"]["seq_rep"] == "OTU" and  config['classify']['mothur'] and config['postcluster']['mumu'] else [],
         # blast
-        expand(os.path.join(config["general"]["output_dir"],"finalData/blast_{database}/filtered_blast_table.csv"), database=config['blast']['database'].lower()) if config["blast"]["blast"] else [],
-        expand(os.path.join(config["general"]["output_dir"],"finalData/blast_{database}/filtered_blast_table_complete.csv"), database=config['blast']['database'].lower()) if config["blast"]["blast"] else []
+        expand(os.path.join(config["general"]["output_dir"],"finalData/blast_{database}/OTU_table.csv"), database=config['blast']['database'].lower()) if config["blast"]["blast"] else [],
+        expand(os.path.join(config["general"]["output_dir"],"finalData/blast_{database}/OTU_table_mumu.csv"), database=config['blast']['database'].lower()) if config["general"]["seq_rep"] == "OTU" and  config["blast"]["blast"] and config['postcluster']['mumu'] else []
 
 
 ruleorder: assembly > prinseq

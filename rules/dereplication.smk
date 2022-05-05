@@ -11,10 +11,11 @@ rule cdhit:
     threads: config["general"]["cores"]
     params:
         id_percent=config["derep"]["clustering"],
-        length_cutoff=config["derep"]["length_overlap"]
+        length_cutoff=config["derep"]["length_overlap"],
+        memory=config["general"]["memory"]
     shell:
         "cd-hit-est -i {input} -o {output[0]} -c {params.id_percent} -T"
-        " {threads} -s {params.length_cutoff} -M 2000 -sc 1 -d 0"
+        " {threads} -s {params.length_cutoff} -M {params.memory} -sc 1 -d 0"
 
 rule cluster_sorting:
     input:

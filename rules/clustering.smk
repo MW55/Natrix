@@ -50,7 +50,7 @@ if config["general"]["sequencing"] == "Nanopore":
             "results/finalData/merged.uc"
         params:
             cutoff=config["merge"]["vsearch_clust_id"],
-            output=config["merge"]["vearch_clust_output"]
+            output=config["merge"]["vsearch_clust_output"]
         threads: config["general"]["cores"]
         conda:
             "../envs/vsearch.yaml"

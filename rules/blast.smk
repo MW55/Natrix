@@ -163,4 +163,14 @@ rule split_filtered_blast_table:
     params:
         database=str(config["blast"]["database"])
     script:
-        "../scripts/split_taxonomy.py" 
+        "../scripts/split_taxonomy.py"
+
+rule annotate_splitted_blast_table:
+    input:
+        "results/finalData/taxonomy_splits/"+str(config["blast"]["annotate_rank"])+".csv"
+    output:
+        "results/finalData/taxonomy_splits/"+str(config["blast"]["annotate_rank"])+"_annotated.csv"
+    conda:
+        "../envs/annotate_rank.yaml"
+    script:
+        "../scripts/annotate_rank.py"

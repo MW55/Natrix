@@ -13,7 +13,7 @@ blast_df = pd.read_csv(snakemake.input["blast_result"], sep="\t",names=columns, 
 taxids = list(set(blast_df["taxonomy"]))
 
 tax_df = pd.read_hdf(snakemake.input["lineage"], 'tax_df')
-tax_df = tax_df.loc[taxids]
+tax_df = tax_df.reindex(taxids)
 
 def split2(char, string):
     if(isinstance(string, str)):
@@ -59,7 +59,7 @@ for i in querynames:
     blast_res = blast_res.sort_values(by=['Mscore'], ascending=False) # sort by score
     mode = 'w' if header else 'a'
     blast_res.to_csv(snakemake.output["all_tax"], mode=mode, header=header, sep="\t", index_label="seqid")
-    best_tax = blast_res[:1][["qlen","length","pident","mismatch","qstart","qend", "sstart","send","gaps","evalue","tax_lineage"]]
+    best_tax = blast_res[:1][["qlen","length","pident","mismatch","qstart","qend", "sstart","send","gaps","evalue","tax_lineage", "tax_key", "tax_ids"]]
     best_tax = best_tax.rename(index=str, columns={"tax_lineage": "taxonomy"})
     best_tax.to_csv(snakemake.output["tax_lineage"], mode=mode, header=header, sep="\t", index_label="seqid")
     header = False

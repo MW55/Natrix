@@ -1,0 +1,8 @@
+name: utopia_parser
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+dependencies:
+  - beautifulsoup4
+  - pandas

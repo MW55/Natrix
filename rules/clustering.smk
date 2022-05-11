@@ -49,12 +49,13 @@ if config["general"]["sequencing"] == "Nanopore":
             "results/finalData/representatives.fasta",
             "results/finalData/merged.uc"
         params:
-            cutoff=config["merge"]["vsearch_clust_id"]
+            cutoff=config["merge"]["vsearch_clust_id"],
+            output=config["merge"]["vearch_clust_output"]
         threads: config["general"]["cores"]
         conda:
             "../envs/vsearch.yaml"
         shell:
-            "vsearch --cluster_fast {input} --consout {output[0]} --id {params.cutoff} --uc {output[1]} --sizein --clusterout_id --threads {threads}"
+            "vsearch --cluster_fast {input} --{params.output} {output[0]} --id {params.cutoff} --uc {output[1]} --sizein --clusterout_id --threads {threads}"
     
     rule vsearch_otu_results:
         input:
@@ -66,7 +67,8 @@ if config["general"]["sequencing"] == "Nanopore":
             all_out="results/finalData/swarm_table_all.csv",
             consensus_filtered="results/finalData/representatives_filtered.fasta"
         params:
-            min_sequences=config["merge"]["vsearch_clust_min"]
+            min_sequences=config["merge"]["vsearch_clust_min"],
+            consensus=config["merge"]["vsearch_clust_output"]
         conda:
             "../envs/merge_results.yaml"
         script:

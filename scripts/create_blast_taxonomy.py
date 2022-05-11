@@ -24,23 +24,22 @@ names_df = names_df.drop(columns=['name class'])
 names_df = names_df.reindex(names_df.index.values.sort())
 names_df = names_df.join(nodes_df)
 
-
 def ids_to_names_and_ranks(ids):
     ids = list(map(int, ids.split(" ")))
     names = [names_df.at[id, 'name_txt'] for id in ids]
     ranks = [names_df.at[id, 'rank'] for id in ids]
-    return ";".join(names), ";".join(ranks)
+    return ";".join(names), ";".join(ranks), ";".join([str(i) for i in ids])
 
 
 def get_tax_lineage(row):
     if not isinstance(row['lineage'], str):
-        names, ranks = ids_to_names_and_ranks(str(row.name))
+        names, ranks, ids = ids_to_names_and_ranks(str(row.name))
         logging.info("Taxid {} is not present in NCBI lineage file.".format(row.name))  # no lineage information?
     else:
-        names, ranks = ids_to_names_and_ranks(row['lineage'] + str(row.name))
-    return names, ranks
+        names, ranks, ids = ids_to_names_and_ranks(row['lineage'] + str(row.name))
+    return names, ranks, ids
 
-tax_df[['tax_lineage', 'tax_key']] = tax_df.apply(get_tax_lineage, axis=1, result_type="expand")
+tax_df[['tax_lineage', 'tax_key', 'tax_ids']] = tax_df.apply(get_tax_lineage, axis=1, result_type="expand")
 tax_df = tax_df.drop(['lineage'], axis=1)
 
 tax_df.to_hdf(snakemake.output[0], key='tax_df', mode='w')

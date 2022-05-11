@@ -15,7 +15,10 @@ with open(snakemake.input["consensus"], "r") as rep_in:
         if line.startswith(">"):
             representatives[centroid] = sequence
             header = line.split(";")
-            centroid = header[0].split("=")[1]+";"+header[1]+";"
+            if(snakemake.params["consensus"] == "consensus"):
+                centroid = header[0].split("=")[1]+";"+header[1]+";"
+            else:
+                centroid = header[0][1:]+";"+header[1]+";"
             sequence = ""
         else:
             sequence += line.rstrip()

@@ -34,6 +34,10 @@ blast:
     default: False
     description: "Boolean if results of filtered_blast_table should additionally be splitted into files by taxonomic rank."
     type: boolean
+  annotate_rank:
+    default: null
+    oneOf: "Phylum, Class, Order, Family, Genus, Species"
+    description: "one of ['Phylum','Class','Order','Family','Genus','Species'] or null; only if ncbi; searches opus23 otupia search for their tags"
 chim:
   abskew:
     default: 16
@@ -155,6 +159,11 @@ merge:
     minimum: 0.0
     maximum: 1.0
     type: float
+  vsearch_clust_output:
+    default: centroids
+    description: "output the centroid or consensus sequence for the clusters"
+    oneOf: "centroids, consout"
+    type: string
 qc:
   all_primer:
     default: true

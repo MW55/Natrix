@@ -13,7 +13,7 @@ blast_df = pd.read_csv(snakemake.input["blast_result"], sep="\t",names=columns, 
 taxids = list(set(blast_df["taxonomy"]))
 
 tax_df = pd.read_hdf(snakemake.input["lineage"], 'tax_df')
-tax_df = tax_df.loc[taxids]
+tax_df = tax_df.reindex(taxids) # changed from .loc() to .reindex for missing taxids
 
 def split2(char, string):
     if(isinstance(string, str)):

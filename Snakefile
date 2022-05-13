@@ -4,9 +4,6 @@ from snakemake.utils import validate
 
 validate(config, "schema/config.schema.yaml")
 
-#if config["general"]["seq_rep"] == "ASV" and config["postcluster"]["mumu"]:
-#    config["postcluster"]["mumu"] = False
-
 units = pd.read_table(os.path.join(config["general"]["output_dir"],config["general"]["units"]), index_col=["sample", "unit"],
     dtype=str)
 units.index = units.index.set_levels([i.astype(str) for i in units.index.levels])

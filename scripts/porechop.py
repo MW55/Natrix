@@ -23,7 +23,7 @@ r_adapter_rev_complement = str(Seq(r_adapter).reverse_complement())
 
 process = subprocess.run(["porechop",
     "-i", snakemake.input[0], "-o", snakemake.output[0],
-    "--custom_adapter", f_adapter, f_adpter_rev_complement, "Custom Adapter forward",
+    "--custom_adapter", f_adapter, f_adapter_rev_complement, "Custom Adapter forward",
     "--custom_adapter", r_adapter, r_adapter_rev_complement, "Custom Adapter reverse",
     "-t", str(snakemake.threads),
     "--tail_crop", str(snakemake.params["tail_crop"]),

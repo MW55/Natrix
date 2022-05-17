@@ -2,8 +2,6 @@ import urllib.request
 from bs4 import BeautifulSoup
 import pandas as pd
 
-
-#file = "/media/sandra/Elements4TB/LargePythonProjects/Natrix/results/finalData/taxonomy_splits/Class.csv"
 file = snakemake.input[0]
 
 data = pd.read_csv(file)
@@ -40,7 +38,6 @@ result["Unnamed: 0"] = "tags"
 tags = pd.DataFrame.from_dict(result)
 data = pd.concat([data,tags])
 data = data.set_index("Unnamed: 0")
-data = data.rename(columns={"Unnamed: 0": ""})
+#data = data.rename(columns={"Unnamed: 0": ""})
 
-#data.to_csv("/media/sandra/Elements4TB/LargePythonProjects/Natrix/results/finalData/taxonomy_splits/Class_annotated.csv")
 data.to_csv(snakemake.output[0])

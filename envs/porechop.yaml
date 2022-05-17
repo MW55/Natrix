@@ -9,4 +9,4 @@ dependencies:
   - biopython=1.79
   - pip=22.0.4
   - pip:
-    - git+https://github.com/seclemens/Porechop.git@f8483c1
+    - git+https://github.com/seclemens/Porechop.git@df22d15

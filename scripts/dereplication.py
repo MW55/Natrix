@@ -6,7 +6,7 @@ clstr = snakemake.input[1]
 fasta_not_clstr = snakemake.input[2]
 
 def sequence_dict(fasta_file):
-    return {entry.name:entry.sequence for entry
+    return {entry.name.split()[0]:entry.sequence for entry
                 in dinopy.FastaReader(str(fasta_file)).entries()}
 
 

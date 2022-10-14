@@ -10,7 +10,7 @@ if snakemake.params.database == 'NCBI':
     tax_keys = tax_keys.groupby(tax_keys.index).first()
     blast_table = blast_table.drop(['tax_key', 'tax_ids'], axis=1)
 blast_table = blast_table.astype('int64')
-blast_table = blast_table.rename(columns=lambda x: x.split('-')[0])
+#blast_table = blast_table.rename(columns=lambda x: x.split('-')[0])
 blast_table = blast_table.T
 blast_table = blast_table.groupby(by=blast_table.columns, axis=1).sum()
 

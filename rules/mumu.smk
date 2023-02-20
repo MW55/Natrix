@@ -22,7 +22,7 @@ if config['classify']['mothur']:
 
     rule run_mumu:
         input:
-            os.path.join(config["general"]["output_dir"],"clustering/swarm_table.csv"),
+            os.path.join(config["general"]["output_dir"],"clustering/swarm_table.csv") if config["general"]["seq_rep"] == "OTU" and config["dataset"]["nanopore"]== "FALSE" else os.path.join(config["general"]["output_dir"],"filtering/filtered.fasta"),
             expand(os.path.join(config["general"]["output_dir"],"mothur/{database}/match_scores.txt"), database=config['classify']['database']),
         output:
             temp(expand(os.path.join(config["general"]["output_dir"], "mothur/{database}/OTU_table_mumu.tmp"), database=config['classify']['database'])),
@@ -70,7 +70,7 @@ else:
 
     rule run_mumu:
         input:
-            os.path.join(config["general"]["output_dir"],"clustering/swarm_table.csv"),
+            os.path.join(config["general"]["output_dir"],"clustering/swarm_table.csv") if config["general"]["seq_rep"] == "OTU" and config["dataset"]["nanopore"]== "FALSE" else os.path.join(config["general"]["output_dir"],"filtering/filtered.fasta"),
             expand(os.path.join(config["general"]["output_dir"],"blast/match_scores.txt"), database=config['classify']['database']),
         output:
             temp(expand(os.path.join(config["general"]["output_dir"], "blast/OTU_table_mumu.tmp"), database=config['classify']['database'])),

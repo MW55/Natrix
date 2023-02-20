@@ -1,8 +1,7 @@
 import os
-
 rule cdhit:
     input:
-        os.path.join(config["general"]["output_dir"],"assembly/{sample}_{unit}/{sample}_{unit}.fasta")
+        os.path.join(config["general"]["output_dir"],"assembly/{sample}_{unit}/{sample}_{unit}.fasta") if not config['dataset']['nanopore'] else expand(os.path.join(config["general"]["output_dir"],"read_correction/medaka/{{sample}}_{{unit}}_R{read}/consensus.fasta"),read=reads)
     output:
         os.path.join(config["general"]["output_dir"],"assembly/{sample}_{unit}/{sample}_{unit}_cdhit.fasta"),
         temp(os.path.join(config["general"]["output_dir"],"assembly/{sample}_{unit}/{sample}_{unit}_cdhit.fasta.clstr"))
@@ -21,7 +20,7 @@ rule cluster_sorting:
     input:
         os.path.join(config["general"]["output_dir"],"assembly/{sample}_{unit}/{sample}_{unit}_cdhit.fasta"),
         os.path.join(config["general"]["output_dir"],"assembly/{sample}_{unit}/{sample}_{unit}_cdhit.fasta.clstr"),
-        os.path.join(config["general"]["output_dir"],"assembly/{sample}_{unit}/{sample}_{unit}.fasta")
+        os.path.join(config["general"]["output_dir"],"assembly/{sample}_{unit}/{sample}_{unit}.fasta") if not config['dataset']['nanopore'] else expand(os.path.join(config["general"]["output_dir"],"read_correction/medaka/{{sample}}_{{unit}}_R{read}/consensus.fasta"),read=reads)
     output:
         os.path.join(config["general"]["output_dir"],"assembly/{sample}_{unit}/{sample}_{unit}.dereplicated.fasta")
     conda:
@@ -31,3 +30,4 @@ rule cluster_sorting:
         length_cutoff=config["derep"]["length_overlap"]
     script:
         "../scripts/dereplication.py"
+

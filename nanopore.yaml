@@ -1,0 +1,89 @@
+# General options
+general:
+        filename: nanopore1 # The path / filename of the project folder, primertable (.csv) and configfile (.yaml). If the raw data folder is not in the root directory of Natrix, please add the path relative to the root directory (e.g. input/example_data)
+        output_dir: nanopore_out # Path to custom output directory / relative to the root directory of natrix. Do not use a dash in the folder name.
+        primertable: nanopore.csv # Path to the primertable. If the primertable is not in the root directory of Natrix, please add the path relative to the root directory (e.g. input/example_data.yaml)
+        units: nanopore.csv # Path to the sequencing unit sheet. (name will be concatenated with output_dir)
+        cores: 20 # Amount of cores available for the workflow.
+        memory: 4000 # Available RAM in Mb.
+        multiqc: TRUE # Initial quality check (fastqc & multiqc), currently only works for not yet assembled reads.
+        demultiplexing: FALSE # Boolean, run demultiplexing for reads if they were not demultiplexed by the sequencing company (slow).
+        read_sorting: FALSE # Boolean, run read sorting for paired end reads if they were not sorted by the sequencing company (slow).
+        already_assembled: FALSE # Boolean, skip the quality control and read assembly steps for data if it is already assembled.
+        seq_rep: OTU # Type of sequence representative, possible values are: "ASV", amplicon sequence variants, created with DADA2 or "OTU", operational taxonomic units, created with SWARM
+
+# Quality check and primer removal
+qc:
+        threshold: 0.9 # PANDAseq score threshold a sequence must meet to be kept in the output.
+        minoverlap: 15 # Sets the minimum overlap between forward and reverse reads.
+        minqual: 1 # Minimal quality score for bases in an assembled read to be accepted by PANDAseq.
+        minlen: 100 # The minimal length of a sequence after primer removal to be accepted by PANDAseq or Cutadapt.
+        maxlen: 600 # The maximal length of a sequence after primer removal to be accepted by PANDAseq or Cutadapt.
+        primer_offset: FALSE # Using PANDAseq to remove primer sequences by length offset instead of sequence identity, only for OTU variant.
+        mq: 25 # Minimum quality sequence check (prinseq), filtering of sequences according to the PHRED quality score before the assembly.
+        barcode_removed: TRUE # Boolean that indicates if the sequence is free of barcodes.
+        all_primer: TRUE # Boolean that indicates if the sequence is free of any kind of additional subsequences (primer, barcodes etc.).
+
+# Dereplication
+derep:
+        clustering: 1 # Percent identity for cdhit (dereplication) (1 = 100%), if cdhit is solely to be used for dereplication (recommended), keep the default value.
+        length_overlap: 0.0 # Length difference cutoff, default 0.0 if set to 0.9, the shorter sequences need to be at least 90% length of the representative of the cluster.
+        representative: most_common # Which sequence to use as a representative sequence per CDHIT cluster. longest = the longest sequence of the corresponding cluster, most_common = the most common sequence of the corresponding cluster.
+
+# Chimera removal
+chim:
+        beta: 8.0 # Weight of a "no" vote for the VSEARCH chimera detection algorithm.
+        pseudo_count: 1.2 # Pseudo - count prior on number of “no” votes.
+        abskew: 16 # Minimum abundance skew, definied by (min(abund.(paren1), abund.(paren2))) / abund.(child).
+
+# Merging
+merge:
+        filter_method: split_sample # If the split sample approach was used (split_sample) or not (not_split).
+        ampliconduo: TRUE # Boolean, whether AmpliconDuo should be used for statistical analysis of the data.
+        cutoff: 2 # An additional abundance filter if the split sample approach was not used. For a read to be kept, the sum of abundances over all samples needs to be above the cutoff.
+        ampli_corr: fdr # Specifies the correction method for Fisher's exact test.
+        save_format: png # File format for the frequency-frequency plot.
+        plot_AmpDuo: TRUE # Boolean, whether the frequency-frequency plot should be saved.
+        paired_End: FALSE # Boolean. Format of the sequencing data, TRUE if the reads are in paired-end format.
+        name_ext: R1 # The identifier for the forward read (for the reverse read the 1 is switched with 2, if the data is in paired-end format), has to be included at the end of the file name, before the file format identifier (including for single end files).
+
+# Mothur parameter
+classify:
+        mothur: TRUE # Boolean for the use of mothur
+        search: kmer # Allows you to specify the method to find most similar template. Your options are: suffix, kmer, blast, align and distance. The default is kmer
+        method: wang # Allows you to specify classification method to use. Your options are: wang, knn and zap. The default is wang.
+        database: pr2 # Database against which MOTHUR should be carried out, at the moment "pr2" , "unite" and "silva" are supported
+database_version:
+        pr2: 4.14.0
+        silva: 138.1
+database_path:
+        silva_tax: database/silva_db.138.1.tax # Path for Silva taxonomy database
+        silva_ref: database/silva_db.138.1.fasta # Path for Silva reference database
+        pr2_ref: database/pr2db.4.14.0.fasta # Path for PR2 reference database
+        pr2_tax: database/pr2db.4.14.0.tax # Path for PR2 taxonomy database
+        unite_ref: database/unite_v8.3.fasta # Path for UNITE reference database
+        unite_tax: database/unite_v8.3.tax # Path for UNITE taxonomy database
+
+# BLAST
+blast:
+        blast: FALSE # Boolean to indicate the use of the BLAST search algorithm to assign taxonomic information to the OTUs.
+        database: NCBI # Database against which the BLAST should be carried out, at the moment "NCBI" and "SILVA" are supported.
+        drop_tax_classes: '.*unclassified Bacteria.*,.*uncultured.*bacterium.*' # Given a comma-separated list, drops undesired classes either by id, by name or using regex
+        db_path: database/ncbi/nt # Path to the database file against which the BLAST should be carried out, at the moment only the SILVA (database/silva/silva.db) and NCBI (database/ncbi/nt) databases will be automatically downloaded.
+        max_target_seqs: 10 # Number of NCBI blast hits that are saved per sequence / OTU.
+        ident: 90.0 # Minimal identity overlap between target and query sequence. Set to lower threshold to be able to filter later by hand-
+        evalue: 1e-20 # Highest accepted evalue. Set to higher threshold (e.g. 1e-5) to be able to filter later by hand.
+
+# Postclustering
+postcluster:
+        mumu: TRUE # Boolean for the use of MUMU, only for OTU clustering.
+
+# nanopore
+dataset:
+        nanopore: TRUE
+#denoising by isOncorrect
+denoise: TRUE
+
+pychop:
+        qual: 7 #Minimum mean base quality (default 7)
+

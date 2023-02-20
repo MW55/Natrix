@@ -1,0 +1,9 @@
+name: read_correction
+channels:
+  - bioconda
+  - conda-forge
+dependencies:
+  - cd-hit
+  - fastx_toolkit
+  - minimap2
+  - recon

@@ -21,6 +21,7 @@ def create_dataframe(fl, fpl, config, slice):
         df = pd.DataFrame(columns=['sample', 'unit', 'fq1', 'fq2'],
             index =range(int(len(fl)/2)), dtype=str)
         i, j = (0, 0)
+
         while i < len(fl)/2:
             # last split needs to be fwd or rev read
             # second last can be unit
@@ -35,9 +36,24 @@ def create_dataframe(fl, fpl, config, slice):
             df.loc[i]['fq2'] = fpl[j+1][:slice]
             j += 2
             i += 1
+
+    elif config['dataset']['nanopore']:
+        df = pd.DataFrame(columns=['sample', 'unit', 'fq1'],
+                          index=range(int(len(fl))), dtype=str)
+        i = 0
+        while i < len(fl):
+            unit = fl[i].split('_')[-2]
+            print(unit)
+            # no units in sample name
+            # print(fl[0])
+            df.loc[i]['sample'] = '_'.join(fl[i].split('_')[:-2])
+            df.loc[i]['fq1'] = fpl[i][:slice]
+            df.loc[i]['unit'] = unit
+            i += 1
     else:
         df = pd.DataFrame(columns=['sample', 'unit', 'fq1', 'fq2'],
             index = range(int(len(fl))), dtype=str)
+
         i = 0
         while i < len(fl):
             # last split needs to be fwd or rev read
@@ -75,13 +91,15 @@ if __name__ == '__main__':
         file_list = sorted([file_.split('/')[-1] for file_
                     in file_path_list])
         slice = -3 # Remove the .gz extension from the file paths.
-    else:
-        file_path_list = sorted(glob(os.path.join(config["general"]["output_dir"],'assembly/*/*.fastq')))
-        file_list = sorted([file_.split('/')[-1] for file_
-                    in file_path_list])
+    if config['dataset']['nanopore']:
+        file_path_list = sorted(glob(os.path.join(config["general"]["filename"],'*R1.fastq')))
+
+        file_list = sorted([file_.split('/')[-1] for file_ in file_path_list])
         slice = None
+        #print(file_list, file_path_list)
     # create dataframe
     df = create_dataframe(file_list, file_path_list, config, slice)
+    print(df)
 
     pathlib.Path(config["general"]["output_dir"]).mkdir(parents=True, exist_ok=True)
     df.to_csv(os.path.join(config["general"]["output_dir"],config["general"]['units']), sep='\t')

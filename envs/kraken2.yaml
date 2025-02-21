@@ -1,0 +1,11 @@
+name: kraken2_env
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - kraken2=2.1.2
+  - bracken=2.6.2
+  - wget
+  - pigz
+  - tar

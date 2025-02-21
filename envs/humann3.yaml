@@ -1,0 +1,11 @@
+name: humann3_env
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - humann=3.8
+  - wget
+  - tar
+  - pigz
+  - python=3.9

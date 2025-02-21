@@ -1,0 +1,11 @@
+name: diversity_analysis_env
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - python=3.9
+  - pandas
+  - numpy
+  - scipy
+  - scikit-bio

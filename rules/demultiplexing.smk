@@ -19,6 +19,6 @@ rule unzip:
     input:
          "demultiplexed/{sample}_{unit}_R{read}.fastq.gz"
     output:
-        temp("demultiplexed/{sample}_{unit}_{read}.fastq")
+        "demultiplexed/{sample}_{unit}_{read}.fastq"
     shell:
          "gunzip -c {input} > {output}"

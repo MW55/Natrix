@@ -4,5 +4,4 @@ channels:
   - bioconda
   - defaults
 dependencies:
-  - snakemake=5.32.2
-  - dinopy=2.0.1
+  - snakemake=8.28.0

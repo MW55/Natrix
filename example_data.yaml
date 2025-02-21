@@ -8,7 +8,7 @@ general:
         demultiplexing: FALSE # Boolean, run demultiplexing for reads if they were not demultiplexed by the sequencing company (slow).
         read_sorting: FALSE # Boolean, run read sorting for paired end reads if they were not sorted by the sequencing company (slow).
         already_assembled: FALSE # Boolean, skip the quality control and read assembly steps for data if it is already assembled.
-        seq_rep: OTU # Type of sequence representative, possible values are: "ASV", amplicon sequence variants, created with DADA2 or "OTU", operational taxonomic units, created with SWARM
+        seq_rep: ASV # Type of sequence representative, possible values are: "ASV", amplicon sequence variants, created with DADA2 or "OTU", operational taxonomic units, created with SWARM
 
 # Quality check and primer removal
 qc:
@@ -36,8 +36,8 @@ chim:
 
 # Merging
 merge:
-        filter_method : split_sample # If the split sample approach was used (split_sample) or not (not_split).
-        ampliconduo: TRUE # Boolean, whether AmpliconDuo should be used for statistical analysis of the data.
+        filter_method : not_split # If the split sample approach was used (split_sample) or not (not_split).
+        ampliconduo: FALSE # Boolean, whether AmpliconDuo should be used for statistical analysis of the data.
         cutoff : 3 # An additional abundance filter if the split sample approach was not used.
         ampli_corr : fdr # Specifies the correction method for Fisher's exact test.
         save_format : png # File format for the frequency-frequency plot.
@@ -54,3 +54,22 @@ blast:
         max_target_seqs : 10 # Number of NCBI blast hits that are saved per sequence / OTU.
         ident : 90.0 # Minimal identity overlap between target and query sequence. Set to lower threshold to be able to filter later by hand-
         evalue : 1e-51 # Highest accepted evalue. Set to higher threshold to be able to filter later by hand.
+
+shotgun:
+        enabled: TRUE  # Boolean, whether shotgun metagenome processing should be enabled.
+        host_removal:
+                reference_index: "database/host/human_index"  # Path to Bowtie2 reference index
+                bowtie2_params: "--very-sensitive --phred33"  # Parameters for Bowtie2 alignment
+                threads: 8  # Number of threads for host read removal
+        kraken2:
+                enabled: TRUE  # Boolean, whether Kraken2 should be used for taxonomic classification
+                threads: 1  # Number of threads for Kraken2 processing
+                options: "--confidence 0.02"  # Kraken2 command-line options, default: 0.1
+        bracken:
+                enabled: FALSE  # Boolean, whether Bracken should be used for abundance estimation
+                threshold: 10  # Minimum read count to include a species
+                threads: 8  # Number of threads for Bracken processing
+                read_length: 100
+                level: S # Hierachical level, C is class, i.e. very high level, S is species. I used C for the example_data, as there were only few classification hits
+        humann3:
+                threads: 8

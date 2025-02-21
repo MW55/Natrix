@@ -186,3 +186,47 @@ qc:
     maximum: 1.0
     minimum: 0.0
     type: float
+shotgun:
+  enabled:
+    default: false
+    description: "Boolean, whether shotgun metagenome processing should be enabled."
+    type: boolean
+  host_removal:
+    reference_index:
+      default: "database/host/human_index"
+      description: "Path to Bowtie2 reference index"
+      type: string
+    bowtie2_params:
+      default: "--very-sensitive --phred33"
+      description: "Parameters for Bowtie2 alignment"
+      type: string
+    threads:
+      default: 8
+      description: "Number of threads for host read removal"
+      type: int
+  kraken2:
+    enabled:
+      default: true
+      description: "Boolean, whether Kraken2 should be used for taxonomic classification"
+      type: boolean
+    threads:
+      default: 8
+      description: "Number of threads for Kraken2 processing"
+      type: int
+    options:
+      default: "--confidence 0.1"
+      description: "Kraken2 command-line options"
+      type: string
+  bracken:
+    enabled:
+      default: false
+      description: "Boolean, whether Bracken should be used for abundance estimation"
+      type: boolean
+    threshold:
+      default: 10
+      description: "Minimum read count to include a species"
+      type: int
+    threads:
+      default: 8
+      description: "Number of threads for Bracken processing"
+      type: int

@@ -1,5 +1,6 @@
 name: humann3_env
 channels:
+  - biobakery
   - conda-forge
   - bioconda
   - defaults

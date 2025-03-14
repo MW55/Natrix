@@ -36,8 +36,8 @@ rule humann3_functional_annotation:
     input:
         merged_fq="results/filtered/{sample}_{unit}_merged.fastq",
         taxonomy_report="results/taxonomy/{sample}_{unit}_kraken2_report.txt",
-        chocophlan_db="database/humann3/chocophlan.tar.gz",
-        uniref_db="database/humann3/uniref90.tar.gz"
+        chocophlan_db="database/humann3",
+        uniref_db="database/humann3"
     output:
         gene_families="results/functional/{sample}_{unit}_genefamilies.tsv",
         pathways="results/functional/{sample}_{unit}_pathways.tsv",

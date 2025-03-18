@@ -16,8 +16,22 @@ rule download_host_index:
         fi
         """
 
+rule host_removal:
+    input:
+        fq=expand("results/assembly/{{sample}}_{{unit}}/{{sample}}_{{unit}}_{read}_cut.fastq", read=reads),
+        index="database/host/human_index.1.bt2"
+    output:
+        fq=expand("results/filtered/{{sample}}_{{unit}}_clean.{read}", read=reads)
+    params:
+        bowtie2_params=config["shotgun"]["host_removal"]["bowtie2_params"],
+        threads=config["shotgun"]["host_removal"]["threads"],
+        fq_prefix="results/filtered/{sample}_{unit}_clean"
+    conda:
+        "../../envs/host_removal.yaml"
+    script:
+        "../../scripts/shotgun/host_removal.py"
 
-
+'''
 rule host_removal:
     input:
         fq1="results/assembly/{sample}_{unit}/{sample}_{unit}_1_cut.fastq",
@@ -38,3 +52,4 @@ rule host_removal:
         --un-conc {params.fq_prefix} \
         {params.bowtie2_params} --threads {params.threads}
         """
+'''

@@ -1,6 +1,6 @@
 rule download_card:
     output:
-        card_archive="database/CARD/data.tar.gz"
+        card_archive="database/CARD/data"
     shell:
         """
         mkdir -p database/CARD
@@ -11,20 +11,46 @@ rule download_card:
 
 rule extract_card:
     input:
-        card_archive="database/CARD/data.tar.gz"
+        card_archive="database/CARD/data"
     output:
         card_json="database/CARD/card.json"
     shell:
         """
-        mkdir -p database/CARD
         tar -xvf {input.card_archive} -C database/CARD ./card.json
+        """
+
+rule create_annotation:
+    input:
+        card_json="database/CARD/card.json",
+    output:
+        card_db_fasta="database/CARD/card_database_v4.0.0.fasta",
+    conda:
+        "../../envs/rgi.yaml"
+    shell:
+        """
+        rgi card_annotation -i {input.card_json}
+        mv card_database_v4.0.0.fasta {output.card_db_fasta}
+        """
+
+rule load_card_db:
+    input:
+        card_json = "database/CARD/card.json",
+        card_db_fasta="database/CARD/card_database_v4.0.0.fasta",
+    output:
+        touch("database/CARD/db_loaded.done")
+    conda:
+        "../../envs/rgi.yaml"
+    shell:
+        """
+        rgi load --card_json {input.card_json} --card_annotation {input.card_db_fasta} --local
+        touch {output}
         """
 
 rule rgi:
     input:
         r1="results/filtered/{sample}_{unit}_clean.1",
         r2=lambda wildcards: "results/filtered/{sample}_{unit}_clean.2" if config["merge"]["paired_End"] else [],
-        card_db="database/CARD/card.json"
+        db_done="database/CARD/db_loaded.done"
     output:
         "results/rgi/{sample}_{unit}.overall_mapping_stats.txt"
     params:

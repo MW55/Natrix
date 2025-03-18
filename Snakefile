@@ -22,7 +22,7 @@ if config["merge"]["paired_End"]:
 else:
     reads = 1
 
-
+"""
 rule all:
     input:
         "results/finalData/unfiltered_table.csv" if not config["shotgun"]["enabled"] else [],
@@ -41,6 +41,13 @@ rule all:
         "results/visualization/taxonomy_barplot.png" if config["shotgun"]["enabled"] else [],
         "results/visualization/functional_heatmap.png" if config["shotgun"]["enabled"] else [],
         "results/visualization/beta_diversity_pcoa.png" if config["shotgun"]["enabled"] else []
+"""
+
+rule all:
+    input:
+        "results/rgi/merged_rgi.txt"
+        #"results/rgi/{unit.sample}_{unit.unit}_rgi.txt"
+
 
 ruleorder: assembly > prinseq
 
@@ -57,3 +64,4 @@ include: "rules/shotgun_metagenome/read_based_processing.smk"
 include: "rules/shotgun_metagenome/functional_annotation.smk"
 include: "rules/shotgun_metagenome/aggregate_results.smk"
 include: "rules/shotgun_metagenome/analysis.smk"
+include: "rules/antimicrobial_resistance_prediction/resistance_prediction.smk"

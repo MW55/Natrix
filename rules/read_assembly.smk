@@ -35,6 +35,7 @@ rule prinseq:
     script:
         "../scripts/prinseq.py"
 
+"""
 rule cutadapt:
     input:
         expand(
@@ -57,6 +58,25 @@ rule cutadapt:
         "results/logs/{sample}_{unit}/cutadapt.log"
     script:
         "../scripts/cutadapt.py"
+"""
+rule fastp:
+    input:
+        expand("results/assembly/{{sample}}_{{unit}}/{{sample}}_{{unit}}_{read}.fastq", read=reads),
+        primer_t="primer_table.csv"
+    output:
+        expand("results/assembly/{{sample}}_{{unit}}/{{sample}}_{{unit}}_{read}_cut.fastq", read=reads)
+    params:
+        paired_end = config["merge"]["paired_End"],
+        prim_rm = config["qc"]["all_primer"],
+        minlen = config["qc"]["minlen"],
+        maxlen = config["qc"]["maxlen"]
+    conda:
+        "../envs/fastp.yaml"
+    log:
+        "results/logs/{sample}_{unit}/fastp.log"
+    script:
+        "../scripts/fastp.py"
+
 
 rule assembly:
     input:

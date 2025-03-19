@@ -11,7 +11,7 @@ with open(log_path, "w") as logfile:
     base_cmd = [
         "rgi", "bwt",
         "-n", str(snakemake.params.threads),
-        "-a", "bowtie2",
+        "-a", "kma",
         "-o", output_base,
         "--local",
         "--clean"

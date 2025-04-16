@@ -112,8 +112,8 @@ def writer(c_size, seq_dict, output_file):
 if str(snakemake.params.repr) == "most_common":
     seq_dict_mc = sequence_dict(fasta_not_clstr)
     c_size_mc = get_most_common_rep(clstr, fasta_not_clstr)
-    writer(c_size_mc, seq_dict_mc, snakemake.output)
+    writer(c_size_mc, seq_dict_mc, snakemake.output[0])
 else:
     seq_dict_l = sequence_dict(fasta)
     c_size_l = get_longest_rep(clstr)
-    writer(c_size_l, seq_dict_l, snakemake.output)
+    writer(c_size_l, seq_dict_l, snakemake.output[0])

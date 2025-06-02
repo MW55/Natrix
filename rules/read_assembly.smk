@@ -111,3 +111,11 @@ rule copy_to_fasta:
         "../envs/seqtk.yaml"
     shell:
         "seqtk seq -a {input} > {output}"
+
+rule dummy_rule:
+    input:
+        expand("results/assembly/{{sample}}_{{unit.unit}}/{{unit.sample}}_{{unit.unit}}.fasta", unit=units.reset_index().itertuples())
+    output:
+        f = "results/assembly/dummy.done"
+    shell:
+        "touch {output.f}"
